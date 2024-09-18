@@ -23,19 +23,19 @@ async function login() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-    <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
-      <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-        <div class="mt-12 flex flex-col items-center">
-          <h1 class="text-2xl xl:text-3xl font-extrabold">
+  <div class="tw-min-h-screen tw-bg-gray-100 tw-text-gray-900 tw-flex tw-justify-center">
+    <div class="tw-max-w-screen-xl tw-m-0 sm:tw-m-10 tw-bg-white tw-shadow sm:tw-rounded-lg tw-flex tw-justify-center tw-flex-1">
+      <div class="lg:tw-w-1/2 xl:tw-w-5/12 tw-p-6 sm:tw-p-12">
+        <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">
+          <h1 class="tw-text-2xl xl:tw-text-3xl tw-font-extrabold">
             Login
           </h1>
-          <div class="w-full flex-1 mt-8">
-            <div class="flex flex-col items-center">
+          <div class="tw-w-full tw-flex-1 tw-mt-8">
+            <div class="tw-flex tw-flex-col tw-items-center">
               <Button
-                  class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
-                <div class="bg-white p-2 rounded-full">
-                  <svg class="w-4" viewBox="0 0 533.5 544.3">
+                  class="tw-w-full tw-max-w-xs tw-font-bold tw-shadow-sm tw-rounded-lg tw-py-3 tw-bg-indigo-100 tw-text-gray-800 tw-flex tw-items-center tw-justify-center tw-transition-all tw-duration-300 tw-ease-in-out tw-focus:outline-none tw-hover:tw-shadow tw-focus:tw-shadow-sm tw-focus:tw-shadow-outline">
+                <div class="tw-bg-white tw-p-2 tw-rounded-full">
+                  <svg class="tw-w-4" viewBox="0 0 533.5 544.3">
                     <path
                         d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
                         fill="#4285f4" />
@@ -50,61 +50,59 @@ async function login() {
                         fill="#ea4335" />
                   </svg>
                 </div>
-                <span class="ml-4">
+                <span class="tw-ml-4">
                                 Login with Google
                             </span>
               </Button>
-
             </div>
 
-            <div class="my-12 border-b text-center">
+            <div class="tw-my-12 tw-border-b tw-text-center">
               <div
-                  class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
+                  class="tw-leading-none tw-px-2 tw-inline-block tw-text-sm tw-text-gray-600 tw-tracking-wide tw-font-medium tw-bg-white tw-transform tw-translate-y-1/2">
                 Or login with e-mail
               </div>
             </div>
 
-            <div class="mx-auto max-w-xs">
+            <div class="tw-mx-auto tw-max-w-xs">
               <Form @submit="login">
                 <FormItem
                     label="Email"
-
                 >
                   <Input
                       v-model="auth.username"
-                      class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm  focus:bg-white"
+                      class="tw-w-full tw-px-8 tw-py-4 tw-rounded-lg tw-font-medium tw-bg-gray-100 tw-placeholder-gray-500 tw-text-sm tw-focus:tw-bg-white"
                       type="email" placeholder="Email" />
                 </FormItem>
                 <Input
                     v-model="auth.password"
-                    class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 placeholder-gray-500 text-sm focus:bg-white mt-5"
+                    class="tw-w-full tw-px-8 tw-py-4 tw-rounded-lg tw-font-medium tw-bg-gray-100 tw-placeholder-gray-500 tw-text-sm tw-focus:tw-bg-white tw-mt-5"
                     type="password" placeholder="Password" />
                 <Button
                     :disabled="loading"
                     type="submit"
-                    class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center">
-                  <svg v-if="!loading" class="w-6 h-6 -ml-2" fill="none" stroke="currentColor" stroke-width="2"
+                    class="tw-mt-5 tw-tracking-wide tw-font-semibold tw-bg-indigo-500 tw-text-gray-100 tw-w-full tw-py-4 tw-rounded-lg tw-hover:bg-indigo-700 tw-transition-all tw-duration-300 tw-ease-in-out tw-flex tw-items-center tw-justify-center">
+                  <svg v-if="!loading" class="tw-w-6 tw-h-6 -tw-ml-2" fill="none" stroke="currentColor" stroke-width="2"
                        stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
                     <circle cx="8.5" cy="7" r="4" />
                     <path d="M20 8v6M23 11h-6" />
                   </svg>
-                  <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg v-if="loading" class="tw-animate-spin -tw-ml-1 tw-mr-3 tw-h-5 tw-w-5 tw-text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="tw-opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="tw-opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  <span class="ml-3">
+                  <span class="tw-ml-3">
                     Login
                   </span>
                 </Button>
               </Form>
-              <p class="mt-6 text-xs text-gray-600 text-center">
+              <p class="tw-mt-6 tw-text-xs tw-text-gray-600 tw-text-center">
                 I agree to abide by templatana's
-                <a href="#" class="border-b border-gray-500 border-dotted">
+                <a href="#" class="tw-border-b tw-border-gray-500 tw-border-dotted">
                   Terms of Service
                 </a>
                 and its
-                <a href="#" class="border-b border-gray-500 border-dotted">
+                <a href="#" class="tw-border-b tw-border-gray-500 tw-border-dotted">
                   Privacy Policy
                 </a>
               </p>
@@ -112,8 +110,8 @@ async function login() {
           </div>
         </div>
       </div>
-      <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
-        <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+      <div class="tw-flex-1 tw-bg-indigo-100 tw-text-center tw-hidden lg:tw-flex">
+        <div class="tw-m-12 xl:tw-m-16 tw-w-full tw-bg-contain tw-bg-center tw-bg-no-repeat"
              style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');">
         </div>
       </div>
