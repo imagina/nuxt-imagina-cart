@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@pinia/nuxt',
     '@vesp/nuxt-fontawesome',
+    'nuxt-quasar-ui'
   ],
   shadcn: {
     /**
@@ -28,4 +29,5 @@ export default defineNuxtConfig({
       apiRoute: process.env.API_ROUTE || ''
     }
   },
+
 })
