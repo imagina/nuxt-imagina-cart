@@ -73,8 +73,8 @@ async function login() {
                     label="* Email"
                     lazy-rules
                     :rules="[
-                      val => !!val || 'El email es obligatorio',
-                      val => /.+@.+\..+/.test(val) || 'Por favor ingresa un email válido'
+                      val => !!val || 'Email is required.',
+                      val => /.+@.+\..+/.test(val) || 'Please enter a valid email'
                     ]"
                 />
                 <q-input
@@ -83,12 +83,12 @@ async function login() {
                     label="* Password"
                     lazy-rules
                     :rules="[
-                      val => !!val || 'La contraseña es obligatoria',
-                      val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres',
-                      val => /[A-Z]/.test(val) || 'Debe contener al menos una letra mayúscula',
-                      val => /[a-z]/.test(val) || 'Debe contener al menos una letra minúscula',
-                      val => /\d/.test(val) || 'Debe contener al menos un número',
-                      val => /[\W_]/.test(val) || 'Debe contener al menos un carácter especial'
+                      val => !!val || 'Password is required',
+                      val => val.length >= 8 || 'Password must be at least 8 characters long',
+                      val => /[A-Z]/.test(val) || 'Must contain at least one uppercase letter',
+                      val => /[a-z]/.test(val) || 'Must contain at least one lowercase letter',
+                      val => /\d/.test(val) || 'Must contain at least one number',
+                      val => /[\W_]/.test(val) || 'Must contain at least one special character'
                     ]"
                     :type="isPwd ? 'password' : 'text'"
                 >
