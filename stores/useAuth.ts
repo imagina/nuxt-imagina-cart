@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { Notify } from 'quasar'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -38,7 +39,13 @@ export const useAuthStore = defineStore('auth', {
                 router.push('/home')
                 this.loading = false
             } catch (error) {
+                this.loading = false;
                 console.error('Login failed:', error)
+                Notify.create({
+                    message: 'Algo salio mal en el login',
+                    type: 'negative'
+                })
+
             }
         },
         async logout() {

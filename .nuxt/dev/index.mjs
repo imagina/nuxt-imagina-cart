@@ -102,7 +102,7 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiRoute": ""
+    "apiRoute": "https://dev-clustertic.ozonohosting.com"
   }
 };
 const envOptions = {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components//ui/input'
-import { Form, FormItem } from '@/components//ui/form'
+const refLogin: any = ref(null);
+const isPwd = ref(true);
 const store = useAuthStore();
 definePageMeta({
   middleware: 'auth'
@@ -14,6 +14,8 @@ const auth = reactive<{username: string; password: string }>({
 const loading = computed(() => store.loading)
 async function login() {
   try {
+    const validateLogin = await refLogin.value.validate()
+    if(!validateLogin) return;
     await store.login(auth);
   } catch (erro) {
     console.log(erro)
@@ -50,7 +52,7 @@ async function login() {
                         fill="#ea4335" />
                   </svg>
                 </div>
-                <span class="tw-ml-4">
+                <span class="tw-ml-4 tw-text-white">
                                 Login with Google
                             </span>
               </Button>
@@ -64,19 +66,40 @@ async function login() {
             </div>
 
             <div class="tw-mx-auto tw-max-w-xs">
-              <Form @submit="login">
-                <FormItem
-                    label="Email"
-                >
-                  <Input
-                      v-model="auth.username"
-                      class="tw-w-full tw-px-8 tw-py-4 tw-rounded-lg tw-font-medium tw-bg-gray-100 tw-placeholder-gray-500 tw-text-sm tw-focus:tw-bg-white"
-                      type="email" placeholder="Email" />
-                </FormItem>
-                <Input
+              <q-form @submit.prevent.stop="login" ref="refLogin">
+                <q-input
+                    filled
+                    v-model="auth.username"
+                    label="* Email"
+                    lazy-rules
+                    :rules="[
+                      val => !!val || 'El email es obligatorio',
+                      val => /.+@.+\..+/.test(val) || 'Por favor ingresa un email válido'
+                    ]"
+                />
+                <q-input
+                    filled
                     v-model="auth.password"
-                    class="tw-w-full tw-px-8 tw-py-4 tw-rounded-lg tw-font-medium tw-bg-gray-100 tw-placeholder-gray-500 tw-text-sm tw-focus:tw-bg-white tw-mt-5"
-                    type="password" placeholder="Password" />
+                    label="* Password"
+                    lazy-rules
+                    :rules="[
+                      val => !!val || 'La contraseña es obligatoria',
+                      val => val.length >= 8 || 'La contraseña debe tener al menos 8 caracteres',
+                      val => /[A-Z]/.test(val) || 'Debe contener al menos una letra mayúscula',
+                      val => /[a-z]/.test(val) || 'Debe contener al menos una letra minúscula',
+                      val => /\d/.test(val) || 'Debe contener al menos un número',
+                      val => /[\W_]/.test(val) || 'Debe contener al menos un carácter especial'
+                    ]"
+                    :type="isPwd ? 'password' : 'text'"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                        :name="isPwd ? 'visibility_off' : 'visibility'"
+                        class="cursor-pointer"
+                        @click="isPwd = !isPwd"
+                    />
+                  </template>
+                </q-input>
                 <Button
                     :disabled="loading"
                     type="submit"
@@ -95,7 +118,7 @@ async function login() {
                     Login
                   </span>
                 </Button>
-              </Form>
+              </q-form>
               <p class="tw-mt-6 tw-text-xs tw-text-gray-600 tw-text-center">
                 I agree to abide by templatana's
                 <a href="#" class="tw-border-b tw-border-gray-500 tw-border-dotted">

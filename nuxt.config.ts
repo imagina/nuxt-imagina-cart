@@ -29,5 +29,7 @@ export default defineNuxtConfig({
       apiRoute: process.env.API_ROUTE || ''
     }
   },
-
+  quasar: {
+    plugins: ['Notify']
+  }
 })
