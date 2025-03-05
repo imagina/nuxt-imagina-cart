@@ -1,8 +1,12 @@
+import fontawesomeV6 from 'quasar/icon-set/svg-fontawesome-v6'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: '2024-04-03',
   pages: true,
+  css: ['~/assets/css/tailwind.css'],
+
   modules: [
     '@nuxtjs/tailwindcss',
     'shadcn-nuxt',
@@ -26,10 +30,26 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiRoute: process.env.API_ROUTE || ''
+      api: process.env.api || ''
     }
   },
   quasar: {
-    plugins: ['Notify']
+    plugins: [
+      'AppFullscreen',
+      'BottomSheet',
+      'Dialog',
+      'Loading',
+      'LoadingBar',
+      'Notify',
+    ],
+    sassVariables: true,
+    iconSet: {
+      ...fontawesomeV6      
+    },
+    extras: {
+      //font: 'roboto-font',
+      fontIcons: ['material-icons', 'fontawesome-v6'],
+      animations: 'all',
+    },
   }
 })

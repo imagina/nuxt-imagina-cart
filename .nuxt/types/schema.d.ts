@@ -172,7 +172,7 @@ declare module 'nuxt/schema' {
    },
   }
   interface PublicRuntimeConfig {
-   apiRoute: string,
+   api: string,
   }
 }
 declare module 'vue' {

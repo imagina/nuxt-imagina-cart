@@ -31,6 +31,6 @@ export { default as baseService } from '../composables/baseService';
 export { default as config } from '../composables/config';
 export { useAuthStore } from '../stores/useAuth';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
-export { useDialogPluginComponent, useFormChild, useInterval, useMeta, useQuasar, useRenderCache, useSplitAttrs, useTick, useTimeout, Notify } from 'quasar';
+export { useDialogPluginComponent, useFormChild, useInterval, useMeta, useQuasar, useRenderCache, useSplitAttrs, useTick, useTimeout, AppFullscreen, BottomSheet, Dialog, Loading, LoadingBar, Notify } from 'quasar';
 export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';

@@ -102,7 +102,7 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiRoute": "https://dev-clustertic.ozonohosting.com"
+    "api": "https://www.imaginacolombia.com/api"
   }
 };
 const envOptions = {
@@ -546,9 +546,9 @@ function normalizeCookieHeaders(headers) {
   return outgoingHeaders;
 }
 
-const config$1 = useRuntimeConfig();
+const config = useRuntimeConfig();
 const _routeRulesMatcher = toRouteMatcher(
-  createRouter({ routes: config$1.nitro.routeRules })
+  createRouter({ routes: config.nitro.routeRules })
 );
 function createRouteRulesHandler(ctx) {
   return eventHandler((event) => {
@@ -1043,16 +1043,6 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
-const config = {
-  apiUrl: "https://www.imaginacolombia.com/api",
-  cacheMaxAge: 1,
-  //in seconds
-  languages: {
-    default: "es",
-    availables: ["en", "es"]
-  }
-};
-
 const base_get = defineCachedEventHandler(async (event) => {
   const params = getQuery$1(event);
   let api = params.api;
@@ -1065,7 +1055,7 @@ const base_get = defineCachedEventHandler(async (event) => {
   });
   return data;
 }, {
-  maxAge: config.cacheMaxAge
+  maxAge: 1
   //minimun time, 
   //staleMaxAge: 1, // sent to the client while the cache updates in the background.
   //getKey: () => cacheName

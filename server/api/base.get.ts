@@ -1,5 +1,3 @@
-import config from "~/composables/config";
-
 export default defineCachedEventHandler(async (event) => {
     const params = getQuery(event)
     let api = params.api
@@ -13,7 +11,7 @@ export default defineCachedEventHandler(async (event) => {
     })
     return data;
   }, {
-      maxAge: config.cacheMaxAge,  //minimun time, 
+      maxAge: 1,  //minimun time, 
       //staleMaxAge: 1, // sent to the client while the cache updates in the background.
       //getKey: () => cacheName
   });

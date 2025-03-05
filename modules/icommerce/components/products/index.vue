@@ -45,15 +45,23 @@
 				<!-- action buttons -->
 					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
 						<QBtn
-							label="Ver Planes"
-							class="tw-w-1/2 tw-justify-center tw-text-black"
-							
+							label="Ver Planes"							
+							text-color="black"							
+							no-caps
+							 icon="shopping_cart"
 						/>
 						<q-btn
 							label="Añadir"
-							class="tw-w-1/2 tw-justify-center tw-text-black"
-							color="primary"						
-						/>
+							text-color="black"
+							color="amber"
+							no-caps
+							icon="fa-light fa-shopping_cart"							
+						>
+						
+						</q-btn>
+						
+						
+						
 					</div>
 			</q-card>
 		</div>
@@ -61,9 +69,6 @@
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
-
-
-
 
 	const products = ref([])
 
