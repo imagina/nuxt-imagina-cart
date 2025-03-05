@@ -48,7 +48,6 @@
 							label="Ver Planes"							
 							text-color="black"							
 							no-caps
-							 icon="shopping_cart"
 						/>
 						<q-btn
 							label="Añadir"
@@ -56,12 +55,7 @@
 							color="amber"
 							no-caps
 							icon="fa-solid fa-cart-shopping"							
-						>
-						
-						</q-btn>
-						
-						
-						
+						/>
 					</div>
 			</q-card>
 		</div>
