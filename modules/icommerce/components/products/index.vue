@@ -55,7 +55,7 @@
 							text-color="black"
 							color="amber"
 							no-caps
-							icon="fa-light fa-shopping_cart"							
+							icon="fa-solid fa-cart-shopping"							
 						>
 						
 						</q-btn>
