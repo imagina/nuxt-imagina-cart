@@ -110,6 +110,7 @@
   },
   "include": [
     "./types/nitro-nuxt.d.ts",
+    "../modules/icommerce/runtime/server",
     "../node_modules/@nuxtjs/tailwindcss/runtime/server",
     "../node_modules/shadcn-nuxt/runtime/server",
     "../node_modules/@pinia/nuxt/runtime/server",
@@ -124,6 +125,7 @@
   "exclude": [
     "../node_modules",
     "../node_modules/nuxt/node_modules",
+    "../modules/icommerce/node_modules",
     "../dist"
   ]
 }

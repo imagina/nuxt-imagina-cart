@@ -5,6 +5,14 @@ module.exports = {
   darkMode: ["class"],
   safelist: ["dark"],
   prefix: "tw-",
+  content: [
+    "./app.vue",
+    "./components/**/*.{vue,js,ts}",
+    "./modules/**/*.{vue,js,ts}",
+    "./layouts/**/*.{vue,js,ts}",
+    "./pages/**/*.{vue,js,ts}",
+    "./plugins/**/*.{js,ts}",
+  ],
   
   theme: {
     container: {

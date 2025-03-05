@@ -2,6 +2,10 @@ import { NuxtModule, RuntimeConfig } from '@nuxt/schema'
 declare module '@nuxt/schema' {
   interface NuxtOptions {
     /**
+     * Configuration for `F:/Henry/github/base-nuxt/modules/icommerce/index`
+     */
+    ["icommerce"]: typeof import("F:/Henry/github/base-nuxt/modules/icommerce/index").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
      * Configuration for `@nuxtjs/tailwindcss`
      */
     ["tailwindcss"]: typeof import("@nuxtjs/tailwindcss").default extends NuxtModule<infer O> ? O : Record<string, any>
@@ -32,6 +36,10 @@ declare module '@nuxt/schema' {
   }
   interface NuxtConfig {
     /**
+     * Configuration for `F:/Henry/github/base-nuxt/modules/icommerce/index`
+     */
+    ["icommerce"]?: typeof import("F:/Henry/github/base-nuxt/modules/icommerce/index").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
      * Configuration for `@nuxtjs/tailwindcss`
      */
     ["tailwindcss"]?: typeof import("@nuxtjs/tailwindcss").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
@@ -59,12 +67,17 @@ declare module '@nuxt/schema' {
      * Configuration for `@nuxt/telemetry`
      */
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
-    modules?: (undefined | null | false | NuxtModule | string | [NuxtModule | string, Record<string, any>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["shadcn-nuxt", Exclude<NuxtConfig["shadcn"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["@vesp/nuxt-fontawesome", Exclude<NuxtConfig["fontawesome"], boolean>] | ["nuxt-quasar-ui", Exclude<NuxtConfig["quasar"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
+    modules?: (undefined | null | false | NuxtModule | string | [NuxtModule | string, Record<string, any>] | ["F:/Henry/github/base-nuxt/modules/icommerce/index", Exclude<NuxtConfig["icommerce"], boolean>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["shadcn-nuxt", Exclude<NuxtConfig["shadcn"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["@vesp/nuxt-fontawesome", Exclude<NuxtConfig["fontawesome"], boolean>] | ["nuxt-quasar-ui", Exclude<NuxtConfig["quasar"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
 }
 declare module 'nuxt/schema' {
   interface NuxtOptions {
     /**
+     * Configuration for `F:/Henry/github/base-nuxt/modules/icommerce/index`
+     * @see https://www.npmjs.com/package/F:/Henry/github/base-nuxt/modules/icommerce/index
+     */
+    ["icommerce"]: typeof import("F:/Henry/github/base-nuxt/modules/icommerce/index").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
      * Configuration for `@nuxtjs/tailwindcss`
      * @see https://www.npmjs.com/package/@nuxtjs/tailwindcss
      */
@@ -102,6 +115,11 @@ declare module 'nuxt/schema' {
   }
   interface NuxtConfig {
     /**
+     * Configuration for `F:/Henry/github/base-nuxt/modules/icommerce/index`
+     * @see https://www.npmjs.com/package/F:/Henry/github/base-nuxt/modules/icommerce/index
+     */
+    ["icommerce"]?: typeof import("F:/Henry/github/base-nuxt/modules/icommerce/index").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
      * Configuration for `@nuxtjs/tailwindcss`
      * @see https://www.npmjs.com/package/@nuxtjs/tailwindcss
      */
@@ -136,7 +154,7 @@ declare module 'nuxt/schema' {
      * @see https://www.npmjs.com/package/@nuxt/telemetry
      */
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
-    modules?: (undefined | null | false | NuxtModule | string | [NuxtModule | string, Record<string, any>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["shadcn-nuxt", Exclude<NuxtConfig["shadcn"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["@vesp/nuxt-fontawesome", Exclude<NuxtConfig["fontawesome"], boolean>] | ["nuxt-quasar-ui", Exclude<NuxtConfig["quasar"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
+    modules?: (undefined | null | false | NuxtModule | string | [NuxtModule | string, Record<string, any>] | ["F:/Henry/github/base-nuxt/modules/icommerce/index", Exclude<NuxtConfig["icommerce"], boolean>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["shadcn-nuxt", Exclude<NuxtConfig["shadcn"], boolean>] | ["@pinia/nuxt", Exclude<NuxtConfig["pinia"], boolean>] | ["@vesp/nuxt-fontawesome", Exclude<NuxtConfig["fontawesome"], boolean>] | ["nuxt-quasar-ui", Exclude<NuxtConfig["quasar"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
   interface RuntimeConfig {
    app: {
