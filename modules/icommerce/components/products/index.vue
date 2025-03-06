@@ -6,7 +6,7 @@
 			<div class="tw-flex items-center">
 				Ordenar&nbsp;&nbsp;
 				<q-select
-				borderless
+					borderless
 					v-model="sort"
 					:options="sortOptions"
 					option-value="value"
@@ -56,8 +56,7 @@
 							label="Ver Planes"
 							text-color="black"
 							no-caps
-
-							class="tw-w-1/2 tw-justify-center tw-text-black"
+							class="tw-w-1/2 tw-justify-center"
 						/>
 						<q-btn
 							label="Añadir"
@@ -66,7 +65,8 @@
 							no-caps
 							icon="o_shopping_cart"
 							unelevated
-							class="tw-w-1/2 tw-justify-center tw-text-black"
+							class="tw-w-1/2 tw-justify-center"
+							@click="addTocart(product)"
 						/>
 					</div>
 			</q-card>
@@ -75,6 +75,10 @@
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
+//import { useCartStore } from '../../stores/cart'
+
+  const cartStore = useCartStore()
+
 
 	const products = ref([])
 
@@ -105,6 +109,10 @@ import apiRoutes from '../../config/apiRoutes'
 		baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
 		})
+	}
+
+	function addTocart(product){
+		cartStore.products.push(product)
 	}
 
 	onMounted(async () => {
