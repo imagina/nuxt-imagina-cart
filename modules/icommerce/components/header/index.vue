@@ -16,6 +16,8 @@
       <div class="tw-flex tw-items-center tw-space-x-4">
         Login
       </div>
+      <cartComponent />
+
     </div>
   </header>
 </template>
@@ -23,6 +25,7 @@
 <script setup>
 import {ref, computed} from 'vue'
 import Navbar from './Navbar.vue'
+import cartComponent from '../cart'
 
 const props = defineProps({
   scrollPosition: Object

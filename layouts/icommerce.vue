@@ -1,8 +1,8 @@
 <template>
     <q-layout view="hHh lpR fFf" @scroll="handleScroll">
 			<q-page-container>
-          <HeaderApp :scroll-position="scrollPosition" />
-					<slot />
+						<HeaderApp :scroll-position="scrollPosition" />
+						<slot />
 			</q-page-container>
     </q-layout>
 </template>
