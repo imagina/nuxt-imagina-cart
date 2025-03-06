@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     componentDir: './components/ui'
   },
   pinia: {
-    storesDirs: ['./stores/**', './modules/icommerce/stores/**'],
+    storesDirs: ['./stores/**', './modules/*/stores/**'],
   },
   runtimeConfig: {
     public: {
