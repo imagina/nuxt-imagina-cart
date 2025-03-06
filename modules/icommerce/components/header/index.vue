@@ -1,6 +1,6 @@
 <template>
   <header :class="[
-      'tw-sticky tw-top-0 tw-z-50 tw-bg-white tw-border-b tw-border-gray-200',
+      'tw-sticky tw-top-0 tw-z-50 tw-border-b tw-border-gray-200',
       isScrolled ? 'tw-bg-gray-900' : 'tw-bg-white'
       ]">
     <div class="tw-max-w-7xl tw-min-h-[60px] tw-mx-auto tw-px-4 tw-py-3 tw-flex tw-items-center tw-justify-between">
@@ -21,21 +21,14 @@
 </template>
 
 <script setup>
-import {ref, onMounted, onUnmounted} from 'vue'
+import {ref, computed} from 'vue'
 import Navbar from './Navbar.vue'
-const isScrolled = ref(false);
 
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 0;
-};
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
+const props = defineProps({
+  scrollPosition: Object
 });
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+const isScrolled = computed(() => props.scrollPosition?.position > 0);
 
 const navItems = ref([
   {label: 'Inicio', to: '/'},

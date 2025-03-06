@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-for="(menuItem, menuIndex) in menuItems" :key="menuItem.id || menuIndex">
-      <q-btn v-if="menuItem.items" v-bind="menuItem.props">
+      <q-btn v-if="menuItem.items" :label="menuItem.label" v-bind="menuItem.props">
         <q-menu>
           <q-list style="min-width: 100px">
             <q-item
