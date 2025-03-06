@@ -1,7 +1,7 @@
 <template>    
         <div class="tw-flex">
             <div>
-                <categories />
+                <categoriesComponent />
             </div>
             <div>		
                 <div>
@@ -19,15 +19,15 @@
                 </div>
                 <hr  class="tw-my-[18px]" />
                 <div class="">
-                    <ProductsComponent/>        
+                    <productsComponent/>        
                 </div>
             </div>
         </div>
 
 </template>
 <script setup lang="ts">
-import ProductsComponent from '../components/products';
-import categories from '../components/categories';
+import productsComponent from '../components/products';
+import categoriesComponent from '../components/categories';
 
 const router = ref(useRouter())
 </script>

@@ -3,7 +3,7 @@ import materialIconsOutlined from 'quasar/icon-set/material-icons-outlined'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  //devtools: { enabled: true },
   compatibilityDate: '2024-04-03',
   pages: true,
   css: ['~/assets/css/tailwind.css'],
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     componentDir: './components/ui'
   },
   pinia: {
-    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+    storesDirs: ['./stores/**', './modules/icommerce/stores/**'],
   },
   runtimeConfig: {
     public: {
