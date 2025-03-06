@@ -1,5 +1,5 @@
 <template>
-		<div class="tw-w-[400px] tw-p-[20px]">
+		<div class="tw-p-[20px]">
 			<h1>categorias</h1>
 			<q-list>				
 				<template v-for="category in categories">

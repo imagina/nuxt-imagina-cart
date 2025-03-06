@@ -6,6 +6,7 @@
 			<div class="tw-flex items-center">
 				Ordenar&nbsp;&nbsp;
 				<q-select
+				borderless
 					v-model="sort"
 					:options="sortOptions"
 					option-value="value"
@@ -17,7 +18,14 @@
 		</div>
 
 		<!-- products list -->
-  	<div class="tw-grid tw-grid-cols-3  tw-gap-4">
+  	<div class="
+			tw-grid
+			tw-grid-cols-1
+			md:tw-grid-cols-2
+			lg:tw-grid-cols-3
+			xl:tw-grid-cols-4
+			tw-gap-4"
+		>
 			<q-card v-for="product in products" class="product q-pa-md">
 				<div>
 					<span class="tw-text-[12] tw-font-[700]" style="color: #888888">{{ product.name }}</span>
