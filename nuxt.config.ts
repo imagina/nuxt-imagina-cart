@@ -1,4 +1,5 @@
 import fontawesomeV6 from 'quasar/icon-set/svg-fontawesome-v6'
+import materialIconsOutlined from 'quasar/icon-set/material-icons-outlined'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -44,11 +45,11 @@ export default defineNuxtConfig({
     ],
     sassVariables: true,
     iconSet: {
-      ...fontawesomeV6      
+      ...materialIconsOutlined, ...fontawesomeV6
     },
     extras: {
       //font: 'roboto-font',
-      fontIcons: ['material-icons', 'fontawesome-v6'],
+      fontIcons: ['material-icons', 'material-icons-outlined', 'fontawesome-v6'],
       animations: 'all',
     },
   }

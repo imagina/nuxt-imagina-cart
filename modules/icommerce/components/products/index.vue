@@ -17,7 +17,7 @@
 		</div>
 
 		<!-- products list -->
-  	<div class="tw-grid tw-grid-cols-2  tw-gap-4">
+  	<div class="tw-grid tw-grid-cols-3  tw-gap-4">
 			<q-card v-for="product in products" class="product q-pa-md">
 				<div>
 					<span class="tw-text-[12] tw-font-[700]" style="color: #888888">{{ product.name }}</span>
@@ -30,7 +30,7 @@
 						<img src="../../assets/img/cP_white.png" />
 					</div>
 				</div>
-				<div class="description tw-p-6" v-html="product.description">					
+				<div class="description tw-p-6" v-html="product.description">
 				</div>
 				<!-- price -->
 				<div class="tw-mb-4">
@@ -44,17 +44,21 @@
 				</div>
 				<!-- action buttons -->
 					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
-						<QBtn
-							label="Ver Planes"							
-							text-color="black"							
+						<q-btn
+							label="Ver Planes"
+							text-color="black"
 							no-caps
+
+							class="tw-w-1/2 tw-justify-center tw-text-black"
 						/>
 						<q-btn
 							label="Añadir"
 							text-color="black"
 							color="amber"
 							no-caps
-							icon="fa-solid fa-cart-shopping"							
+							icon="o_shopping_cart"
+							unelevated
+							class="tw-w-1/2 tw-justify-center tw-text-black"
 						/>
 					</div>
 			</q-card>
@@ -83,19 +87,15 @@ import apiRoutes from '../../config/apiRoutes'
 		await getProducts()
 	}
 
-
-
 	async function getProducts(){
-		console.time('products')
 		const params = {
 			take: 10,
 			page: 1,
-			order: sort.value.value, 
+			order: sort.value.value,
 			include: 'relatedProducts,categories,category,parent,manufacturer'
 		}
 		baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
-			console.timeEnd('products')
 		})
 	}
 
