@@ -1,16 +1,18 @@
 <template>
-      <q-layout view="hHh lpR fFf">
-		<div class="tw-m-8">
-			<cartComponent />
-		</div>
-
-		
-			<q-page-container>					
-					<slot />					
-			</q-page-container>    
-    </q-layout>  
+    <q-layout view="hHh lpR fFf" @scroll="handleScroll">
+			<q-page-container>
+          <HeaderApp :scroll-position="scrollPosition" />
+					<slot />
+			</q-page-container>
+    </q-layout>
 </template>
 <script setup>
- import cartComponent from '../modules/icommerce/components/cart'
+import { ref } from 'vue';
+import HeaderApp from '../modules/icommerce/components/header/index.vue';
 
+const scrollPosition = ref(null);
+
+function handleScroll(position) {
+  scrollPosition.value = position;
+}
 </script>
