@@ -16,7 +16,9 @@
       <div class="tw-flex tw-items-center tw-space-x-4">
         Login
       </div>
-      <cartComponent />
+      <cartComponent 
+        :color="isScrolled ? 'white' : 'black'"
+      />
 
     </div>
   </header>

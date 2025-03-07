@@ -17,7 +17,7 @@
 			</div>
 		</div>
 		<!-- products list -->
-		 cache {{ cartState.length }}
+
   	<div class="
 			tw-grid
 			tw-grid-cols-1
@@ -26,7 +26,10 @@
 			xl:tw-grid-cols-4
 			tw-gap-4"
 		>
-			<q-card v-for="product in products" class="product q-pa-md">
+			<q-card v-for="(product, index) in products" class="product q-pa-md">
+			<div>
+				{{  product.quantity }}
+			</div>
 				<div>
 					<span class="tw-text-[12] tw-font-[700]" style="color: #888888">{{ product.name }}</span>
 				</div>
@@ -59,14 +62,15 @@
 							class="tw-w-1/2 tw-justify-center"
 						/>
 						<q-btn
-							label="Añadir"
+							:label="productLabel"
 							text-color="black"
 							color="amber"
 							no-caps
 							icon="o_shopping_cart"
 							unelevated
 							class="tw-w-1/2 tw-justify-center"
-							@click="addTocart(product)"
+							:disable="disableButton(index)"
+							@click="addTocart(index)"
 						/>
 					</div>
 			</q-card>
@@ -77,12 +81,14 @@
 import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 
+import pages from '../../config/pages'
 
-  const cartStore = useCartStore()
-
-
+const settings = {
+	redirectToCheckOut: true
+}
+	const router = useRouter()
 	const products = ref([])
-	const cartState = useStorage('cart', {products: cartStore.products})
+	const cartState = useStorage('cart', {products: []})
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
 	const sort = ref([])
@@ -95,6 +101,15 @@ import { useStorage } from '@vueuse/core'
 			name: 'Z-A',
 			value: 'asc'
 		}]
+
+	//peding to check on cart..
+	const productLabel = computed(() => settings.redirectToCheckOut ? 'Comprar'	: 'Añadir')
+
+	function disableButton(index) {
+		return (!products.value[index].quantity != 0)
+	}
+
+
 
 	async function init(){
 		sort.value = sortOptions[0].value
@@ -110,15 +125,32 @@ import { useStorage } from '@vueuse/core'
 		}
 		baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
+
+			//add quantity
+			products.value.forEach((product) => {
+				if (product?.quantity) { product.quantity = 1 }
+			})
+
 		})
 	}
 
-	function addTocart(product){
-		cartStore.products.push(product)
-		cartState.value = cartStore.products
-		
+	function addTocart(index){
+		//cartStore.products.push(product)
+		const product = products.value[index]
 
-		
+		if(settings.redirectToCheckOut){
+			//reset cart
+			cartState.value = { products: [product] }
+			router.push({ path: '/commerce/checkout'})
+			return
+		} else {
+			if(product.quantity != 0){
+				product.quantity = (product.quantity - 1)
+				const cartProducts = cartState.value.products
+				cartProducts.push(product)
+				cartState.value = { products: cartProducts }
+			}
+		}
 	}
 
 	onMounted(async () => {
