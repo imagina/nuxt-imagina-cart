@@ -1,6 +1,14 @@
 <template>    
     <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center">
-        <div class="tw-flex tw-gap-3.5 md:tw-gap-[30px] 2xl:tw-w-[1680px] tw-px-3.5">
+        <div 
+            class="
+                tw-flex 
+                tw-gap-3.5 
+                md:tw-gap-[30px] 
+                tw-max-w-[1680px] 
+                tw-px-3.5
+            "
+        >
             <div>
                 <categoriesComponent />
             </div>
