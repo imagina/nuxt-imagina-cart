@@ -25,19 +25,16 @@
 			xl:tw-grid-cols-3
 			tw-gap-10"
 		>
-			<q-card 
-				v-for="(product, index) in products" 
+			<q-card
+				v-for="(product, index) in products"
 				class="
-					product 
-					tw-p-4 
+					product
+					tw-p-4
 					tw-rounded-2xl
 					tw-w-full
 					lg:tw-max-w-[390px]
 				"
 			>
-			<div>
-				{{  product.quantity }}
-			</div>
 				<div>
 					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.name }}</span>
 				</div>
@@ -69,7 +66,7 @@
 							no-caps
 							unelevated
 							class="
-								tw-w-2/3 
+								tw-w-2/3
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
@@ -84,7 +81,7 @@
 							icon="o_shopping_cart"
 							unelevated
 							class="
-								tw-w-2/3 
+								tw-w-2/3
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
