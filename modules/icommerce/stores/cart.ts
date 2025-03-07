@@ -1,9 +1,16 @@
 import { defineStore } from 'pinia'
+//import { useStorage } from '@vueuse/core'
 
-export const useCartStore = defineStore('cartStore', {  
+const storeName = 'cartStore'
+export const useCartStore = defineStore(storeName, {  
   state: () => ({
     products: []
   }),
-  actions: {    
+  actions: {
+    saveState(){
+        ///useStorage(storeName, this.state)
+
+
+    }
   }
 })

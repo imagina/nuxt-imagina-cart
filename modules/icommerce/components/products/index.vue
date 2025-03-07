@@ -16,8 +16,8 @@
 				/>
 			</div>
 		</div>
-
 		<!-- products list -->
+		 cache {{ cartState.length }}
   	<div class="
 			tw-grid
 			tw-grid-cols-1
@@ -75,12 +75,14 @@
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
-//import { useCartStore } from '../../stores/cart'
+import { useStorage } from '@vueuse/core'
+
 
   const cartStore = useCartStore()
 
 
 	const products = ref([])
+	const cartState = useStorage('cart', {products: cartStore.products})
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
 	const sort = ref([])
@@ -113,6 +115,10 @@ import apiRoutes from '../../config/apiRoutes'
 
 	function addTocart(product){
 		cartStore.products.push(product)
+		cartState.value = cartStore.products
+		
+
+		
 	}
 
 	onMounted(async () => {
