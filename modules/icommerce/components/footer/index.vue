@@ -133,16 +133,16 @@
                 tw-flex 
                 tw-w-[1110px]
                 tw-justify-between
-              tw-text-[#999999] 
+                tw-text-[#999999] 
                 tw-text-[13px] 
                 tw-my-3
             "
         >
-            <span class="tw-text-[##999999]">Nosotros</span>
-            <span class="tw-text-[##999999]">Términos y Condiciones</span>
-            <span class="tw-text-[##999999]">Área de clientes</span>
-            <span class="tw-text-[##999999]">Registro de dominio</span>
-            <span class="tw-text-[##999999]">Hosting</span>
+            <span>Nosotros</span>
+            <span>Términos y Condiciones</span>
+            <span>Área de clientes</span>
+            <span>Registro de dominio</span>
+            <span>Hosting</span>
         </div>
         <hr class="tw-w-full tw-border-[#797272B2]" />
         <span class="tw-text-[#999999] tw-text-[13px] tw-py-3.5">
