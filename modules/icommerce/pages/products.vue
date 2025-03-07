@@ -36,12 +36,14 @@
                 </div>
             </div>
         </div>
+        <Footer />
     </div>
 
 </template>
 <script setup lang="ts">
 import productsComponent from '../components/products';
 import categoriesComponent from '../components/categories';
+import Footer from '../components/footer';
 
 const router = ref(useRouter())
 </script>
