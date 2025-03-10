@@ -46,7 +46,15 @@
 						<img src="../../assets/img/cP_white.png" />
 					</div>
 				</div>
-				<div class="description tw-p-6" v-html="product.description">
+				<div 
+					class="
+						description
+						tw-p-6
+						tw-h-[300px]
+						tw-overflow-y-auto
+					"
+					v-html="product.description"
+				>
 				</div>
 				<!-- price -->
 				<div class="tw-mb-4">
@@ -97,8 +105,6 @@
 
 import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
-
-import pages from '../../config/pages'
 
 const settings = {
 	redirectToCheckOut: true
@@ -158,7 +164,7 @@ const settings = {
 		if(settings.redirectToCheckOut){
 			//reset cart
 			cartState.value = { products: [product] }
-			router.push({ path: '/commerce/checkout'})
+			router.push({ path: getPath('icommerce.checkout')})
 			return
 		} else {
 			if(product.quantity != 0){

@@ -1,4 +1,5 @@
 <template>
+    <client-only>
         <div class="tw-flex">
 
             <div v-for="product in cartState.products" >
@@ -11,6 +12,7 @@
             </div>
 
         </div>
+    </client-only>
 
 </template>
 <script setup>
@@ -25,7 +27,7 @@ function removeProduct(product){
     cartState.value = {products: products}
 
     if(cartState.value.products.length == 0){
-        router.push({ path: '/commerce/products'})
+        router.push({ path: getPath('icommerce.products') })
     }
 }
 
