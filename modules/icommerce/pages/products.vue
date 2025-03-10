@@ -1,5 +1,6 @@
 <template>    
     <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center">
+        <breadcrumbs />
         <div 
             class="
                 tw-flex 
@@ -43,6 +44,7 @@
 <script setup lang="ts">
 import productsComponent from '../components/products';
 import categoriesComponent from '../components/categories';
+import breadcrumbs from '../components/breadcrumbs';
 import Footer from '../components/footer';
 
 const router = ref(useRouter())
