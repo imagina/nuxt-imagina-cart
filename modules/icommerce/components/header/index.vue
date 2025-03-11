@@ -210,13 +210,13 @@ const navItems = ref([
       },
     ]
   },
-  { label: 'Dominios', to: '/contacto' },
-  { label: 'Seguridad', to: '/contacto' },
-  { label: 'Soluciones Web', to: '/contacto' },
-  { label: 'Diseño', to: '/contacto' },
-  { label: 'Contacto', to: '/contacto' },
-  { label: 'Clientes', to: '/contacto' },
-  { label: 'Blog', to: '/contacto' },
+  { label: 'Dominios', to: '/' },
+  { label: 'Seguridad', to: '/' },
+  { label: 'Soluciones Web', to: '/' },
+  { label: 'Diseño', to: '/' },
+  { label: '', to: '/' },
+  { label: 'Clientes', to: '/' },
+  { label: 'Blog', to: '/' },
 ])
 </script>
 <style>

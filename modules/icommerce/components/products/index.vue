@@ -1,22 +1,22 @@
 <template>
-		<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8">
-			<div class="tw-flex items-center">
-				<p>{{ products.length }} Artículos</p>
-			</div>
-			<div class="tw-flex items-center">
-				Ordenar&nbsp;&nbsp;
-				<q-select
-					borderless
-					v-model="sort"
-					:options="sortOptions"
-					option-value="value"
-					option-label="name"
-					class="tw-w-[160px]"
-					@update:model-value="getProducts()"
-				/>
-			</div>
+	<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8">
+		<div class="tw-flex items-center">
+			<p>{{ products.length }} Artículos</p>
 		</div>
-		<!-- products list -->
+		<div class="tw-flex items-center">
+			Ordenar&nbsp;&nbsp;
+			<q-select
+				borderless
+				v-model="sort"
+				:options="sortOptions"
+				option-value="value"
+				option-label="name"
+				class="tw-w-[160px]"
+				@update:model-value="getProducts()"
+			/>
+		</div>
+	</div>
+	<!-- products list -->
 
   	<div class="
 			tw-grid
@@ -107,7 +107,7 @@ import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 
 const settings = {
-	redirectToCheckOut: true
+	redirectToCheckOut: false
 }
 	const router = useRouter()
 	const products = ref([])

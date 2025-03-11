@@ -1,6 +1,5 @@
 <template>    
-    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center">
-        <breadcrumbs />
+    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
         <div 
             class="
                 tw-flex 
@@ -11,7 +10,7 @@
             "
         >
             <div>
-                <categoriesComponent />
+                <CategoriesComponent />
             </div>
             <div>
                 <div>
@@ -33,19 +32,17 @@
                 </div>
                 <hr  class="tw-my-6" />
                 <div class="">
-                    <productsComponent/>
+                    <ProductsComponent/>
                 </div>
             </div>
         </div>
-        <Footer />
     </div>
 
 </template>
 <script setup lang="ts">
-import productsComponent from '../components/products';
-import categoriesComponent from '../components/categories';
-import breadcrumbs from '../components/breadcrumbs';
-import Footer from '../components/footer';
+import ProductsComponent from '../components/products';
+import CategoriesComponent from '../components/categories';
 
-const router = ref(useRouter())
+
+
 </script>
