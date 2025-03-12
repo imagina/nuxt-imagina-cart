@@ -36,6 +36,9 @@
 				"
 			>
 				<div>
+					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.category.id }}</span>
+				</div>
+				<div>
 					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.name }}</span>
 				</div>
 				<div class="tw-flex tw-justify-between tw-align-middle">
@@ -141,7 +144,7 @@ const settings = {
 
 	async function getProducts(){
 		const params = {
-			take: 10,
+			take: 40,
 			page: 1,
 			order: sort.value.value,
 			include: 'relatedProducts,categories,category,parent,manufacturer'

@@ -61,7 +61,7 @@
         </div>
         <div class="tw-pl-4">
           <NuxtLink 
-            to="/commerce/store"
+            :to="getPath('icommerce.products')"
             class="
               tw-text-[15px]
               tw-cursor-pointer

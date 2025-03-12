@@ -52,7 +52,7 @@ async function init(){
 async function getCategories(){
 
 	const params = {
-		take: 60,
+		take: 20,
 		page: 1,
 		//order: sort.value, 
 		//include: 'relatedProducts,categories,category,parent,manufacturer'
