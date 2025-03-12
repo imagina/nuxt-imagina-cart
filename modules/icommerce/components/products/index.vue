@@ -34,10 +34,11 @@
 					tw-w-full
 					lg:tw-max-w-[390px]
 				"
-			>				
+			>
 				<div>
 					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.name }}</span>
 				</div>
+
 				<div class="tw-flex tw-justify-between tw-align-middle">
 					<div>
 						<span class="tw-text-[40px] tw-font-semibold">16GB</span>
@@ -46,7 +47,7 @@
 						<img src="../../assets/img/cP_white.png" />
 					</div>
 				</div>
-				<div 
+				<div
 					class="
 						description
 						tw-p-6
@@ -98,6 +99,14 @@
 							@click="addTocart(index)"
 						/>
 					</div>
+
+					<dev-only>
+						<div class="tw-overflow-auto tw-w-[400px] tw-h-[60px]">
+							<pre>{{ JSON.stringify(product?.optionsPivot.length, null, 2) }}</pre>
+						</div>
+					</dev-only>
+
+
 			</q-card>
 		</div>
   </template>
@@ -107,7 +116,7 @@ import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 
 const settings = {
-	redirectToCheckOut: true
+	redirectToCheckOut: false
 }
 	const router = useRouter()
 	const products = ref([])
