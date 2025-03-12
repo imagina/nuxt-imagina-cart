@@ -5,6 +5,8 @@
         <div class="">
           <span>{{ product.name }}</span>
         </div>
+        <div v-html="product.description">
+        </div>
         <div class="">
           <q-btn      
             icon="fa-solid fa-trash"
@@ -15,6 +17,7 @@
             @click="$emit('removeProduct', product)"
           />
         </div>
+        <pre lang="json">{{ product }}</pre>
       </div>
     </q-card>
 

@@ -34,10 +34,7 @@
 					tw-w-full
 					lg:tw-max-w-[390px]
 				"
-			>
-				<div>
-					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.category.id }}</span>
-				</div>
+			>				
 				<div>
 					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.name }}</span>
 				</div>
@@ -72,7 +69,7 @@
 				<!-- action buttons -->
 					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
 						<q-btn
-							label="Ver Planes"
+							label="Ver Plan"
 							text-color="black"
 							no-caps
 							unelevated
@@ -110,7 +107,7 @@ import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 
 const settings = {
-	redirectToCheckOut: false
+	redirectToCheckOut: true
 }
 	const router = useRouter()
 	const products = ref([])
@@ -147,7 +144,7 @@ const settings = {
 			take: 40,
 			page: 1,
 			order: sort.value.value,
-			include: 'relatedProducts,categories,category,parent,manufacturer'
+			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
 		baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
