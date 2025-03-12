@@ -6,8 +6,7 @@
 			icon="o_shopping_cart"
 			:text-color="color"
 			@mouseover="isHovered = true"
-  		@mouseleave="isHovered = false"
-
+  			@mouseleave="isHovered = false"
 		>
 			<q-badge
 				v-if="cartState.products.length"
