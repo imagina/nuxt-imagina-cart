@@ -116,7 +116,7 @@ import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 
 const settings = {
-	redirectToCheckOut: false
+	justOneProdcut: true //one product and redirects to checkout
 }
 	const router = useRouter()
 	const products = ref([])
@@ -135,7 +135,7 @@ const settings = {
 		}]
 
 	//peding to check on cart..
-	const productLabel = computed(() => settings.redirectToCheckOut ? 'Comprar'	: 'Añadir')
+	const productLabel = computed(() => settings.justOneProdcut ? 'Comprar'	: 'Añadir')
 
 	function disableButton(index) {
 		return (!products.value[index].quantity != 0)
@@ -170,7 +170,7 @@ const settings = {
 		//cartStore.products.push(product)
 		const product = products.value[index]
 
-		if(settings.redirectToCheckOut){
+		if(settings.justOneProdcut){
 			//reset cart
 			cartState.value = { products: [product] }
 			router.push({ path: getPath('icommerce.checkout')})
