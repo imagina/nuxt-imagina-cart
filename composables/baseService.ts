@@ -1,5 +1,12 @@
 const baseService = {
 
+	config(){
+		const config = useRuntimeConfig()
+		return {
+			api: config.public.api, 
+		}
+	},
+
 	/**
    * Get items by params
    * @param configName
@@ -8,6 +15,7 @@ const baseService = {
    */
 	index(configName, params = {}) {
 		return new Promise((resolve, reject) => {
+
 			if (!configName) return reject('Config name is required') //Validate config name
 
 			if(!params?.page) params.page = 1
@@ -29,7 +37,7 @@ const baseService = {
 				
 			}			
 			
-			const api = params?.api ? params.api : `${config.apiUrl}${configName}`
+			const api = params?.api ? params.api : `${baseService.config().api}${configName}`
 
 			$fetch('/api/base', {
 				method: 'GET',

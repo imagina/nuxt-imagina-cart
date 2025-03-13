@@ -116,7 +116,7 @@ import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 
 const settings = {
-	justOneProdcut: true //one product and redirects to checkout
+	justOneProdcut: false //one product and redirects to checkout
 }
 	const router = useRouter()
 	const products = ref([])

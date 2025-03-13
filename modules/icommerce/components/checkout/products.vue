@@ -26,15 +26,17 @@
       <div class="tw-flex tw-justify-between tw-gap-5">
         <section>
           <q-select 
-            v-if="showFrencuency(product)"
+            v-if="hasFrencuency(product) && product?.frecuency"
             v-model="product.frecuency"
             :options="getFrecuencyOptions(product)"
+            @update:model-value="calcSubtotal()"
             option-value="value"
             option-label="label"
             outlined
             class="tw-w-52 tw-mb-1 tw-rounded-lg"
             input-class="tw-w-52 tw-mb-1 tw-rounded-lg"            
             label="Periodo" 
+
           />
           <span class="tw-text-xs tw-text-[#818181]">
             Renuevas a $00.000/mes el 00/00/000. ¡Cancela cuando quieras!
@@ -61,7 +63,7 @@
             <span class="tw-text-lg tw-font-semibold">$000.000 COP</span>
           </div>
           <div class="tw-w-fit tw-px-4 tw-py-1.5 tw-rounded-full tw-border tw-border-[#00000033]">
-            <span class="tw-text-lg tw-font-semibold">${{ showPrice(product) }} {{ currency}}/mes</span>
+            <span class="tw-text-lg tw-font-semibold">${{ getPrice(product) }} {{ currency}}/mes</span>
           </div>
         </section>
       </div>
@@ -84,12 +86,12 @@ const props = defineProps({
     required: false
   }
 });
-const emits = defineEmits(['removeProduct'])
 
+const emits = defineEmits(['removeProduct', 'subtotal'])
 
 const frecuencyId = 1 //frecuency option
 const checkoutProducts = ref()
-
+const subtotal = ref(0)
 
 onMounted(() => {
   init()
@@ -102,30 +104,38 @@ watch(
   },
 )
 
-
-
 function init(){
   configProducts()
 }
 
 function configProducts(){
   checkoutProducts.value = props.products
-
   checkoutProducts.value.forEach((product) =>{
-    if(showFrencuency(product)){
-      product.frecuency = getFrecuencyOptions(product)[0] || null
+    if(hasFrencuency(product)){
+      const options = getFrecuencyOptions(product)
+      if(options.length) {
+        product.frecuency = options[0]
+      }      
     }
   })
-
+  calcSubtotal()
 }
 
-function showFrencuency(product){
+function hasFrencuency(product){
   return product?.optionsPivot.length || false
 }
 
-function showPrice(product){
-  return showFrencuency(product) ? product.frecuency.value : product.price
+function getPrice(product){
+  return hasFrencuency(product) && product?.frecuency ? product.frecuency.value : product.price
+}
 
+function calcSubtotal(){
+  subtotal.value = 0;
+  checkoutProducts.value.forEach(product => {
+    const price  = product.frecuency ? product.frecuency.value : product.price
+    subtotal.value = subtotal.value + price
+  });
+  emits('subtotal', subtotal.value)
 }
 
 function getFrecuencyOptions(product){
@@ -133,7 +143,7 @@ function getFrecuencyOptions(product){
 
   const options = option?.productOptionValues.filter((item) => item.optionId == frecuencyId && item.price > 1).map((item) =>  {
     return { label: item.optionValue, value: item.price, id: item.id }
-  }) 
+  }) || []
 
   return options
 }
