@@ -53,9 +53,7 @@ async function register() {
           <q-form @submit.prevent.stop="register" ref="refRegister">
             <div class="tw-flex">
               <div class="tw-basis-1/2 tw-pr-2">
-                <q-input
-                  filled
-                  dark
+                <q-input                  
                   rounded
                   class="tw-mb-3"
                   v-model="auth.firstName"
@@ -70,9 +68,7 @@ async function register() {
                 />
               </div>
               <div class="tw-basis-1/2 tw-pl-2">
-                <q-input
-                  filled
-                  dark
+                <q-input                  
                   rounded
                   class="tw-mb-3"
                   v-model="auth.lastName"
@@ -88,8 +84,6 @@ async function register() {
               </div>
             </div>
             <q-input
-              filled
-              dark
               rounded
               class="tw-mb-3"
               v-model="auth.email"
@@ -102,13 +96,8 @@ async function register() {
                   'Por favor introduzca un correo valido',
               ]"
             >
-              <template v-slot:prepend>
-                
-              </template>
             </q-input>
             <q-input
-              filled
-              dark
               rounded
               class="tw-mb-2"
               v-model="auth.password"
@@ -117,9 +106,6 @@ async function register() {
               :rules="PasswordValidator.rules"
               :type="isPwd ? 'password' : 'text'"
             >
-              <template v-slot:prepend>
-                
-              </template>
               <template v-slot:append>
                 <q-icon
                   :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -138,10 +124,7 @@ async function register() {
               lazy-rules
               :rules="PasswordValidator.rules"
               :type="isPwd ? 'password' : 'text'"
-            >
-              <template v-slot:prepend>
-                
-              </template>
+            >              
               <template v-slot:append>
                 <q-icon
                   :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -152,11 +135,11 @@ async function register() {
             </q-input>
             <div class="tw-mb-6">
               <label class="tw-flex tw-items-center">
-                <Checkbox
+                <q-checkout
                   class="tw-bg-input !tw-border-input"
                   v-model:checked="auth.agreement"
-                ></Checkbox>
-                <span class="tw-text-white tw-ml-2">
+                ></q-checkout>
+                <span class="tw-ml-2">
                   <!-- <i18n-t keypath="auth.register.inputs.termsAndCond.content">
                     <template #highlight1>
                       <NuxtLink
@@ -196,7 +179,7 @@ async function register() {
               </label>
             </div>
             <transition name="hero">
-              <Button
+              <q-btn
                 :disabled="
                   loading ||
                   !auth.agreement ||
@@ -208,7 +191,7 @@ async function register() {
                 <span class="tw-ml-3">
                   {{ Helper.tLang('auth.register.submitBtn') }}
                 </span>
-              </Button>
+              </q-btn>
             </transition>
           </q-form>
           <p

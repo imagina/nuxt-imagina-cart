@@ -4,6 +4,7 @@ export default class PasswordValidator {
   //     this.greeting = t("greeting");
   //   }
   static rules = [
+    /*
     (val: string) => !!val || 'Contraseña es requerida',
     (val: string) => val.length >= 8 || 'Debe de tener al menos 8 caracteres',
     (val: string) =>
@@ -13,6 +14,7 @@ export default class PasswordValidator {
     (val: string) => /\d/.test(val) || 'Debe contener al menos un número',
     (val: string) =>
       /[\W_]/.test(val) || 'Debe contener al menos un carácter especial',
+    */
   ]
 
   static is_password_valid(password: string) {

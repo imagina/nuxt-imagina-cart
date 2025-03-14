@@ -3,8 +3,7 @@ import { reactive, ref } from 'vue'
 
 
 definePageMeta({
-  // middleware: 'auth',
-  //layout: 'dark-bg',
+  // middleware: 'auth',  //layout: '-bg',
 })
 const refReset: any = ref(null)
 const isPwd = ref(true)
@@ -48,8 +47,7 @@ async function reset() {
             <div class="">
               <q-form @submit.prevent.stop="reset" ref="refReset">
                 <q-input
-                  filled
-                  dark
+                  filled                  
                   class="tw-mb-3"
                   v-model="auth.username"
                   :label="Helper.tLang('auth.register.inputs.email')"

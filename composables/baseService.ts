@@ -3,7 +3,7 @@ const baseService = {
 	config(){
 		const config = useRuntimeConfig()
 		return {
-			api: config.public.api, 
+			apiRoute: `${config.public.apiRoute}/api`, 
 		}
 	},
 
@@ -37,7 +37,7 @@ const baseService = {
 				
 			}			
 			
-			const api = params?.api ? params.api : `${baseService.config().api}${configName}`
+			const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
 
 			$fetch('/api/base', {
 				method: 'GET',

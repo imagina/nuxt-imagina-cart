@@ -38,10 +38,7 @@ async function login() {
 
 <template>
   <div class="lg:tw-w-1/2 xl:tw-w-5/12 tw-p-6 sm:tw-p-12">
-    <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">
-      <NuxtLink to="/">
-        
-      </NuxtLink>
+    <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">      
       <h1
         class="tw-text-[35px] xl:tw-text-[50px] tw-font-extralight tw-text-white tw-mb-4"
       >
@@ -102,7 +99,7 @@ async function login() {
             </div>
             <div class="tw-flex tw-justify-center tw-mb-6">
               <SocialAuthGoogle />
-              <!-- <SocialAuthFacebook /> -->
+              <SocialAuthFacebook />
             </div>
             <transition name="hero">
               <q-btn

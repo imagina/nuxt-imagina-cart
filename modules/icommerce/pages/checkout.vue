@@ -1,6 +1,13 @@
 <template>    
 	<div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
 		<div class="tw-grid tw-grid-cols-1">
+			<div>
+				logged : 
+				<span v-if="authStore.isLogged()">
+					 {{ authStore?.user?.fullName }}
+					
+				</span>
+			</div>
 			<div class="tw-flex">
 					<div>
 							<!--title -->
@@ -97,7 +104,14 @@
 									tw-font-bold
 									tw-rounded-lg
 								"							
-								@click="() => {}"
+								@click="() => {
+									router.push({ 
+										path: '/auth/login', 
+										query: {
+											redirectUrl: 'icommerce.checkout'
+										}
+									})
+								}"
 							/>
 						</div>
 					</div>
@@ -109,6 +123,8 @@
 <script setup>
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/checkout/products.vue'
+
+const authStore = useAuthStore()
 
 const cartState = useStorage('cart', {products: []})
 const router = useRouter()

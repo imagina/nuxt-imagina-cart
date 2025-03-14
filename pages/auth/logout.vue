@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue'
 
 const store = useAuthStore()
 definePageMeta({
-  middleware: 'auth',
+  //middleware: 'auth',
 })
 
 onMounted(() => {
