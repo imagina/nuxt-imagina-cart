@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { MailIcon, KeySquareIcon } from 'lucide-vue-next'
 import PasswordValidator from '@/utils/validators/passwordValidator'
 
 definePageMeta({
-  layout: 'dark-bg',
+  //layout: 'dark-bg',
 })
 const refReset: any = ref(null)
 const isPwd = ref(true)
@@ -65,9 +64,8 @@ async function reset() {
           <div class="tw-w-full tw-flex-1">
             <div class="">
               <q-form @submit.prevent.stop="reset" ref="refReset">
-                <InputCPA
-                  filled
-                  dark
+                <q-input
+                  filled                 
                   class="tw-mb-2"
                   v-model="auth.password"
                   :label="Helper.tLang('auth.login.inputs.password')"
@@ -76,7 +74,7 @@ async function reset() {
                   :type="isPwd ? 'password' : 'text'"
                 >
                   <template v-slot:prepend>
-                    <KeySquareIcon class="!tw-text-primary" />
+                    
                   </template>
                   <template v-slot:append>
                     <q-icon
@@ -85,8 +83,8 @@ async function reset() {
                       @click="isPwd = !isPwd"
                     />
                   </template>
-                </InputCPA>
-                <InputCPA
+                </q-input>
+                <q-input
                   filled
                   dark
                   class="tw-mb-2"
@@ -100,7 +98,7 @@ async function reset() {
                   :type="isPwd ? 'password' : 'text'"
                 >
                   <template v-slot:prepend>
-                    <KeySquareIcon class="!tw-text-primary" />
+                    
                   </template>
                   <template v-slot:append>
                     <q-icon
@@ -109,9 +107,9 @@ async function reset() {
                       @click="isPwd = !isPwd"
                     />
                   </template>
-                </InputCPA>
+                </q-input>
                 <transition name="hero">
-                  <Button
+                  <q-btn
                     :disabled="isEmpty || isDiferent"
                     type="submit"
                     class="hero tw-mt-5 tw-tracking-wide tw-font-semibold tw-bg-indigo-500 tw-text-gray-100 tw-w-full tw-py-4 tw-rounded-lg tw-hover:bg-indigo-700 tw-transition-all tw-duration-300 tw-ease-in-out tw-flex tw-items-center tw-justify-center"
@@ -119,7 +117,7 @@ async function reset() {
                     <span class="tw-ml-3">
                       {{ Helper.tLang('auth.reset.submitBtn') }}
                     </span>
-                  </Button>
+                  </q-btn>
                 </transition>
               </q-form>
               <p

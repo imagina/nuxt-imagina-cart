@@ -53,7 +53,7 @@ async function register() {
           <q-form @submit.prevent.stop="register" ref="refRegister">
             <div class="tw-flex">
               <div class="tw-basis-1/2 tw-pr-2">
-                <InputCPA
+                <q-input
                   filled
                   dark
                   rounded
@@ -70,7 +70,7 @@ async function register() {
                 />
               </div>
               <div class="tw-basis-1/2 tw-pl-2">
-                <InputCPA
+                <q-input
                   filled
                   dark
                   rounded
@@ -87,7 +87,7 @@ async function register() {
                 />
               </div>
             </div>
-            <InputCPA
+            <q-input
               filled
               dark
               rounded
@@ -105,8 +105,8 @@ async function register() {
               <template v-slot:prepend>
                 
               </template>
-            </InputCPA>
-            <InputCPA
+            </q-input>
+            <q-input
               filled
               dark
               rounded
@@ -127,8 +127,8 @@ async function register() {
                   @click="isPwd = !isPwd"
                 />
               </template>
-            </InputCPA>
-            <InputCPA
+            </q-input>
+            <q-input
               filled
               dark
               rounded
@@ -149,7 +149,7 @@ async function register() {
                   @click="isPwd = !isPwd"
                 />
               </template>
-            </InputCPA>
+            </q-input>
             <div class="tw-mb-6">
               <label class="tw-flex tw-items-center">
                 <Checkbox

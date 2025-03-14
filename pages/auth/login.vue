@@ -53,9 +53,8 @@ async function login() {
       <div class="tw-w-full tw-flex-1">
         <div class="">
           <q-form @submit.prevent.stop="login" ref="refLogin">
-            <InputCPA
-              filled
-              dark
+            <q-input
+              filled              
               rounded
               class="tw-mb-3"
               v-model="auth.username"
@@ -66,14 +65,10 @@ async function login() {
                 (val) =>
                   /.+@.+\..+/.test(val) || 'Por favor ingrese un correo válido',
               ]"
-            >
-              <template v-slot:prepend>
-                
-              </template>
-            </InputCPA>
-            <InputCPA
-              filled
-              dark
+            >              
+            </q-input>
+            <q-input
+              filled              
               rounded
               class="tw-mb-2"
               v-model="auth.password"
@@ -82,9 +77,7 @@ async function login() {
               :rules="PasswordValidator.rules"
               :type="isPwd ? 'password' : 'text'"
             >
-              <template v-slot:prepend>
-                
-              </template>
+              
               <template v-slot:append>
                 <q-icon
                   :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -92,13 +85,13 @@ async function login() {
                   @click="isPwd = !isPwd"
                 />
               </template>
-            </InputCPA>
+            </q-input>
             <div class="tw-flex tw-justify-between tw-flex-row tw-mb-6">
               <label class="tw-flex tw-items-center">
-                <Checkbox
+                <q-checkbox
                   class="tw-bg-input !tw-border-input"
-                  v-model:checked="auth.remember_me"
-                ></Checkbox>
+                  v-model="auth.remember_me"
+                ></q-checkbox>
                 <span class="tw-text-white tw-ml-2">
                   {{ Helper.tLang('auth.login.inputs.rememberMe') }}
                 </span>
@@ -112,15 +105,14 @@ async function login() {
               <!-- <SocialAuthFacebook /> -->
             </div>
             <transition name="hero">
-              <Button
+              <q-btn
                 :disabled="loading"
-                type="submit"
-                class="hero tw-mt-5 tw-tracking-wide tw-font-semibold tw-bg-indigo-500 tw-text-gray-100 tw-w-full tw-py-4 tw-rounded-lg tw-hover:bg-indigo-700 tw-transition-all tw-duration-300 tw-ease-in-out tw-flex tw-items-center tw-justify-center"
+                type="submit"                
               >
                 <span class="tw-ml-3">
                   {{ Helper.tLang('auth.login.submitBtn') }}
                 </span>
-              </Button>
+              </q-btn>
             </transition>
           </q-form>
           <p

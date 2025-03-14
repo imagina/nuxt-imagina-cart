@@ -47,7 +47,7 @@ async function reset() {
           <div class="tw-w-full tw-flex-1">
             <div class="">
               <q-form @submit.prevent.stop="reset" ref="refReset">
-                <InputCPA
+                <q-input
                   filled
                   dark
                   class="tw-mb-3"
@@ -63,7 +63,7 @@ async function reset() {
                   <template v-slot:prepend>
                     
                   </template>
-                </InputCPA>
+                </q-input>
                 <transition name="hero">
                   <Button
                     :disabled="!auth.username"
