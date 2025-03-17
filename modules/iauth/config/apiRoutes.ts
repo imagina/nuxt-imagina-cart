@@ -4,25 +4,22 @@ const moduleVersion = 'v1';
 const urlBase = `/${moduleName}/${moduleVersion}`
 
 const apiRoutes = {
-	products: `${urlBase}/products`,
-	categories: `${urlBase}/categories`,
 
-	authLogin: '/profile/v1/auth/login',
-	authLogout: '/profile/v1/auth/logout',
-	authMe: '/profile/v1/auth/me',
-	authRegister: '/profile/v1/users/register',
-	authLoginSocialNetwork: '/profile/v1/auth/social',
-	authReset: '/profile/v1/auth/reset',
-	authResetComplete: '/profile/v1/auth/reset-complete',
-	changePassword: `/profile/v1/users/change-password`,
+	authLogin: `${urlBase}/auth/login`,
+	authLogout: `${urlBase}/auth/logout`,
+	authMe: `${urlBase}/auth/me`,
+	authRegister: `${urlBase}/users/register`,
+	authLoginSocialNetwork: `${urlBase}/auth/social`,
+	authReset: `${urlBase}/auth/reset`,
+	authResetComplete: `${urlBase}/auth/reset-complete`,
+	changePassword: `${urlBase}/users/change-password`,
 	
 	/* settings */
-	settings: '/isite/v1/site/settings',
-	profileUsers: '/profile/v1/users',
-	profileSkills: '/profile/v1/skills',
-	profileInformation: '/profile/v1/information',
-
-
+	settings: `/isite/v1/site/settings`,
+	
+	profileUsers: `${urlBase}/users`,
+	profileSkills: `${urlBase}/skills`,
+	profileInformation: `${urlBase}/information`,
 
 }
 
