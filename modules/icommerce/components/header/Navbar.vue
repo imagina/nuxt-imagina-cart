@@ -79,7 +79,7 @@ async function executeAction(action) {
   </div>
 </template>
 <style scoped>
-::v-deep .q-btn .q-icon {
+:deep(.q-btn .q-icon) {
   font-size: 11px;
 }
 </style>

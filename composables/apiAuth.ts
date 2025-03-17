@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/useAuth'
+import { useAuthStore } from '../modules/iauth/stores/useAuth'
 /*
  Adds the Authorization token in evey api call
 */
@@ -7,7 +7,7 @@ export const apiCluster = {
     const authStore = useAuthStore()
     const token = authStore.getToken
     const config = useRuntimeConfig()
-    const url = config.public.apiRoute
+    const url = `${config.public.apiRoute}/api`
     const headers: HeadersInit = {
       ...{
         'Content-Type': 'application/json',

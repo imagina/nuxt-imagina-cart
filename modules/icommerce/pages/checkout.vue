@@ -104,14 +104,7 @@
 									tw-font-bold
 									tw-rounded-lg
 								"							
-								@click="() => {
-									router.push({ 
-										path: '/auth/login', 
-										query: {
-											redirectUrl: 'icommerce.checkout'
-										}
-									})
-								}"
+								@click="redirectToLogin()"
 							/>
 						</div>
 					</div>
@@ -153,6 +146,16 @@ function removeProduct(product){
     if(cartState.value.products.length == 0){
        // router.push({ path: getPath('icommerce.products') })
     }
+}
+
+function redirectToLogin(){
+	const path = getPath('iauth.login')	
+	router.push({ 
+		path, 
+		query: {
+			redirectTo: 'icommerce.checkout'
+		}
+	})
 }
 
 </script>

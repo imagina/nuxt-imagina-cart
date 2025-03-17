@@ -6,23 +6,9 @@ import type { UserData, UserSkill } from '~/models/interfaces/user'
 import type { ProjectTag } from '~/models/interfaces/projects'
 import { User } from '~/models/UserData'
 
-const apiRoutes = {
-  /* auth */
-  authLogin: '/api/profile/v1/auth/login',
-  authLogout: '/api/profile/v1/auth/logout',
-  authMe: '/api/profile/v1/auth/me',
-  authRegister: '/api/profile/v1/users/register',
-  authLoginSocialNetwork: '/api/profile/v1/auth/social',
-  authReset: '/api/profile/v1/auth/reset',
-  authResetComplete: '/api/profile/v1/auth/reset-complete',
-  changePassword: `/api/profile/v1/users/change-password`,
-  /* settings */
-  settings: '/api/isite/v1/site/settings',
+import apiRoutes from '../config/apiRoutes'
 
-  profileUsers: '/api/profile/v1/users',
-  profileSkills: '/api/profile/v1/skills',
-  profileInformation: '/api/profile/v1/information',
-}
+
 
 const routes = {
   home: '/',
@@ -160,14 +146,12 @@ export const useAuthStore = defineStore('authStore', {
                 const router = useRouter()
                 const route = useRoute()
                 
-                if(route.query?.redirectUrl){                    
-                    console.log(route.query)
-                    const path = await getPath(route.query.redirectUrl)
+                if(route.query?.redirectTo){                    
+                    const path = await getPath(route.query.redirectTo)
                     router.push(path)
                 } else {
                   Helper.redirectTo(routes.home)
-                }
-              
+                }              
             }
           })
       } catch (error: any) {
