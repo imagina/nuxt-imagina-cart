@@ -12,7 +12,6 @@ import apiRoutes from '../config/apiRoutes'
 
 const routes = {
   home: '/',
-  login: '/auth/login',
 }
 
 export const useAuthStore = defineStore('authStore', {
@@ -61,7 +60,7 @@ export const useAuthStore = defineStore('authStore', {
     },
     getGoogleClientId(state) {
       return state.googleClientId
-    }    
+    }
   },
   actions: {
     async setToken(token: string, expiresIn: '') {
@@ -86,6 +85,17 @@ export const useAuthStore = defineStore('authStore', {
 
     isLogged(){
         return this.user && this.validateToken()
+    },
+
+    async redirectTo(path){
+      const router = useRouter()
+      const route = useRoute()
+      if(route.query?.redirectTo){
+          const path = await getPath(route.query.redirectTo)
+          router.push(path)
+      } else {
+        Helper.redirectTo(path)
+      }
     },
 
     /* Request login with Social Networks */
@@ -143,15 +153,7 @@ export const useAuthStore = defineStore('authStore', {
           .then(async (response: any) => {
             if (response?.data) {
               this.authSuccess(response.data)
-                const router = useRouter()
-                const route = useRoute()
-                
-                if(route.query?.redirectTo){                    
-                    const path = await getPath(route.query.redirectTo)
-                    router.push(path)
-                } else {
-                  Helper.redirectTo(routes.home)
-                }              
+              this.redirectTo(routes.home)
             }
           })
       } catch (error: any) {
@@ -171,7 +173,10 @@ export const useAuthStore = defineStore('authStore', {
       await apiCluster.get(apiRoutes.authLogout).then((response) => {
         this.clearToken()
       })
-      Helper.redirectTo(routes.login)
+
+      this.redirectTo(apiRoutes.login)
+
+
       Notify.create({
         message: 'Has cerrado sesión exitosamente. ¡Hasta pronto!',
         type: 'positive',
@@ -202,7 +207,7 @@ export const useAuthStore = defineStore('authStore', {
             this.username = dataForm.email
             this.password = dataForm.password
 
-            Helper.redirectTo(routes.login)
+            Helper.redirectTo(apiRoutes.login)
             Notify.create({
               message: '¡Usuario creado! Ahora puedes iniciar sesión.',
               type: 'positive',
@@ -235,7 +240,7 @@ export const useAuthStore = defineStore('authStore', {
       apiCluster
         .post(apiRoutes.changePassword, requestData, {}, false)
         .then((response) => {
-          Helper.redirectTo(routes.login)
+          Helper.redirectTo(apiRoutes.login)
           Notify.create({
             message: 'contraseña actualizada!',
             type: 'positive',
@@ -251,7 +256,6 @@ export const useAuthStore = defineStore('authStore', {
 
     /* reset password request */
     async refreshSession() {
-      console.log('refreshSession')
       try {
         if (!this.getToken) return
         const response: any = await apiCluster.get(apiRoutes.authMe)
@@ -288,7 +292,7 @@ export const useAuthStore = defineStore('authStore', {
       apiCluster
         .post(apiRoutes.authReset, { attributes: dataForm })
         .then((response) => {
-          Helper.redirectTo(routes.login)
+          Helper.redirectTo(apiRoutes.login)
           Notify.create({
             message: 'Revisa tu email para restablecer tu contraseña.',
             type: 'positive',
@@ -303,7 +307,7 @@ export const useAuthStore = defineStore('authStore', {
         })
     },
 
-    /* 
+    /*
       Change password from reset email url
     */
     async changedPasswordRequest(dataForm: {
@@ -323,7 +327,7 @@ export const useAuthStore = defineStore('authStore', {
       apiCluster
         .post(apiRoutes.authResetComplete, dataRequest)
         .then((response) => {
-          Helper.redirectTo(routes.login)
+          Helper.redirectTo(apiRoutes.login)
           Notify.create({
             message: 'Tu contraseña se actualizó correctamente.',
             type: 'positive',

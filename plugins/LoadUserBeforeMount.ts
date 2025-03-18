@@ -2,7 +2,6 @@ import { useAuthStore } from '../modules/iauth/stores/useAuth'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   if (process.client) {
-    console.log('plugin....')
     const userStore = useAuthStore(<any>nuxtApp.$pinia)
 
     // Carga los datos del usuario en el store de Pinia

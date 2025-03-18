@@ -1,66 +1,69 @@
-<template>    
+<template>
 	<div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
 		<div class="tw-grid tw-grid-cols-1">
-			<q-btn 
+			<q-btn
 						label="Back"
 						@click="redirectToCart()"
 					/>
-				<!-- logged -->			
-				<div v-if="authStore.isLogged()">					
-					 {{ user?.fullName }}					
+				<!-- logged -->
+
+				Datos del Cliente
+
+				<div v-if="authStore.isLogged()">
+						<q-btn
+							label="Cerrar sesion"
+							@click="redirectToLogout()"
+						/>
+				</div>
+				<div v-else>
+					<q-btn
+							label="Inicia sesion"
+							@click="redirectToLogin()"
+						/>
+				</div>
+
+
+
+
+
+					 {{ user?.fullName }}
 
 
 					 <q-input
-                  filled                 
-                  class="tw-mb-2"
                   v-model="form.firstName"
-                  label="Nombres"                  
+                  label="Nombres"
 						/>
 
 
 						<q-input
-                  filled                 
+
                   class="tw-mb-2"
                   v-model="form.lastName"
-                  label="Nombres"                  
+                  label="Apellidos"
 						/>
 
 
 						<q-input
-                  filled                 
+
                   class="tw-mb-2"
                   v-model="form.identification"
-                  label="Nombres"                  
+                  label="Identificacion"
 						/>
 
 
 
-				</div>
-				<!-- not logged -->
-				<div v-else>		
-
-					<div>						
-						Datos del Cliente
-						<q-btn
-						label="Inicia sesion"
-						@click="redirectToLogin()"
-					/>
 
 
-					</div>
-					
-					
-
-					
-					
 
 
-				</div>
-				
-			
+
+
+
+
+
 
 		</div>
-		
+
 	</div>
 </template>
 <script setup>
@@ -76,7 +79,7 @@ const user = computed(() => authStore.user)
 const form = ref({})
 
 const currencies = [
-    { value:'COP',  label:'Colombian peso', symbol: '$' }, 
+    { value:'COP',  label:'Colombian peso', symbol: '$' },
     { value: 'USD', label: 'United States dollar', symbol: '$'}
 ];
 
@@ -88,42 +91,50 @@ onMounted(() => {
     init()
 })
 
-watch(
-  () => authStore.user,
-  (newQuery, oldQuery) => {
-    setFormData()
-  },
-)
-
 function init(){
-	//setFormData()
+	setFormData()
 }
 
 function setFormData(){
-	console.log('hello')
-	form.value = {
-		firstName: user.firstName,
-		lastName: user.lastName,
-		identification: getField('identification') 
+
+	if(authStore.isLogged()){
+			form.value = {
+				firstName: user.value.firstName,
+				lastName: user.value.lastName,
+				identification: getField('identification')
+			}
 	}
+
+
 }
 
-function redirectToCart(){	
-	router.push({ 
-		path: getPath('icommerce.cart') 		
+function redirectToCart(){
+	router.push({
+		path: getPath('icommerce.cart')
 	})
 }
  function getField(name){
-	return user.fields.find((field) => field.name == 'name').value || false
+	const field = user.value.fields.find((field) => field.name == name)
+	if(field) return field.value
+	return false
  }
 
 function redirectToLogin(){
-	const path = getPath('iauth.login')	
-	router.push({ 
-		path, 
+	const path = getPath('iauth.login')
+	router.push({
+		path,
 		query: {
-			redirectTo: 'icommerce.checkout', 
-			step: 2
+			redirectTo: 'icommerce.checkout',
+		}
+	})
+}
+
+function redirectToLogout(){
+	const path = getPath('iauth.logout')
+	router.push({
+		path,
+		query: {
+			redirectTo: 'icommerce.checkout',
 		}
 	})
 }
