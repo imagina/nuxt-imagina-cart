@@ -40,6 +40,8 @@ const pages = [
     },
   },
 
+	/*
+
 	{
     name: 'iauth.resetPasswordComplete',
     path: '/auth/resetPasswordComplete/[id]/[token]',
@@ -49,6 +51,7 @@ const pages = [
       title: 'iauth.cms.sidebar.resetPasswordComplete',
     },
   }
+		*/
 ]
 
 

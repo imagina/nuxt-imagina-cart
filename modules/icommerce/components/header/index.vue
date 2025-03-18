@@ -43,12 +43,9 @@
             'hover:tw-text-[#DC3545]': !isScrolled,
             'hover:tw-text-[#F9BA48]': isScrolled
           }"
-        >
-          <span class="tw-text-xs">
-            Regístrate
-          </span>
+        > 
           <q-btn-dropdown 
-            label="Entrar"
+            :label="user ? user.fullName: 'Inicia sesión o regístrate'"
             flat
             no-caps
             padding="0"
@@ -57,6 +54,7 @@
               dropdown-sign-in
               tw-text-[15px]
             "
+
           />
         </div>
         <div class="tw-pl-4">
@@ -88,6 +86,10 @@ import Navbar from './Navbar.vue'
 import cartComponent from '../cart'
 import whiteLogo from '../../assets/img/white-logo-imagina.png'
 import redLogo from '../../assets/img/red-logo-imagina.png'
+
+const authStore = useAuthStore()
+
+const user = computed(() => authStore.user)
 
 const props = defineProps({
   scrollPosition: Object

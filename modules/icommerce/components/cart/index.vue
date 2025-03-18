@@ -1,5 +1,5 @@
 <template>
-	<NuxtLink to="/commerce/checkout">
+	<NuxtLink :to="path">
 		<q-btn
 			unelevated
 			round
@@ -28,9 +28,8 @@ const props = defineProps({
 });
 
 const cartState = useStorage('cart', {products: []})
-
-
 const isHovered = ref(false);
+const path = getPath('icommerce.cart')
 
 
 </script>

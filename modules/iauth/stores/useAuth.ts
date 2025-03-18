@@ -251,6 +251,7 @@ export const useAuthStore = defineStore('authStore', {
 
     /* reset password request */
     async refreshSession() {
+      console.log('refreshSession')
       try {
         if (!this.getToken) return
         const response: any = await apiCluster.get(apiRoutes.authMe)
