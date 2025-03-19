@@ -3,12 +3,12 @@ import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
 
 definePageMeta({
-  //layout: 'dark-bg',
+  //layout: '-bg',
 })
 
 const refRegister: any = ref(null)
 const isPwd = ref(true)
-const store = useAuthStore()
+const authStore = useAuthStore()
 
 const auth = reactive<{
   firstName: string
@@ -25,16 +25,24 @@ const auth = reactive<{
   passwordAgain: '',
   agreement: false,
 })
-const loading = computed(() => store.loading)
+const loading = computed(() => authStore.loading)
+
+onMounted(() => {
+  authStore.getCaptchaSettings()
+})
+
 async function register() {
   try {
     const validateRegister = await refRegister.value.validate()
     if (!validateRegister) return
-    await store.register(auth)
+    await authStore.register(auth)
   } catch (error) {
     console.log(error)
   }
 }
+
+
+
 </script>
 
 <template>
@@ -116,7 +124,7 @@ async function register() {
             </q-input>
             <q-input
               filled
-              dark
+              
               rounded
               class="tw-mb-2"
               v-model="auth.passwordAgain"
@@ -135,10 +143,9 @@ async function register() {
             </q-input>
             <div class="tw-mb-6">
               <label class="tw-flex tw-items-center">
-                <q-checkout
-                  class="tw-bg-input !tw-border-input"
-                  v-model:checked="auth.agreement"
-                ></q-checkout>
+                <q-checkbox
+                  v-model="auth.agreement"
+                />
                 <span class="tw-ml-2">
                   <!-- <i18n-t keypath="auth.register.inputs.termsAndCond.content">
                     <template #highlight1>
@@ -186,7 +193,7 @@ async function register() {
                   auth.password !== auth.passwordAgain
                 "
                 type="submit"
-                class="hero tw-mt-5 tw-tracking-wide tw-font-semibold tw-bg-indigo-500 tw-text-gray-100 tw-w-full tw-py-4 tw-rounded-lg tw-hover:bg-indigo-700 tw-transition-all tw-duration-300 tw-ease-in-out tw-flex tw-items-center tw-justify-center"
+                class="tw-mt-5"
               >
                 <span class="tw-ml-3">
                   {{ Helper.tLang('auth.register.submitBtn') }}
@@ -195,7 +202,7 @@ async function register() {
             </transition>
           </q-form>
           <p
-            class="tw-mt-8 tw-text-sm tw-font-extralight tw-text-white tw-text-center"
+            class="tw-mt-8 tw-text-sm tw-font-extralight tw-text-center"
           >
             {{ Helper.tLang('auth.register.existAccount.content') }}
             <NuxtLink to="/auth/login" class="tw-text-primary tw-ml-1">
@@ -209,7 +216,4 @@ async function register() {
 </template>
 
 <style scoped>
-.hero {
-  view-transition-name: article-thumb;
-}
 </style>

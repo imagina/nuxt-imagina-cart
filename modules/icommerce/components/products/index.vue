@@ -120,7 +120,7 @@ const settings = {
 }
 	const router = useRouter()
 	const products = ref([])
-	const cartState = useStorage('cart', {products: []})
+	const cartState = useStorage('shoppingCart', {products: []})
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
 	const sort = ref([])

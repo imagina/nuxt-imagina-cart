@@ -27,7 +27,9 @@ const props = defineProps({
   color: String
 });
 
-const cartState = useStorage('cart', {products: []})
+const cartState = useStorage('shoppingCart', { 
+	products: [],
+})
 const isHovered = ref(false);
 const path = getPath('icommerce.cart')
 

@@ -10,7 +10,8 @@ export interface AuthState {
   expiresIn: Date | null
   loading: boolean
   facebookClientId: any
-  googleClientId: any
+  googleClientId: any, 
+  settings: any
 }
 export interface ProjectsState {
   projects: Project[]

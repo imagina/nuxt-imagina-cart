@@ -89,11 +89,11 @@ async function login() {
                   class="tw-bg-input !tw-border-input"
                   v-model="auth.remember_me"
                 ></q-checkbox>
-                <span class="tw-text-white tw-ml-2">
+                <span class="tw-ml-2">
                   {{ Helper.tLang('auth.login.inputs.rememberMe') }}
                 </span>
               </label>
-              <NuxtLink to="/auth/resetPassword" class="tw-text-primary">
+              <NuxtLink :to="getPath('iauth.resetPassword')" class="tw-text-primary">
                 {{ Helper.tLang('auth.login.forgotPassword') }}
               </NuxtLink>
             </div>
@@ -113,10 +113,10 @@ async function login() {
             </transition>
           </q-form>
           <p
-            class="tw-mt-8 tw-text-sm tw-font-extralight tw-text-white tw-text-center"
+            class="tw-mt-8 tw-text-sm tw-font-extralight tw-text-center"
           >
             {{ Helper.tLang('auth.login.withoutAccount.content') }}
-            <NuxtLink to="/auth/register" class="tw-text-primary tw-ml-1">
+            <NuxtLink :to="getPath('iauth.register')" class="tw-text-primary tw-ml-1">
               {{ Helper.tLang('auth.login.withoutAccount.link') }}
             </NuxtLink>
           </p>

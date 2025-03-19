@@ -43,9 +43,12 @@
             'hover:tw-text-[#DC3545]': !isScrolled,
             'hover:tw-text-[#F9BA48]': isScrolled
           }"
-        > 
+        >
+
+          <!-- loggin -->
           <q-btn-dropdown 
-            :label="user ? user.fullName: 'Inicia sesión o regístrate'"
+            v-if="authStore.isLogged()"
+            :label="user.fullName"
             flat
             no-caps
             padding="0"
@@ -54,8 +57,33 @@
               dropdown-sign-in
               tw-text-[15px]
             "
+          >
+            <q-list>
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-item-label>
+                    <NuxtLink           
+                      :to="{ path: getPath('iauth.logout'), query: {redirectTo: 'icommerce.products'} }"
+                      class="dropdown-sign-in tw-text-[15px]"
+                    >
+                    Cerrar sesion 
+                    </NuxtLink>                  
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
 
-          />
+
+          <NuxtLink
+            v-if="!authStore.isLogged()"
+            :to="{ path: getPath('iauth.login'), query: {redirectTo: 'icommerce.products'} }"
+            class="dropdown-sign-in tw-text-[15px]"
+          >
+            Inicia sesión o regístrate
+          </NuxtLink>
+          <!-- /loggin -->
+
         </div>
         <div class="tw-pl-4">
           <NuxtLink 

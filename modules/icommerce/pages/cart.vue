@@ -111,11 +111,11 @@
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
-import ProductsComponent from '../components/checkout/products.vue'
+import ProductsComponent from '../components/cart/products.vue'
 
 const authStore = useAuthStore()
 
-const cartState = useStorage('cart', {products: []})
+const cartState = useStorage('shoppingCart', {products: []})
 const router = useRouter()
 
 const subtotal = ref(0)

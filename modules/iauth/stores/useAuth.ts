@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('authStore', {
     loading: false,
     facebookClientId: null,
     googleClientId: null,
+    settings: null
   }),
   getters: {
     fullUser(state) {
@@ -342,37 +343,54 @@ export const useAuthStore = defineStore('authStore', {
     },
 
     /* site settings */
-    async getSettings(settings: string[]) {
+    async getSettings() {
       const config = useRuntimeConfig()
-
-      return await $fetch(`${config.public.apiRoute}${apiRoutes.settings}`, {
+      await $fetch(`${config.public.apiRoute}/api${apiRoutes.settings}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        /*
         params: {
           filter: {
             name: settings,
           },
         },
+        */
+      }).then(response => {          
+        this.settings = response?.data 
       })
     },
+
+    async getSetting(name){
+      const settings = this.settings.siteSettings || null
+
+     
+      if(!settings) return null
+      const setting = settings.find((item) => item.name == name)
+
+     
+      return setting && setting?.value ? setting.value : null
+    }, 
+
     /* facebook settings */
     async getFacebookSettings() {
-      await this.getSettings(['isite::facebookClientId']).then(
-        (response: any) => {
-          if (response?.data) {
-            this.facebookClientId = response.data['isite::facebookClientId']
-          }
-        },
-      )
+      this.facebookClientId = this.getSetting('isite::facebookClientId')
     },
     /* google settings */
     async getGoogleSettings() {
-      await this.getSettings(['isite::googleClientId']).then(
+      this.googleClientId = this.getSetting('isite::googleClientId')
+    },
+
+    /* captcha*/
+    async getCaptchaSettings(){
+      
+      const fields  = ['isite::reCaptchaV2Site', 'isite::reCaptchaV3Site', 'isite::activateCaptcha']
+      await this.getSettings(['isite::reCaptchaV3Site']).then(
         (response: any) => {
           if (response?.data) {
-            this.googleClientId = response.data['isite::googleClientId']
+            console.log(response.data)
+            //this.googleClientId = response.data['isite::googleClientId']
           }
         },
       )
