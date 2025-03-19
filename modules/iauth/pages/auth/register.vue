@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
+import captcha from '../../components/captcha.vue'
 
 definePageMeta({
   //layout: '-bg',
@@ -8,7 +9,7 @@ definePageMeta({
 
 const refRegister: any = ref(null)
 const isPwd = ref(true)
-const authStore = useAuthStore()
+const store = useAuthStore()
 
 const auth = reactive<{
   firstName: string
@@ -25,17 +26,17 @@ const auth = reactive<{
   passwordAgain: '',
   agreement: false,
 })
-const loading = computed(() => authStore.loading)
+const loading = false
 
 onMounted(() => {
-  authStore.getCaptchaSettings()
+  
 })
 
 async function register() {
   try {
     const validateRegister = await refRegister.value.validate()
     if (!validateRegister) return
-    await authStore.register(auth)
+    await store.register(auth)
   } catch (error) {
     console.log(error)
   }
@@ -200,6 +201,7 @@ async function register() {
                 </span>
               </q-btn>
             </transition>
+            <captcha class="col-12" ref="captcha"/>
           </q-form>
           <p
             class="tw-mt-8 tw-text-sm tw-font-extralight tw-text-center"

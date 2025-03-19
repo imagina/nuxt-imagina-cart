@@ -363,23 +363,20 @@ export const useAuthStore = defineStore('authStore', {
     },
 
     async getSetting(name){
-      const settings = this.settings.siteSettings || null
-
-     
+      const settings = this.settings.siteSettings || null     
       if(!settings) return null
       const setting = settings.find((item) => item.name == name)
-
-     
+      
       return setting && setting?.value ? setting.value : null
     }, 
 
     /* facebook settings */
     async getFacebookSettings() {
-      this.facebookClientId = this.getSetting('isite::facebookClientId')
+      this.getSetting('isite::facebookClientId').then(response => this.facebookClientId = response)      
     },
     /* google settings */
-    async getGoogleSettings() {
-      this.googleClientId = this.getSetting('isite::googleClientId')
+    async getGoogleSettings() {     
+      this.getSetting('isite::googleClientId').then(response => this.googleClientId = response)
     },
 
     /* captcha*/

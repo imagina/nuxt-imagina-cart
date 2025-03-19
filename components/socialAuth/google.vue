@@ -10,21 +10,17 @@ const state = reactive({
   loading: false,
 })
 
-onMounted(async () => {
-  await store.getGoogleSettings()
-  if(clientIdGoogle){
-    await addCDN()
-  }  
+onMounted(() => {
+  store.getGoogleSettings().then(() => addCDN())
 })
 
 const clientIdGoogle = computed(() => store.getGoogleClientId)
 
-async function addCDN() {  
+async function addCDN() {
   let cdn = document.createElement('script') //create CDN google recaptcha
   cdn.setAttribute('src', 'https://accounts.google.com/gsi/client')
   cdn.onload = loadClientId() //callback when loaded cdn
   document.head.appendChild(cdn) //add to head
-  console.log(cdn)
 }
 
 //Load Client ID

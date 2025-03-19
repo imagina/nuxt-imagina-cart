@@ -11,11 +11,8 @@ const state = reactive({
   loading: false,
 })
 
-onMounted(async () => {
-  await store.getFacebookSettings() 
-  if(appIdFacebook){
-    await addCDN()
-  }
+onMounted(() => {
+  store.getFacebookSettings().then(() => addCDN())
 })
 
 const appIdFacebook = computed(() => store.getFacebookClientId)
