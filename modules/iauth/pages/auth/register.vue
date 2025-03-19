@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
-import captcha from '../../components/captcha.vue'
+import captchaComponent from '../../components/bcaptcha'
+
+const authStore = useAuthStore()
 
 definePageMeta({
   //layout: '-bg',
 })
+
 
 const refRegister: any = ref(null)
 const isPwd = ref(true)
@@ -17,7 +20,9 @@ const auth = reactive<{
   email: string
   password: string
   passwordAgain: string
-  agreement: boolean
+  agreement: boolean, 
+  captcha: any
+  
 }>({
   firstName: '',
   lastName: '',
@@ -25,8 +30,14 @@ const auth = reactive<{
   password: '',
   passwordAgain: '',
   agreement: false,
+  captcha: null
+  
 })
 const loading = false
+
+
+
+const captchaRef = ref('captchaRef')
 
 onMounted(() => {
   
@@ -36,19 +47,35 @@ async function register() {
   try {
     const validateRegister = await refRegister.value.validate()
     if (!validateRegister) return
+    await getCaptcha()
+    console.log(auth)
     await store.register(auth)
   } catch (error) {
     console.log(error)
   }
 }
 
+  async function getCaptcha(){
+  
+  try {
+    await captchaRef.value.getToken().then((response) => {
+      console.log(response)
+      auth.captcha = response
+    })
+  } catch (error) {
+    console.error(error)
+  }
+ 
+}
 
 
 </script>
 
 <template>
   <div class="lg:tw-w-1/2 xl:tw-w-5/12 tw-p-6 sm:tw-p-12">
-    <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">
+    <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">      
+
+       auth {{ auth}}
       <NuxtLink to="/">
         
       </NuxtLink>
@@ -67,7 +94,7 @@ async function register() {
                   class="tw-mb-3"
                   v-model="auth.firstName"
                   :label="Helper.tLang('auth.register.inputs.firstName')"
-                  lazy-rules
+                  
                   :rules="[
                     (val) => !!val || 'Nombre es requerido.',
                     (val) =>
@@ -82,7 +109,7 @@ async function register() {
                   class="tw-mb-3"
                   v-model="auth.lastName"
                   :label="Helper.tLang('auth.register.inputs.lastName')"
-                  lazy-rules
+                  
                   :rules="[
                     (val) => !!val || 'Apellido es requerido.',
                     (val) =>
@@ -97,7 +124,7 @@ async function register() {
               class="tw-mb-3"
               v-model="auth.email"
               :label="Helper.tLang('auth.register.inputs.email')"
-              lazy-rules
+              
               :rules="[
                 (val) => !!val || 'Correo es requerido.',
                 (val) =>
@@ -111,7 +138,7 @@ async function register() {
               class="tw-mb-2"
               v-model="auth.password"
               :label="Helper.tLang('auth.register.inputs.password')"
-              lazy-rules
+              
               :rules="PasswordValidator.rules"
               :type="isPwd ? 'password' : 'text'"
             >
@@ -130,7 +157,7 @@ async function register() {
               class="tw-mb-2"
               v-model="auth.passwordAgain"
               :label="Helper.tLang('auth.register.inputs.passwordAgain')"
-              lazy-rules
+              
               :rules="PasswordValidator.rules"
               :type="isPwd ? 'password' : 'text'"
             >              
@@ -200,9 +227,14 @@ async function register() {
                   {{ Helper.tLang('auth.register.submitBtn') }}
                 </span>
               </q-btn>
-            </transition>
-            <captcha class="col-12" ref="captcha"/>
+            </transition>            
           </q-form>
+         <ClientOnly>
+            <captchaComponent
+              ref="captchaRef"
+            />
+          </ClientOnly>
+          
           <p
             class="tw-mt-8 tw-text-sm tw-font-extralight tw-text-center"
           >

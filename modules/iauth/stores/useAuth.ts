@@ -15,7 +15,7 @@ const routes = {
 }
 
 export const useAuthStore = defineStore('authStore', {
-  state: (): AuthState => ({
+  state: () => ({
     username: '',
     password: '',
     user: null,
@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('authStore', {
     loading: false,
     facebookClientId: null,
     googleClientId: null,
+    captcha: null,
     settings: null
   }),
   getters: {
@@ -363,7 +364,7 @@ export const useAuthStore = defineStore('authStore', {
     },
 
     async getSetting(name){
-      const settings = this.settings.siteSettings || null     
+      const settings = this.settings.siteSettings || null
       if(!settings) return null
       const setting = settings.find((item) => item.name == name)
       
@@ -383,14 +384,7 @@ export const useAuthStore = defineStore('authStore', {
     async getCaptchaSettings(){
       
       const fields  = ['isite::reCaptchaV2Site', 'isite::reCaptchaV3Site', 'isite::activateCaptcha']
-      await this.getSettings(['isite::reCaptchaV3Site']).then(
-        (response: any) => {
-          if (response?.data) {
-            console.log(response.data)
-            //this.googleClientId = response.data['isite::googleClientId']
-          }
-        },
-      )
+      
     },
 
     //user edit
