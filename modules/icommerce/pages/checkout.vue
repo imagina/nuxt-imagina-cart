@@ -1,142 +1,248 @@
-<template>    
+<template>
+	<ClientOnly>
 	<div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
 		<div class="tw-grid tw-grid-cols-1">
-			<div class="tw-flex">
-					<div>
-							<!--title -->
-							<div class="tw-flex tw-justify-between tw-items-center tw-mb-7">
-									<h1 class="tw-text-4xl tw-font-bold">Tu Carrito</h1>
-									<!-- currency -->
-									<div v-if="showCart">
-											<div class="tw-flex tw-items-center">
-
-													<span>Currency:&nbsp;</span>
-													<template v-for="currencyItem in currencies">                            
-															<q-radio v-model="currency" :val="currencyItem.value" :label="currencyItem.label" />
-													</template>
-											</div>
-									</div>
-							</div>
-							<!-- products -->
-							<div v-if="showCart">
-									<ProductsComponent 
-											:products="cartState.products"
-											:currency="currency"
-											@removeProduct="(product) => removeProduct(product)"
-											@subtotal="(val) => subtotal = val"
-									/>                            
-							</div>
-							<div v-else>
-								<div>
-									<span>Your car is empty</span>
-									<p>
-											Looks like you have not added anything to your cart. Go ahead & explore our products.
-									</p>																
-								</div>
+			<div class="tw-flex" v-if="products">	
+							
+				<div>
+					<q-btn
+						label="Back"
+						no-caps
+						@click="redirectToCart()"
+					/>			
+				
+					<!-- logged -->
+					<div v-if="false">
+						<div v-if="authStore.isLogged()">
 								<q-btn
-										label="Ir a tienda "
-										text-color="black"
-										color="amber"
-										no-caps							
-										unelevated
-										class="
-											tw-w-2/4
-											tw-justify-center
-											tw-font-bold
-											tw-rounded-lg
-											tw-mt-4											
-										"							
-										@click="() => {
-											router.push({ path: getPath('icommerce.products') })
-										}"
-									/>		
-							</div>
-					</div>
-					<div class="tw-mt-6 tw-p-6" v-if="showCart">
-						<div class="card tw-rounded-[20px] tw-px-5 tw-pt-7 tw-pb-5 tw-my-5">
-							<div class="tw-flex tw-justify-between tw-items-center">
-								<span
-									class="
-										tw-font-semibold 
-										tw-text-[22px] 
-										tw-m-0 
-										tw-p-0
-										tw-leading-5
-									"
-								>
-									subtotal
-								</span>
-								<span
-									class="											
-											tw-text-[20px] 
-											tw-m-0 
-											tw-p-0
-											tw-leading-5
-										">
-									{{  subtotal }} cop
-								</span>
+									label="Cerrar sesion"
+									no-caps
+									@click="redirectToLogout()"
+								/>
 						</div>
-
-						<div class="tw-flex tw-justify-between tw-items-center">
-							<span class="tw-text-xs tw-text-[#818181]">
-								el subtotal aun no incluye impuestos
-							</span>
-							<span>0cop</span>
-						</div>
-
-						<div class="tw-mt-4">
+						<div v-else>
 							<q-btn
-								label="Continuar"
-								text-color="black"
-								color="amber"
-								no-caps							
-								unelevated
-								class="
-									tw-w-full
-									tw-justify-center
-									tw-font-bold
-									tw-rounded-lg
-								"							
-								@click="() => {}"
-							/>
+									label="Inicia sesion"
+									no-caps
+									@click="redirectToLogin()"
+								/>
 						</div>
 					</div>
+
+					<!-- user data -->					
+					
+						<div>
+							<h2>Datos del Cliente</h2>
+							<q-form @submit.prevent.stop="goToPayment" ref="refForm">
+								<q-input
+									v-model="form.email"
+									label="Email"
+								/>
+							<q-input
+									v-model="form.firstName"
+									label="Nombres"
+								/>
+								<q-input
+									class="tw-mb-2"
+									v-model="form.lastName"
+									label="Apellidos"
+								/>
+								<q-input
+									class="tw-mb-2"
+									v-model="form.identification"
+									label="Identificacion"
+									
+								/>
+								<q-input
+									class="tw-mb-2"
+									v-model="form.mobilePhone"
+									label="Phone"
+									type="tel"
+								/>
+								<q-input
+									class="tw-mb-2"
+									v-model="form.country"
+									label="Pais de residencia"
+								/>
+							<q-btn 
+								no-caps
+								label="Continuar"
+								type="submit"							
+							/>
+						</q-form>
+						</div>
+					
 				</div>
-			</div>            
-		</div>			
+				
+					<div>
+						<div class="tw-p-20">
+							<div v-for="product in products" class="tw-m-4">
+								{{ product.name }} 
+								<div>
+									<div v-if="productsHelper.hasFrencuency(product)">
+										{{ product.frecuency?.label }} 
+									</div>
+									<div>
+										Price: {{ productsHelper.getPrice(product) }}
+									</div>									
+								</div>
+							</div>
+							<hr />
+							${{ subTotal }}
+						</div>					
+					</div>
+				
+			</div>
+		</div>
 	</div>
+	</ClientOnly>
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
-import ProductsComponent from '../components/checkout/products.vue'
+import { useQuasar } from 'quasar'
+import productsHelper from '../helpers/products'
 
-const cartState = useStorage('cart', {products: []})
+
+const quasar = useQuasar()
+const authStore = useAuthStore()
+const cartState = useStorage('shoppingCart', {products: []})
+const form = useStorage('shoppingCheckoutForm', {
+	email: null, 
+	firstName: null, 
+	lastName: null, 
+	identification: null, 
+	mobilePhone: null,
+	country: null
+})
 const router = useRouter()
 
-const subtotal = ref(0)
+const refForm = ref(null)
 
-const currencies = [
-    { value:'COP',  label:'Colombian peso', symbol: '$' }, 
-    { value: 'USD', label: 'United States dollar', symbol: '$'}
-];
+const user = computed(() => authStore.user)
+const products = computed(() => cartState.value.products)
 
-const currency = ref(currencies[0].value)
+const subTotal	= computed(() => {
+	let value = 0;
+	if(!cartState?.value?.products.length) return value
 
-const showCart = computed(() => cartState.value?.products?.length ||  false)
+	cartState?.value?.products.forEach(product => {
+		const price  = productsHelper.getPrice(product)
+		value = value + price
+	});
+	return value  
+})
+
+watch(
+  () => cartState.value.products,
+  (newValue, oldValue) => {
+    if(!newValue.length) redirectToCart()
+  },
+)
+
+onBeforeMount(() => {
+	if(!cartState.value.products.length) redirectToCart() //empty cart 
+})
+
 
 onMounted(() => {
     init()
 })
 
-function init(){}
+function init(){	
+	setFormData()
+}
 
-function removeProduct(product){
-    const products = cartState.value.products.filter(obj => obj.id != product.id);
-    cartState.value = {products: products}
+function setFormData(){
+	if(authStore.isLogged()){
+		form.value = {
+			email: user.value.email,
+			firstName: user.value.firstName,
+			lastName: user.value.lastName,
+			identification: getField('identification'),
+			mobilePhone: getField('cellularPhone')
+		}
+	}
+}
 
-    if(cartState.value.products.length == 0){
-       // router.push({ path: getPath('icommerce.products') })
-    }
+function getField(name){
+	const field = user.value.fields.find((field) => field.name == name)
+	if(field) return field.value
+	return false
+}
+
+function redirectToCart(){
+	router.push({
+		path: getPath('icommerce.cart')
+	})
+} 
+
+function redirectToLogin(){
+	const path = getPath('iauth.login')
+	router.push({
+		path,
+		query: {
+			redirectTo: 'icommerce.checkout',
+		}
+	})
+}
+
+function redirectToLogout(){
+	const path = getPath('iauth.logout')
+	router.push({
+		path,
+		query: {
+			redirectTo: 'icommerce.checkout',
+		}
+	})
+}
+
+
+async function goToPayment(){
+	const postUrl  = 'https://clientes.imaginacolombia.com/newcartorder.php'
+
+	const validateRegister = await refForm.value.validate()
+	if (!validateRegister) return
+
+
+	quasar.loading.show({
+		message: 'We are procresing your order', 
+		//messageColor: 'black',
+		//backgroundColor: 'primary',
+	})
+
+	const order = {
+		user: {...form.value}, 
+		total: subTotal.value,
+
+		products: products.value.map((product) =>  { 
+			return { 
+				id: product.id,
+				//description: product.description,
+				name: product.name,
+				url: product.url,
+				discount: product.discount, 
+				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
+				price: productsHelper.getPrice(product)
+			}
+		})
+	}
+
+	console.log(JSON.stringify(order))	
+
+	const res = await $fetch(postUrl, {
+    method: 'POST',
+		body: JSON.stringify(order)		
+  	}).then((response) => {
+		console.log(response)
+		//WIP
+		window.location.replace('https://clientes.imaginacolombia.com');
+		cartState.value = { products: []}
+	})
+
+	
+
+
+	
 }
 
 </script>

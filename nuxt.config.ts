@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      api: process.env.api || ''
+      apiRoute: process.env.API_ROUTE || ''
     }
   },
   quasar: {

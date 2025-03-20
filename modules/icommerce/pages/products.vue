@@ -43,6 +43,4 @@
 import ProductsComponent from '../components/products';
 import CategoriesComponent from '../components/categories';
 
-
-
 </script>

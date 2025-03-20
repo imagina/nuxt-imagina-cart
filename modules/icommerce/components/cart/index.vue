@@ -1,5 +1,5 @@
 <template>
-	<NuxtLink to="/commerce/checkout">
+	<NuxtLink :to="path">
 		<q-btn
 			unelevated
 			round
@@ -8,14 +8,16 @@
 			@mouseover="isHovered = true"
   			@mouseleave="isHovered = false"
 		>
-			<q-badge
-				v-if="cartState.products.length"
-				floating
-				rounded
-				:class="{ 'hover-active': isHovered }"
-			>
-					{{ cartState.products.length }}
-			</q-badge>
+			<ClientOnly>
+				<q-badge
+					v-if="cartState?.products.length || false"
+					floating
+					rounded
+					:class="{ 'hover-active': isHovered }"
+				>
+						{{ cartState.products.length }}
+				</q-badge>
+			</ClientOnly>
 		</q-btn>
 	</NuxtLink>
 
@@ -27,10 +29,11 @@ const props = defineProps({
   color: String
 });
 
-const cartState = useStorage('cart', {products: []})
-
-
+const cartState = useStorage('shoppingCart', { 
+	products: [],
+})
 const isHovered = ref(false);
+const path = getPath('icommerce.cart')
 
 
 </script>
