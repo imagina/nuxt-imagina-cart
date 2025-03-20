@@ -112,13 +112,10 @@
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
 
-const authStore = useAuthStore()
-
 const cartState = useStorage('shoppingCart', {products: []})
 const router = useRouter()
 
 const subtotal = ref(0)
-const step = ref(0)
 
 const currencies = [
     { value:'COP',  label:'Colombian peso', symbol: '$' }, 
@@ -129,14 +126,6 @@ const currency = ref(currencies[0].value)
 
 const showCart = computed(() => cartState.value?.products?.length ||  false)
 
-onMounted(() => {
-    init()
-})
-
-function init(){
-	
-}
-
 function removeProduct(product){
     const products = cartState.value.products.filter(obj => obj.id != product.id);
     cartState.value = {products: products}
@@ -144,10 +133,6 @@ function removeProduct(product){
     if(cartState.value.products.length == 0){
        // router.push({ path: getPath('icommerce.products') })
     }
-}
-
-function setStep(value){	
-	step.value = value
 }
 
 function redirectCheckout(){	

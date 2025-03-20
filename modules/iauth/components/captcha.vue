@@ -58,7 +58,6 @@
             recaptcha.setAttribute('src', 'https://www.google.com/recaptcha/api.js' + cdnAttributes)
             recaptcha.onload = this.initCaptcha()//callback when loaded cdn
             document.head.appendChild(recaptcha)//add to head
-            console.log('loadCaptcha')
           } catch (e) {
             console.error(e)
           }

@@ -10,7 +10,7 @@
 		>
 			<ClientOnly>
 				<q-badge
-					v-if="cartState.products.length"
+					v-if="cartState?.products.length || false"
 					floating
 					rounded
 					:class="{ 'hover-active': isHovered }"

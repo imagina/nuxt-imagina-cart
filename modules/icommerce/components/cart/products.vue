@@ -26,9 +26,9 @@
       <div class="tw-flex tw-justify-between tw-gap-5">
         <section>
           <q-select 
-            v-if="hasFrencuency(product) && product?.frecuency"
+            v-if="productsHelper.hasFrencuency(product) && product?.frecuency"
             v-model="product.frecuency"
-            :options="getFrecuencyOptions(product)"
+            :options="productsHelper.getFrecuencyOptions(product, frecuencyId)"
             @update:model-value="calcSubtotal()"
             option-value="value"
             option-label="label"
@@ -63,7 +63,7 @@
             <span class="tw-text-lg tw-font-semibold">$000.000 COP</span>
           </div>
           <div class="tw-w-fit tw-px-4 tw-py-1.5 tw-rounded-full tw-border tw-border-[#00000033]">
-            <span class="tw-text-lg tw-font-semibold">${{ getPrice(product) }} {{ currency}}/mes</span>
+            <span class="tw-text-lg tw-font-semibold">${{ productsHelper.getPrice(product) }} {{ currency}}/mes</span>
           </div>
         </section>
       </div>
@@ -73,8 +73,7 @@
 
 <script lang="ts" setup>
 
-const model = ref('1 Mes')
-const options = ref(['1 Mes', '2 Meses', '3 Meses', '4 Meses', '5 Meses'])
+import productsHelper from '../../helpers/products.ts';
 
 const props = defineProps({
   products: {
@@ -89,7 +88,7 @@ const props = defineProps({
 
 const emits = defineEmits(['removeProduct', 'subtotal'])
 
-const frecuencyId = 1 //frecuency option
+const frecuencyId = 4 //frecuency option
 const checkoutProducts = ref()
 const subtotal = ref(0)
 
@@ -111,8 +110,8 @@ function init(){
 function configProducts(){
   checkoutProducts.value = props.products
   checkoutProducts.value.forEach((product) =>{
-    if(hasFrencuency(product)){
-      const options = getFrecuencyOptions(product)
+    if(productsHelper.hasFrencuency(product)){
+      const options = productsHelper.getFrecuencyOptions(product, frecuencyId)
       if(options.length) {
         product.frecuency = options[0]
       }      
@@ -121,31 +120,12 @@ function configProducts(){
   calcSubtotal()
 }
 
-function hasFrencuency(product){
-  return product?.optionsPivot.length || false
-}
-
-function getPrice(product){
-  return hasFrencuency(product) && product?.frecuency ? product.frecuency.value : product.price
-}
-
 function calcSubtotal(){
   subtotal.value = 0;
-  checkoutProducts.value.forEach(product => {
-    const price  = product.frecuency ? product.frecuency.value : product.price
-    subtotal.value = subtotal.value + price
+  checkoutProducts.value.forEach(product => {    
+    subtotal.value = subtotal.value + productsHelper.getPrice(product)
   });
   emits('subtotal', subtotal.value)
-}
-
-function getFrecuencyOptions(product){
-  const option = product.optionsPivot.find((item) => item.optionId == frecuencyId)
-
-  const options = option?.productOptionValues.filter((item) => item.optionId == frecuencyId && item.price > 1).map((item) =>  {
-    return { label: item.optionValue, value: item.price, id: item.id }
-  }) || []
-
-  return options
 }
 
 </script>

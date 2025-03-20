@@ -1,7 +1,8 @@
 <template>
+	<ClientOnly>
 	<div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
 		<div class="tw-grid tw-grid-cols-1">
-			<div class="tw-flex">	
+			<div class="tw-flex" v-if="products">	
 							
 				<div>
 					<q-btn
@@ -29,7 +30,7 @@
 					</div>
 
 					<!-- user data -->					
-					<ClientOnly>
+					
 						<div>
 							<h2>Datos del Cliente</h2>
 							<q-form @submit.prevent.stop="goToPayment" ref="refForm">
@@ -70,38 +71,40 @@
 							/>
 						</q-form>
 						</div>
-					</ClientOnly>	
+					
 				</div>
-				<ClientOnly>
+				
 					<div>
 						<div class="tw-p-20">
 							<div v-for="product in products" class="tw-m-4">
 								{{ product.name }} 
-								<p>									
-									<div v-if="hasFrencuency(product)">
+								<div>
+									<div v-if="productsHelper.hasFrencuency(product)">
 										{{ product.frecuency?.label }} 
 									</div>
 									<div>
-										Price: {{ getPrice(product) }}
-									</div>
-									
-								</p>
+										Price: {{ productsHelper.getPrice(product) }}
+									</div>									
+								</div>
 							</div>
 							<hr />
 							${{ subTotal }}
 						</div>					
 					</div>
-				</ClientOnly>															
+				
 			</div>
 		</div>
-
 	</div>
+	</ClientOnly>
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
+import { useQuasar } from 'quasar'
+import productsHelper from '../helpers/products'
 
+
+const quasar = useQuasar()
 const authStore = useAuthStore()
-
 const cartState = useStorage('shoppingCart', {products: []})
 const form = useStorage('shoppingCheckoutForm', {
 	email: null, 
@@ -118,18 +121,15 @@ const refForm = ref(null)
 const user = computed(() => authStore.user)
 const products = computed(() => cartState.value.products)
 
-
-
 const subTotal	= computed(() => {
 	let value = 0;
 	if(!cartState?.value?.products.length) return value
 
-  cartState?.value?.products.forEach(product => {
-    const price  = getPrice(product)
-    value = value + price
-  });
-	return value
-  
+	cartState?.value?.products.forEach(product => {
+		const price  = productsHelper.getPrice(product)
+		value = value + price
+	});
+	return value  
 })
 
 watch(
@@ -139,22 +139,17 @@ watch(
   },
 )
 
+onBeforeMount(() => {
+	if(!cartState.value.products.length) redirectToCart() //empty cart 
+})
 
 
 onMounted(() => {
     init()
 })
 
-function init(){
+function init(){	
 	setFormData()
-}
-
-function hasFrencuency(product){
-  return product?.optionsPivot.length || false
-}
-
-function getPrice(product){
-  return hasFrencuency(product) && product?.frecuency ? product.frecuency.value : product.price
 }
 
 function setFormData(){
@@ -201,10 +196,19 @@ function redirectToLogout(){
 	})
 }
 
+
 async function goToPayment(){
+	const postUrl  = 'https://clientes.imaginacolombia.com/newcartorder.php'
 
 	const validateRegister = await refForm.value.validate()
 	if (!validateRegister) return
+
+
+	quasar.loading.show({
+		message: 'We are procresing your order', 
+		//messageColor: 'black',
+		//backgroundColor: 'primary',
+	})
 
 	const order = {
 		user: {...form.value}, 
@@ -217,24 +221,25 @@ async function goToPayment(){
 				name: product.name,
 				url: product.url,
 				discount: product.discount, 
-				frecuency: hasFrencuency(product) ? product.frecuency : null,
-				price: getPrice(product)
+				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
+				price: productsHelper.getPrice(product)
 			}
 		})
 	}
 
 	console.log(JSON.stringify(order))	
-	return
-	
-	const url  = 'https://clientes.imaginacolombia.com/newcartorder.php'
-	const res = await $fetch(url, {
+
+	const res = await $fetch(postUrl, {
     method: 'POST',
 		body: JSON.stringify(order)		
   	}).then((response) => {
 		console.log(response)
+		//WIP
+		window.location.replace('https://clientes.imaginacolombia.com');
+		cartState.value = { products: []}
 	})
 
-	console.log(res)
+	
 
 
 	

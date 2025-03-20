@@ -32,14 +32,15 @@
 					tw-p-4
 					tw-rounded-2xl
 					tw-w-full
+					tw-h-[332px]
 					lg:tw-max-w-[390px]
 				"
 			>
 				<div>
-					<span class="tw-text-sm tw-font-bold" style="color: #888888">{{ product.name }}</span>
+					<span class="tw-text-lg tw-font-bold tw-line-clamp-1 tw-capitalize " style="color: #888888">{{ product.name.toLowerCase() }}</span>
 				</div>
 
-				<div class="tw-flex tw-justify-between tw-align-middle">
+				<div class="tw-flex tw-justify-between tw-align-middle" v-if="false">
 					<div>
 						<span class="tw-text-[40px] tw-font-semibold">16GB</span>
 					</div>
@@ -47,15 +48,19 @@
 						<img src="../../assets/img/cP_white.png" />
 					</div>
 				</div>
-				<div
-					class="
-						description
-						tw-p-6
-						tw-h-[300px]
-						tw-overflow-y-auto
-					"
-					v-html="product.description"
-				>
+				<div class="tw-h-[180px]">
+					<div
+						class="
+							description
+							tw-px-6
+							tw-pt-6
+							tw-h-[160px]
+							tw-overflow-y-auto
+						"
+						v-if="product?.description"
+						v-html="product?.description.toLowerCase()"
+					>
+					</div>
 				</div>
 				<!-- price -->
 				<div class="tw-mb-4">
@@ -99,14 +104,6 @@
 							@click="addTocart(index)"
 						/>
 					</div>
-
-					<dev-only>
-						<div class="tw-overflow-auto tw-w-[400px] tw-h-[60px]">
-							<pre>{{ JSON.stringify(product?.optionsPivot.length, null, 2) }}</pre>
-						</div>
-					</dev-only>
-
-
 			</q-card>
 		</div>
   </template>
@@ -114,6 +111,7 @@
 
 import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
+import productsHelper from '../helpers/products.ts'
 
 const settings = {
 	justOneProdcut: false //one product and redirects to checkout
@@ -145,7 +143,7 @@ const settings = {
 
 
 	async function init(){
-		sort.value = sortOptions[0].value
+		sort.value = sortOptions[0].value 
 		await getProducts()
 	}
 
@@ -171,14 +169,12 @@ const settings = {
 		//cartStore.products.push(product)
 		const product = products.value[index]
 
-		if(hasFrencuency(product)){
-      const options = getFrecuencyOptions(product)
+		if(productsHelper.hasFrencuency(product)){
+      const options = productsHelper.getFrecuencyOptions(product)
       if(options.length) {
         product.frecuency = options[0]
       }      
     }
-
-
 
 		if(settings.justOneProdcut){
 			//reset cart
@@ -193,21 +189,7 @@ const settings = {
 				cartState.value = { products: cartProducts }
 			}
 		}
-	}
-
-	function hasFrencuency(product){
-  	return product?.optionsPivot.length || false
-	}
-
-	function getFrecuencyOptions(product){
-		const option = product.optionsPivot.find((item) => item.optionId == frecuencyId)
-
-		const options = option?.productOptionValues.filter((item) => item.optionId == frecuencyId && item.price > 1).map((item) =>  {
-			return { label: item.optionValue, value: item.price, id: item.id }
-		}) || []
-
-		return options
-	}
+	}	
 
 	onMounted(async () => {
 		init();
