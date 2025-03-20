@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
-import captchaComponent from '../../components/bcaptcha'
+import captchaComponent from '../../components/captcha'
 
 const authStore = useAuthStore()
 

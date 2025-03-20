@@ -136,6 +136,7 @@ const settings = {
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? 'Comprar'	: 'Añadir')
+	const frecuencyId = 1 //frecuency option
 
 	function disableButton(index) {
 		return (!products.value[index].quantity != 0)
@@ -170,6 +171,15 @@ const settings = {
 		//cartStore.products.push(product)
 		const product = products.value[index]
 
+		if(hasFrencuency(product)){
+      const options = getFrecuencyOptions(product)
+      if(options.length) {
+        product.frecuency = options[0]
+      }      
+    }
+
+
+
 		if(settings.justOneProdcut){
 			//reset cart
 			cartState.value = { products: [product] }
@@ -183,6 +193,20 @@ const settings = {
 				cartState.value = { products: cartProducts }
 			}
 		}
+	}
+
+	function hasFrencuency(product){
+  	return product?.optionsPivot.length || false
+	}
+
+	function getFrecuencyOptions(product){
+		const option = product.optionsPivot.find((item) => item.optionId == frecuencyId)
+
+		const options = option?.productOptionValues.filter((item) => item.optionId == frecuencyId && item.price > 1).map((item) =>  {
+			return { label: item.optionValue, value: item.price, id: item.id }
+		}) || []
+
+		return options
 	}
 
 	onMounted(async () => {

@@ -8,14 +8,16 @@
 			@mouseover="isHovered = true"
   			@mouseleave="isHovered = false"
 		>
-			<q-badge
-				v-if="cartState.products.length"
-				floating
-				rounded
-				:class="{ 'hover-active': isHovered }"
-			>
-					{{ cartState.products.length }}
-			</q-badge>
+			<ClientOnly>
+				<q-badge
+					v-if="cartState.products.length"
+					floating
+					rounded
+					:class="{ 'hover-active': isHovered }"
+				>
+						{{ cartState.products.length }}
+				</q-badge>
+			</ClientOnly>
 		</q-btn>
 	</NuxtLink>
 
