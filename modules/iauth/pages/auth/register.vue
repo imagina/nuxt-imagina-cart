@@ -34,38 +34,27 @@ const auth = reactive<{
   
 })
 const loading = false
-
-
-
 const captchaRef = ref('captchaRef')
-
-onMounted(() => {
-  
-})
 
 async function register() {
   try {
     const validateRegister = await refRegister.value.validate()
     if (!validateRegister) return
-    await getCaptcha()
-    console.log(auth)
+    await getCaptcha()    
     await store.register(auth)
   } catch (error) {
     console.log(error)
   }
 }
 
-  async function getCaptcha(){
-  
+async function getCaptcha(){  
   try {
     await captchaRef.value.getToken().then((response) => {
-      console.log(response)
       auth.captcha = response
     })
   } catch (error) {
     console.error(error)
-  }
- 
+  } 
 }
 
 
@@ -73,12 +62,7 @@ async function register() {
 
 <template>
   <div class="lg:tw-w-1/2 xl:tw-w-5/12 tw-p-6 sm:tw-p-12">
-    <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">      
-
-       auth {{ auth}}
-      <NuxtLink to="/">
-        
-      </NuxtLink>
+    <div class="tw-mt-12 tw-flex tw-flex-col tw-items-center">
       <h1
         class="tw-text-[35px] xl:tw-text-[50px] tw-font-extralight tw-text-white tw-mb-4"
       >
