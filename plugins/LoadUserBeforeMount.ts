@@ -5,7 +5,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const userStore = useAuthStore(<any>nuxtApp.$pinia)
 
     // Carga los datos del usuario en el store de Pinia
-    await userStore.refreshSession()
+    
+    userStore.refreshSession()
     userStore.getSettings()
+    
   }
 })

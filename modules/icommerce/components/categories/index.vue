@@ -31,7 +31,6 @@
 
 import apiRoutes from '../../config/apiRoutes'
 
-
 const categories = ref([])
 const drawer = ref(false)
 const isMobile = ref(false)
@@ -42,30 +41,28 @@ function updateViewport() {
 	drawer.value = !isMobile.value
 }
 
+onBeforeMount(async () => {
+	await getCategories()
+})
+
 async function init(){
 	updateViewport()
-	window.addEventListener('resize', updateViewport)
-	await getCategories()
+	window.addEventListener('resize', updateViewport)	
 }
-
 
 async function getCategories(){
 
 	const params = {
 		take: 20,
 		page: 1,
-		//order: sort.value, 
-		//include: 'relatedProducts,categories,category,parent,manufacturer'
+		//order: sort.value,
 	}
+
 	baseService.index(apiRoutes.categories, params).then(response => {
 		let  data =  response?.data || []
-		
-		//data = data.filter(item => item?.showMenu)
-
 		categories.value = data.map((category) => {
 			return { label: category.title}
 		})
-
 	})
 }
 
@@ -80,6 +77,6 @@ onUnmounted(() => {
 </script>
 <style>
 .expand-icon > i {
-font-size: 15px !important; /* Cambia el tamaño del icono aquí */
+	font-size: 15px !important; /* Cambia el tamaño del icono aquí */
 }
 </style>

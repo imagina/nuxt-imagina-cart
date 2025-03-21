@@ -43,4 +43,13 @@
 import ProductsComponent from '../components/products';
 import CategoriesComponent from '../components/categories';
 
+useSeoMeta({
+  title: 'Products Site',
+  ogTitle: 'Products Site',
+  description: 'Products Site',
+  ogDescription: 'Products Site',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image',
+})
+
 </script>
