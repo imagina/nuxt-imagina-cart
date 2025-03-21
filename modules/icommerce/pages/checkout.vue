@@ -12,7 +12,7 @@
 					/>			
 				
 					<!-- logged -->
-					<div v-if="false">
+					<div>
 						<div v-if="authStore.isLogged()">
 								<q-btn
 									label="Cerrar sesion"
@@ -64,6 +64,31 @@
 									v-model="form.country"
 									label="Pais de residencia"
 								/>
+
+								<q-input
+									class="tw-mb-2"
+									v-model="form.adress"
+									label="Direccion"
+								/>
+
+								<q-input
+									class="tw-mb-2"
+									v-model="form.city"
+									label="Ciudad"
+								/>
+
+								<q-input
+									class="tw-mb-2"
+									v-model="form.region"
+									label="Region"
+								/>
+
+								<q-input
+									class="tw-mb-2"
+									v-model="form.zipCode"
+									label="Codigo postal"
+								/>
+
 							<q-btn 
 								no-caps
 								label="Continuar"
@@ -112,7 +137,11 @@ const form = useStorage('shoppingCheckoutForm', {
 	lastName: null, 
 	identification: null, 
 	mobilePhone: null,
-	country: null
+	country: null, 
+	address: null, 
+	city: null, 
+	region: null, 
+	zipCode: null
 })
 const router = useRouter()
 
