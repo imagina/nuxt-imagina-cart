@@ -29,6 +29,10 @@ module.exports = {
         "collapsible-down": "collapsible-down 0.2s ease-in-out",
         "collapsible-up": "collapsible-up 0.2s ease-in-out",
       },
+      colors :{
+        "primary": "#181818",
+        "secondary" : "#DC3545"
+      },
     },
   },
   plugins: [animate],
