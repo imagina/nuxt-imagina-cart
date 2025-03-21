@@ -69,7 +69,7 @@ async function getCaptcha() {
         >
           {{ Helper.tLang('auth.register.title') }}
         </h1>
-        <div class="tw-w-full tw-flex-1 shadow-5 tw-p-6 sm:tw-p-14 tw-rounded-3xl tw-animate-fade-in">
+        <div class="tw-w-full tw-flex-1 shadow-form 5 tw-p-6 sm:tw-p-14 tw-rounded-3xl tw-animate-fade-in">
           <div class="">
             <q-form @submit.prevent.stop="register" ref="refRegister">
               <div class="md:tw-flex tw-gap-4">
@@ -248,4 +248,7 @@ async function getCaptcha() {
 </template>
 
 <style scoped>
+.shadow-form{
+  box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);
+}
 </style>

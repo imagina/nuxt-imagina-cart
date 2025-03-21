@@ -48,7 +48,7 @@ async function login() {
         <p class="tw-text-primary tw-mb-7 md:tw-mb-14 tw-text-base md:tw-text-lg xl:tw-text-[20px] tw-font-extralight">
           {{ Helper.tLang('auth.login.subtitle') }}
         </p>
-        <div class="tw-w-full tw-flex-1 shadow-5 tw-p-6 sm:tw-p-14 tw-rounded-3xl tw-animate-fade-in">
+        <div class="tw-w-full tw-flex-1 shadow-form tw-p-6 sm:tw-p-14 tw-rounded-3xl tw-animate-fade-in">
           <div class="">
             <q-form @submit.prevent.stop="login" ref="refLogin">
               <q-input
@@ -151,5 +151,9 @@ async function login() {
 .hero-leave-to {
   transform: scale(0.5);
   opacity: 0;
+}
+
+.shadow-form{
+  box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);
 }
 </style>
