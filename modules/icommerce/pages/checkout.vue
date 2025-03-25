@@ -1,122 +1,181 @@
 <template>
 	<ClientOnly>
-	<div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
-		<div class="tw-grid tw-grid-cols-1">
-			<div class="tw-flex" v-if="products">	
-							
-				<div>
-					<q-btn
-						label="Back"
-						no-caps
-						@click="redirectToCart()"
-					/>			
-				
-					<!-- logged -->
-					<div>
-						<div v-if="authStore.isLogged()">
-								<q-btn
-									label="Cerrar sesion"
-									no-caps
-									@click="redirectToLogout()"
-								/>
-						</div>
-						<div v-else>
-							<q-btn
-									label="Inicia sesion"
-									no-caps
-									@click="redirectToLogin()"
-								/>
-						</div>
-					</div>
+	<div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-pt-6 md:tw-pt-10 lg:tw-pt-16 tw-pb-8 md:tw-pb-16 lg:tw-pb-24">
+		<div class="tw-container !tw-px-4 lg:pb-1">
+      <div class="tw-flex tw-justify-between tw-mb-5 md:tw-mb-8">
+        <q-btn
+            label="Back"
+            icon="chevron_left"
+            flat
+            rounded
+            color="#101923"
+            class="tw-font-bold tw-text-[16px] md:tw-text-[20px]"
+            no-caps
+            @click="redirectToCart()"
+        />
+        <!-- logged -->
+        <div>
+          <div v-if="authStore.isLogged()">
+            <q-btn
+                label="Cerrar sesion"
+                icon-right="logout"
+                flat
+                rounded
+                color="#101923"
+                class="tw-font-bold tw-text-[16px] md:tw-text-[20px]"
+                no-caps
+                @click="redirectToLogout()"
+            />
+          </div>
+          <div v-else>
+            <q-btn
+                label="Inicia sesion"
+                icon-right="person"
+                flat
+                rounded
+                color="#101923"
+                class="tw-font-bold tw-text-[16px] md:tw-text-[20px]"
+                no-caps
+                @click="redirectToLogin()"
+            />
+          </div>
+        </div>
+      </div>
+
+			<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-12 max-md:tw-place-items-center" v-if="products">
+
+				<div class="md:tw-col-span-8 md:!tw-pr-2 lg:tw-pr-5 tw-pb-8 sm:tw-pb-16 md:tw-pb-0 max-sm:tw-w-[95vw] max-md:tw-w-[85vw]">
 
 					<!-- user data -->					
 					
-						<div>
-							<h2>Datos del Cliente</h2>
-							<q-form @submit.prevent.stop="goToPayment" ref="refForm">
-								<q-input
-									v-model="form.email"
-									label="Email"
-								/>
+						<div class="shadow-card tw-rounded-3xl md:!tw-pt-8 tw-p-5">
+							<h2 class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
+                <span class="tw-rounded-full tw-border tw-border-gray-600 tw-h-7 tw-w-7 md:tw-h-10 md:tw-w-10 tw-flex tw-items-center tw-justify-center">1</span>
+                Datos del Cliente
+              </h2>
+							<q-form @submit.prevent.stop="goToPayment" ref="refForm" class="tw-grid lg:tw-grid-cols-2 tw-gap-y-5 lg:tw-gap-y-8 tw-gap-x-5">
 							<q-input
+                  class="rounded-lg"
 									v-model="form.firstName"
 									label="Nombres"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.lastName"
 									label="Apellidos"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.identification"
 									label="Identificacion"
+                  dense
+                  outlined
+                  label-color="#444"
 									
 								/>
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.mobilePhone"
 									label="Phone"
 									type="tel"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
+
+                <q-input
+                    dense
+                    outlined
+                    label-color="#444"
+                    v-model="form.email"
+                    label="Email"
+                />
+
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.country"
 									label="Pais de residencia"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.adress"
 									label="Direccion"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.city"
 									label="Ciudad"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.region"
 									label="Region"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 
 								<q-input
-									class="tw-mb-2"
+									class="rounded-lg"
 									v-model="form.zipCode"
 									label="Codigo postal"
+                  dense
+                  outlined
+                  label-color="#444"
 								/>
 
 							<q-btn 
 								no-caps
 								label="Continuar"
-								type="submit"							
-							/>
+								type="submit"
+                text-color="black"
+                color="amber"
+                unelevated
+                class="tw-font-bold tw-rounded-lg tw-capitalize tw-max-w-[160px] tw-text-[16px] lg:tw-text-[20px] tw-p-[8px 20px] lg:tw-p-[13px 30px]" />
 						</q-form>
 						</div>
 					
 				</div>
-				
-					<div>
-						<div class="tw-p-20">
-							<div v-for="product in products" class="tw-m-4">
-								{{ product.name }} 
+				<div class="md:tw-col-span-4 tw-pr-2 lg:tw-pl-5 max-sm:tw-w-[95vw] max-md:tw-w-[85vw]">
+						<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
+              <div v-for="product in products" class="tw-my-4 group/item">
+                <h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg tw-mb-1 group-hover/item:tw-text-secondary">
+                  {{ product.name }}
+                </h2>
 								<div>
-									<div v-if="productsHelper.hasFrencuency(product)">
+									<h4 v-if="productsHelper.hasFrencuency(product)" class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
 										{{ product.frecuency?.label }} 
-									</div>
-									<div>
+									</h4>
+									<h6 class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
 										Price: {{ productsHelper.getPrice(product) }}
-									</div>									
+									</h6>
 								</div>
 							</div>
-							<hr />
-							${{ subTotal }}
+							<hr class="tw-mb-5"/>
+              <strong class="tw-text-base lg:tw-text-lg !tw-text-[#444]">
+                ${{ subTotal }}
+              </strong>
 						</div>					
 					</div>
-				
+
 			</div>
 		</div>
 	</div>
@@ -275,3 +334,8 @@ async function goToPayment(){
 }
 
 </script>
+<style>
+.shadow-card{
+    box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);
+}
+</style>
