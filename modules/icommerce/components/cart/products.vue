@@ -28,15 +28,14 @@
           <q-select 
             v-if="productsHelper.hasFrencuency(product) && product?.frecuency"
             v-model="product.frecuency"
-            :options="productsHelper.getFrecuencyOptions(product, frecuencyId)"
+            :options="productsHelper.getFrecuencyOptions(product)"
             @update:model-value="calcSubtotal()"
             option-value="value"
             option-label="label"
             outlined
             class="tw-w-52 tw-mb-1 tw-rounded-lg"
             input-class="tw-w-52 tw-mb-1 tw-rounded-lg"            
-            label="Periodo" 
-
+            label="Periodo"
           />
           <span class="tw-text-xs tw-text-[#818181]">
             Renuevas a $00.000/mes el 00/00/000. ¡Cancela cuando quieras!
@@ -88,7 +87,7 @@ const props = defineProps({
 
 const emits = defineEmits(['removeProduct', 'subtotal'])
 
-const frecuencyId = 4 //frecuency option
+const frecuencyId = 1 //frecuency option
 const checkoutProducts = ref()
 const subtotal = ref(0)
 
@@ -111,7 +110,7 @@ function configProducts(){
   checkoutProducts.value = props.products
   checkoutProducts.value.forEach((product) =>{
     if(productsHelper.hasFrencuency(product)){
-      const options = productsHelper.getFrecuencyOptions(product, frecuencyId)
+      const options = productsHelper.getFrecuencyOptions(product)
       if(options.length) {
         product.frecuency = options[0]
       }      

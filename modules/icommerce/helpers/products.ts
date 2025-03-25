@@ -20,7 +20,15 @@ const helper = {
 	/**/
 	getPrice: (product) => {
 		return helper.hasFrencuency(product) && product?.frecuency ? product.frecuency.value : (product?.price || 0)
-	}
+	},
+
+	getCurrencies(){
+		return [
+			{ value:'COP',  label:'Colombian peso', symbol: '$' }, 
+			{ value: 'USD', label: 'United States dollar', symbol: '$'}
+		];
+	}, 
+	
 }
 
 

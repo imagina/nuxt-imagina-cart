@@ -344,23 +344,7 @@ export const useAuthStore = defineStore('authStore', {
     },
 
     /* site settings */
-    async getSettings() {
-      const config = useRuntimeConfig()
-      await $fetch(`${config.public.apiRoute}/api${apiRoutes.settings}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },        
-        params: {
-          filter: {
-            name: settings,
-          },
-        },
-        
-      }).then(response => {          
-        this.settings = response?.data 
-      })
-    },
+    
 
     async getSetting(name){
       const settings = this.settings.siteSettings || null
