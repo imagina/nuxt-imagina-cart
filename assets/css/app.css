@@ -1,0 +1,7 @@
+.q-field--outlined .q-field__control {
+    height: 40px;
+    padding: 0px 12px;
+    border-style: solid;
+    border-color: (229, 231 ,235);
+    border-radius: 8px;
+}
