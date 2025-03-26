@@ -11,9 +11,9 @@
 										<!-- currency -->
 										<div v-if="showCart">
 												<div class="tw-flex tw-items-center">
-														<span>Currency:&nbsp;</span>
+														<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
 														<template v-for="currencyItem in currencies">                            
-																<q-radio v-model="currency" :val="currencyItem.value" :label="currencyItem.label" />
+																<q-radio v-model="cartState.currency" :val="currencyItem.value" :label="currencyItem.label" />
 														</template>
 												</div>
 										</div>
@@ -22,7 +22,7 @@
 								<div v-if="showCart">
 										<ProductsComponent 
 												:products="cartState.products"
-												:currency="currency"
+												:currency="cartState.currency"
 												@removeProduct="(product) => removeProduct(product)"
 												@subtotal="(val) => subtotal = val"
 										/>                            
@@ -74,7 +74,7 @@
 												tw-p-0
 												tw-leading-5
 											">
-										{{  subtotal }} cop
+										{{  subtotal }} {{ cartState.currency }}
 									</span>
 							</div>
 
@@ -82,7 +82,7 @@
 								<span class="tw-text-xs tw-text-[#818181]">
 									el subtotal aun no incluye impuestos
 								</span>
-								<span>0cop</span>
+								<span>0 {{ cartState.currency }}</span>
 							</div>
 
 							<div class="tw-mt-4">
@@ -111,18 +111,17 @@
 <script setup>
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
+import productsHelper from '../helpers/products'
 
-const cartState = useStorage('shoppingCart', {products: []})
+const cartState = useStorage('shoppingCart', {
+	products: [],
+	currency: {}
+})
 const router = useRouter()
 
 const subtotal = ref(0)
 
-const currencies = [
-    { value:'COP',  label:'Colombian peso', symbol: '$' }, 
-    { value: 'USD', label: 'United States dollar', symbol: '$'}
-];
-
-const currency = ref(currencies[0].value)
+const currencies = productsHelper.getCurrencies()
 
 const showCart = computed(() => cartState.value?.products?.length ||  false)
 

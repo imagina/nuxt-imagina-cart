@@ -116,9 +116,12 @@ import productsHelper from '../helpers/products.ts'
 const settings = {
 	justOneProdcut: false //one product and redirects to checkout
 }
-	const router = useRouter()
-	const products = ref([])
-	const cartState = useStorage('shoppingCart', {products: []})
+const router = useRouter()
+const products = ref([])
+const cartState = useStorage('shoppingCart', {
+	products: [],
+	currency: {}
+})
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
 	

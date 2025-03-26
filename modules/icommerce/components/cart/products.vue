@@ -59,10 +59,10 @@
         <section class="tw-flex tw-items-start tw-gap-[30px] tw-text-[#444444]">
           <div class="tw-flex tw-flex-col">
             <span class="tw-text-[13px]">Tarifa de configuración:</span>
-            <span class="tw-text-lg tw-font-semibold">$000.000 COP</span>
+            <span class="tw-text-lg tw-font-semibold">$000.000 {{ currency }}</span>
           </div>
           <div class="tw-w-fit tw-px-4 tw-py-1.5 tw-rounded-full tw-border tw-border-[#00000033]">
-            <span class="tw-text-lg tw-font-semibold">${{ productsHelper.getPrice(product) }} {{ currency}}/mes</span>
+            <span class="tw-text-lg tw-font-semibold">${{ productsHelper.getPrice(product, currency) }} {{ currency}}</span>
           </div>
         </section>
       </div>
@@ -102,6 +102,13 @@ watch(
   },
 )
 
+watch(
+  () => props.currency,
+  (newQuery, oldQuery) => {
+    calcSubtotal()
+  },
+)
+
 function init(){
   configProducts()
 }
@@ -120,11 +127,8 @@ function configProducts(){
 }
 
 function calcSubtotal(){
-  subtotal.value = 0;
-  checkoutProducts.value.forEach(product => {    
-    subtotal.value = subtotal.value + productsHelper.getPrice(product)
-  });
-  emits('subtotal', subtotal.value)
+  const subtotal = productsHelper.getSubtotal(checkoutProducts.value, props.currency)  
+  emits('subtotal', subtotal)
 }
 
 </script>

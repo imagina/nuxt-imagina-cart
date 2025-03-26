@@ -105,7 +105,7 @@
 												</div>
 												<div>
 													<span class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-														usd {{ productsHelper.getPrice(product) }}
+														usd {{ productsHelper.getPrice(product, cartState.currency) }}
 													</span>
 												</div>
 											</div>
@@ -137,7 +137,10 @@ import productsHelper from '../helpers/products'
 
 const quasar = useQuasar()
 const authStore = useAuthStore()
-const cartState = useStorage('shoppingCart', { products: [] })
+const cartState = useStorage('shoppingCart', {
+	products: [],
+	currency: {}
+})
 
 const form = useStorage('shoppingCheckoutForm', {
 	email: null,
@@ -161,11 +164,7 @@ const products = computed(() => cartState.value.products)
 const subTotal = computed(() => {
 	let value = 0;
 	if (!cartState?.value?.products.length) return value
-
-	cartState?.value?.products.forEach(product => {
-		const price = productsHelper.getPrice(product)
-		value = value + price
-	});
+	value = productsHelper.getSubtotal(cartState?.value?.products, cartState.value.currency)  
 	return value
 })
 
@@ -259,7 +258,7 @@ async function goToPayment() {
 				url: product.url,
 				discount: product.discount,
 				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
-				price: productsHelper.getPrice(product)
+				price: productsHelper.getPrice(product, cartState.currency)
 			}
 		})
 	}
