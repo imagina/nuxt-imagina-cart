@@ -95,15 +95,19 @@
 											<span class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
 												{{ product.name }}
 											</span>
-											<div class="flex">
-												<h4 v-if="productsHelper.hasFrencuency(product)"
-												class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
-												{{ product.frecuency?.label }}
-											</h4>
-											<h6 class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-												usd {{ productsHelper.getPrice(product) }}
-											</h6>									
+											<div class="tw-flex tw-justify-between">
+												<div>
+													<span v-if="productsHelper.hasFrencuency(product)"
+														class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
+														{{ product.frecuency?.label }}
+													</span>
 
+												</div>
+												<div>
+													<span class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
+														usd {{ productsHelper.getPrice(product) }}
+													</span>
+												</div>
 											</div>
 											
 										</q-card-section>
