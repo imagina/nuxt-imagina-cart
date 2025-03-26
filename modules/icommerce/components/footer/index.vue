@@ -63,8 +63,7 @@
         </div>
         <div 
             class="
-                tw-flex 
-                tw-w-[1110px]
+                tw-flex
                 tw-text-base
                 tw-justify-between
                 tw-text-[#B4B4B4] 
@@ -131,7 +130,7 @@
         <div 
             class="
                 tw-flex 
-                tw-w-[1110px]
+                
                 tw-justify-between
                 tw-text-[#999999] 
                 tw-text-[13px] 

@@ -7,7 +7,7 @@
   >
     <div 
       class="
-        tw-max-w-[1680px]
+        
         tw-min-h-[60px] 
         tw-mx-auto 
         tw-px-4 
