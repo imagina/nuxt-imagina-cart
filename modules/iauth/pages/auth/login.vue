@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
+import logo from "assets/red-logo-imagina.png";
 
 const refLogin: any = ref(null)
 const isPwd = ref(true)
@@ -37,25 +38,27 @@ async function login() {
 </script>
 
 <template>
-  <div class="tw-max-w-[90vw] sm:tw-max-w-xl xl:tw-max-w-2xl tw-mx-auto tw-h-screen">
+  <div class="tw-max-w-[90vw] sm:tw-max-w-md tw-mx-auto tw-h-screen">
     <div class="tw-flex tw-items-center tw-justify-center tw-h-full">
       <div class="tw-flex tw-flex-col tw-items-center tw-w-full">
+        <div class="tw-mb-5">
+          <img :src="logo" :alt="logo" class="tw-h-12 tw-w-12 tw-object-contain">
+        </div>
         <h1
-            class="tw-text-3xl md:tw-text-[35px] xl:tw-text-[50px] tw-leading-none tw-font-medium tw tw-text-primary tw-capitalize tw-mb-2 lg:tw-mb-4"
+            class="tw-text-[18px] tw-leading-none tw-font-medium tw-text-slate-500 tw-mb-2"
         >
           {{ Helper.tLang('auth.login.title') }}
         </h1>
-        <p class="tw-text-primary tw-mb-7 md:tw-mb-14 tw-text-base md:tw-text-lg xl:tw-text-[20px] tw-font-extralight">
+        <p class="tw-text-slate-500 tw-mb-3 tw-text-sm tw-font-light">
           {{ Helper.tLang('auth.login.subtitle') }}
         </p>
-        <div class="tw-w-full tw-flex-1 shadow-form tw-p-6 sm:tw-p-14 tw-rounded-3xl tw-animate-fade-in">
+        <div class="tw-w-full tw-flex-1 tw-p-2 tw-animate-fade-in">
           <div class="">
             <q-form @submit.prevent.stop="login" ref="refLogin">
               <q-input
                   dense
-                  rounded
                   outlined
-                  class="tw-mb-0 lg:tw-mb-2"
+                  class="tw-mb-0"
                   v-model="auth.username"
                   :label="Helper.tLang('auth.login.inputs.email')"
                   lazy-rules
@@ -68,9 +71,8 @@ async function login() {
               </q-input>
               <q-input
                   dense
-                  rounded
                   outlined
-                  class="tw-mb-5 lg:tw-mb-10"
+                  class="tw-mb-3"
                   v-model="auth.password"
                   :label="Helper.tLang('auth.login.inputs.password')"
                   lazy-rules
@@ -86,33 +88,39 @@ async function login() {
                   />
                 </template>
               </q-input>
-              <div class="tw-flex tw-justify-between tw-flex-col sm:tw-flex-row tw-mb-6">
-                <label class="tw-flex tw-items-center tw-mb-5 tw-mb-sm-0">
+              <div class="tw-flex tw-justify-between tw-flex-col sm:tw-flex-row tw-mb-3">
+                <label class="tw-flex tw-items-center tw-mb-2">
                   <q-checkbox
                       class="tw-bg-input !tw-border-input"
                       v-model="auth.remember_me"
                   ></q-checkbox>
-                  <span class="tw-ml-2 tw-text-md lg:tw-text-base">
+                  <span class="tw-ml-2 tw-text-sm lg:tw-text-md tw-text-slate-500">
                   {{ Helper.tLang('auth.login.inputs.rememberMe') }}
                 </span>
                 </label>
-                <NuxtLink :to="getPath('iauth.resetPassword')"
-                          class="tw-text-primary tw-pt-3 tw-text-md lg:tw-text-base tw-text-center sm:tw-text-left tw-duration-300 hover:tw-underline hover:tw-text-secondary">
-                  {{ Helper.tLang('auth.login.forgotPassword') }}
+                <NuxtLink :to="getPath('iauth.resetPassword')">
+                <q-btn
+                    class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md mx-auto sm-mx-0 tw-flex tw-mx-auto"
+                    size="md"
+                    color="#64748b"
+                    flat
+                >
+                    {{ Helper.tLang('auth.login.forgotPassword') }}
+                  </q-btn>
                 </NuxtLink>
               </div>
-              <div class="tw-flex tw-justify-center tw-mb-6">
+              <div class="tw-flex tw-justify-center tw-mb-1">
                 <SocialAuthGoogle/>
                 <SocialAuthFacebook/>
               </div>
               <transition name="hero">
                 <q-btn
                     :disabled="loading"
-                    class="glossy tw-py-1.5 tw-px-3 md:tw-py-2.5 sm:tw-px-5 tw-text-sm sm:tw-text-base tw-tracking-wider"
+                    class="glossy tw-tracking-widest"
                     type="submit"
                     color="primary"
-                    rounded
-                    push
+                    unelevated
+                    no-caps
                 >
                 <span class="tw-ml-3">
                   {{ Helper.tLang('auth.login.submitBtn') }}
@@ -120,15 +128,21 @@ async function login() {
                 </q-btn>
               </transition>
             </q-form>
-            <p
-                class="tw-mt-8 tw-text-sm tw-font-light tw-text-center"
-            >
-              {{ Helper.tLang('auth.login.withoutAccount.content') }}
-              <NuxtLink :to="getPath('iauth.register')"
-                        class="tw-text-primary tw-ml-1 tw-font-bold tw-duration-150 hover:tw-text-secondary ">
-                {{ Helper.tLang('auth.login.withoutAccount.link') }}
+            <div class="max-[400px]:tw-flex-col tw-flex tw-items-center justify-center tw-mt-8 tw-gap-4">
+              <p class="tw-text-slate-700 tw-text-sm tw-font-light tw-text-center">
+                {{ Helper.tLang('auth.login.withoutAccount.content') }}
+              </p>
+              <NuxtLink :to="getPath('iauth.register')">
+                <q-btn
+                    class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md"
+                    size="md"
+                    color="#64748b"
+                    flat
+                >
+                   {{ Helper.tLang('auth.login.withoutAccount.link') }}
+                </q-btn>
               </NuxtLink>
-            </p>
+            </div>
           </div>
         </div>
       </div>
@@ -151,9 +165,5 @@ async function login() {
 .hero-leave-to {
   transform: scale(0.5);
   opacity: 0;
-}
-
-.shadow-form{
-  box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);
 }
 </style>
