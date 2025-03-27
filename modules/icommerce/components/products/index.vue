@@ -31,8 +31,7 @@
 					product
 					tw-p-4
 					tw-rounded-2xl
-					tw-w-full
-					tw-h-[332px]
+					tw-w-full					
 					lg:tw-max-w-[390px]
 				"
 			>
@@ -40,7 +39,7 @@
 					<span class="tw-text-lg tw-font-bold tw-line-clamp-1 tw-capitalize " style="color: #888888">{{ product.name.toLowerCase() }}</span>
 				</div>
 
-				<div class="tw-flex tw-justify-between tw-align-middle" v-if="false">
+				<div class="tw-flex tw-justify-between tw-align-middle">
 					<div>
 						<span class="tw-text-[40px] tw-font-semibold">16GB</span>
 					</div>
@@ -48,13 +47,13 @@
 						<img src="../../assets/img/cP_white.png" />
 					</div>
 				</div>
-				<div class="tw-h-[180px]">
+				<div class="tw-h-[140px]">
 					<div
 						class="
 							description
 							tw-px-6
 							tw-pt-6
-							tw-h-[160px]
+							tw-h-[120px]
 							tw-overflow-y-auto
 						"
 						v-if="product?.description"
@@ -68,7 +67,7 @@
 						<span>Desde</span>
 					</div>
 					<div>
-						<span class="tw-text-[24] tw-font-[700]"> {{ productsHelper.getPrice(product, cartState.currency) }} {{ cartState.currency }}</span>
+						<span class="tw-text-[24px] tw-font-[700]"> {{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
 					</div>
 				</div>
 				<!-- action buttons -->

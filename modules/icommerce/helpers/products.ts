@@ -25,10 +25,6 @@ const helper = {
 		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
 		
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
-
-
-
-
 		if(price > 0 && currencyValue != 'COP'){
 			//Dolar 
 			const trm = helper.getTrm()		
@@ -37,6 +33,10 @@ const helper = {
 		}
 		
 		return price 
+	},
+
+	getPriceWithSymbol(product, currency = 'COP'){
+		return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
 	},
 
 	getSubtotal(products, currencyValue){		
@@ -53,6 +53,11 @@ const helper = {
 			{ value:'COP',  label:'Peso', symbol: '$'}, 
 			{ value: 'USD', label: 'Dollar', symbol: '$'}
 		];
+	},
+
+	getCurrencySymbol(currencyValue = 'COP'){
+		const currency = helper.getCurrencies().find(x => x.value == currencyValue)
+		return currency?.symbol
 	},
 
 	getTrm(){

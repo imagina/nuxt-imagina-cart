@@ -62,7 +62,7 @@
             <span class="tw-text-lg tw-font-semibold">$000.000 {{ currency }}</span>
           </div>
           <div class="tw-w-fit tw-px-4 tw-py-1.5 tw-rounded-full tw-border tw-border-[#00000033]">
-            <span class="tw-text-lg tw-font-semibold">${{ productsHelper.getPrice(product, currency) }} {{ currency}}</span>
+            <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
           </div>
         </section>
       </div>

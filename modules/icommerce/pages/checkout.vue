@@ -118,7 +118,7 @@
 							<hr class="tw-my-4"/>
 							<div class="tw-my-2">
 								<strong class="tw-text-base lg:tw-text-lg !tw-text-[#444]">
-									Subtotal ${{ subTotal }}
+									Subtotal ${{ subTotal }} {{ cartState.currency }}
 								</strong> 
 							</div>
 						</div>
