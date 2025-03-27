@@ -139,7 +139,7 @@ const quasar = useQuasar()
 const authStore = useAuthStore()
 const cartState = useStorage('shoppingCart', {
 	products: [],
-	currency: {}
+	currency: ''
 })
 
 const form = useStorage('shoppingCheckoutForm', {

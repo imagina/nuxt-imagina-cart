@@ -86,10 +86,8 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['removeProduct', 'subtotal'])
-
-const frecuencyId = 1 //frecuency option
 const checkoutProducts = ref()
-const subtotal = ref(0)
+
 
 onMounted(() => {
   init()

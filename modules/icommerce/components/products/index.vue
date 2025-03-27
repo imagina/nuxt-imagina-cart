@@ -68,8 +68,7 @@
 						<span>Desde</span>
 					</div>
 					<div>
-						<span class="tw-text-[24] tw-font-[700]">{{ product.price }}</span>
-						<span>&nbsp;/ 1 mes</span>
+						<span class="tw-text-[24] tw-font-[700]">{{ cartState.currency }} {{ productsHelper.getPrice(product, cartState.currency) }}</span>						
 					</div>
 				</div>
 				<!-- action buttons -->
@@ -120,7 +119,7 @@ const router = useRouter()
 const products = ref([])
 const cartState = useStorage('shoppingCart', {
 	products: [],
-	currency: {}
+	currency: 'COP'
 })
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
@@ -150,8 +149,7 @@ const cartState = useStorage('shoppingCart', {
 	})
 
 	async function init(){
-		///sort.value = sortOptions[0].value 
-		
+		///sort.value = sortOptions[0].value 		
 	}
 
 	async function getProducts(){
@@ -193,7 +191,7 @@ const cartState = useStorage('shoppingCart', {
 				product.quantity = (product.quantity - 1)
 				const cartProducts = cartState.value.products
 				cartProducts.push(product)
-				cartState.value = { products: cartProducts }
+				cartState.value = { products: cartProducts, currency: cartState.value.currency }
 			}
 		}
 	}	

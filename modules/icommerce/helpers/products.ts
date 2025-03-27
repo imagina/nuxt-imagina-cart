@@ -19,15 +19,24 @@ const helper = {
 
 	/**/
 	getPrice: (product, currencyValue = 'COP') => {
-	 let price = helper.hasFrencuency(product) && product?.frecuency ? product.frecuency.value : (product?.price || 0)
-	 if(price > 0 && currencyValue != 'COP'){
-		//Dolar 
-		const trm = helper.getTrm()		
-	 	price = (price / trm)
-		price = Number.isInteger(price) ? price : price.toFixed(2)
-	 }
-	 
-	 return price 
+
+		const frecuencies = helper.getFrecuencyOptions(product)
+
+		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
+		
+		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
+
+
+
+
+		if(price > 0 && currencyValue != 'COP'){
+			//Dolar 
+			const trm = helper.getTrm()		
+			price = (price / trm)
+			price = Number.isInteger(price) ? price : price.toFixed(2)
+		}
+		
+		return price 
 	},
 
 	getSubtotal(products, currencyValue){		

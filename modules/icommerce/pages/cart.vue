@@ -9,6 +9,7 @@
 								<div class="tw-flex tw-justify-between tw-items-center tw-mb-7">
 										<h1 class="tw-text-4xl tw-font-bold">Tu Carrito</h1>
 										<!-- currency -->
+										 {{ cartState.currency }}
 										<div v-if="showCart">
 												<div class="tw-flex tw-items-center">
 														<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
@@ -115,7 +116,7 @@ import productsHelper from '../helpers/products'
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
-	currency: {}
+	currency: ''
 })
 const router = useRouter()
 
