@@ -2,7 +2,7 @@
 import {reactive, ref} from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
 import captchaComponent from '../../components/captcha'
-import logo from 'assets/red-logo-imagina.png'
+import logo from "../../assets/images/red-logo-imagina.png"
 
 const authStore = useAuthStore()
 

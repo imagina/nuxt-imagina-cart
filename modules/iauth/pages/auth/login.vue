@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
-import logo from "assets/red-logo-imagina.png";
+import logo from "../../assets/images/red-logo-imagina.png"
 
 const refLogin: any = ref(null)
 const isPwd = ref(true)
