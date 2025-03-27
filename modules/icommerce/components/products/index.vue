@@ -68,7 +68,7 @@
 						<span>Desde</span>
 					</div>
 					<div>
-						<span class="tw-text-[24] tw-font-[700]">{{ cartState.currency }} {{ productsHelper.getPrice(product, cartState.currency) }}</span>						
+						<span class="tw-text-[24] tw-font-[700]"> {{ productsHelper.getPrice(product, cartState.currency) }} {{ cartState.currency }}</span>
 					</div>
 				</div>
 				<!-- action buttons -->
@@ -173,13 +173,12 @@ const cartState = useStorage('shoppingCart', {
 	function addTocart(index){
 		//cartStore.products.push(product)
 		const product = products.value[index]
-
 		if(productsHelper.hasFrencuency(product)){
-      const options = productsHelper.getFrecuencyOptions(product)
-      if(options.length) {
-        product.frecuency = options[0]
-      }      
-    }
+      		const options = productsHelper.getFrecuencyOptions(product)
+			if(options.length) {
+				product.frecuency = options[0]
+			}      
+    	}
 
 		if(settings.justOneProdcut){
 			//reset cart
@@ -194,6 +193,10 @@ const cartState = useStorage('shoppingCart', {
 				cartState.value = { products: cartProducts, currency: cartState.value.currency }
 			}
 		}
+		Notify.create({
+			message: 'Producto agregado al carrito',
+			type: 'positive',
+		})
 	}	
 
 	onMounted(async () => {

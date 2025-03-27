@@ -127,7 +127,7 @@ const showCart = computed(() => cartState.value?.products?.length ||  false)
 
 function removeProduct(product){
     const products = cartState.value.products.filter(obj => obj.id != product.id);
-    cartState.value = {products: products}
+    cartState.value = {products: products, currency: cartState.value.currency}
 
     if(cartState.value.products.length == 0){
        // router.push({ path: getPath('icommerce.products') })

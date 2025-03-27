@@ -105,7 +105,7 @@
 												</div>
 												<div>
 													<span class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-														usd {{ productsHelper.getPrice(product, cartState.currency) }}
+														{{ productsHelper.getPrice(product, cartState.currency) }} {{ cartState.currency }}
 													</span>
 												</div>
 											</div>
