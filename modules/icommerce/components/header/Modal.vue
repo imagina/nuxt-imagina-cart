@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { defineProps } from 'vue'
+import completedLogo from "../../assets/img/logo-imagina-completo-white.png";
 
 defineProps( {
   children: {
@@ -34,19 +35,30 @@ const showModal = ref( false );
     >
       <q-card class="q-pa-md !tw-overflow-x-hidden tw-w-full !tw-h-screen !tw-max-h-none tw-p-0" >
 
-        <q-card-actions align="right" class="tw-mb-10 tw-border-b tw-border-b-gray-300 tw-px-5 tw-pt-5">
+        <q-card-section class="tw-mb-8 tw-border-b tw-border-b-gray-300 tw-pt-2 !px-0 tw-bg-secondary tw-flex tw-justify-between tw-items-center">
+
+          <!--        Render image  -->
+          <q-card-section>
+               <div class=" tw-flex tw-justify-center tw-items-center">
+           <img :src="completedLogo" :alt="completedLogo" class="tw-w-52" />
+         </div>
+          </q-card-section>
 
           <!--  Btn Close   -->
-          <q-btn
-              round
-              dense
-              color="primary"
-              icon="close"
-              size="sm"
-              outline
-              @click="showModal = false"
-          />
-        </q-card-actions>
+          <q-card-actions align="right" >
+            <q-btn
+                flat
+                color="white"
+                label="Cerrar"
+                icon="close"
+                size="md"
+                class="tw-font-semibold"
+                @click="showModal = false"
+            />
+
+          </q-card-actions>
+
+        </q-card-section>
 
         <q-card-section class="q-pt-none">
 
