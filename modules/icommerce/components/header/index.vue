@@ -1,109 +1,53 @@
 <template>
-  <header 
-    :class="[
+  <header
+      :class="[
       'tw-sticky tw-top-0 tw-z-50 tw-border-b tw-border-gray-200',
       isScrolled ? 'tw-bg-[#101923] tw-text-white' : 'tw-bg-white'
     ]"
   >
-    <div 
-      class="
-        
-        tw-min-h-[60px] 
-        tw-mx-auto 
-        tw-px-4 
-        tw-py-3 
-        tw-flex 
-        tw-items-center 
-        tw-justify-between
-      "
-    >
+    <div class="
+        tw-min-h-[60px] tw-mx-auto 2xl:tw-px-20 xl:tw-px-10 sm:tw-px-5
+        tw-px-2 tw-py-3 tw-flex tw-items-center tw-justify-between relative
+      ">
+
       <!-- LOGO -->
-      <img
-        :src="logoSrc" 
-        alt="Logo" 
-        class="tw-w-[38px]"
-      />
+      <div class="lg:tw-w-1/12 2xl:tw-w-3/12 tw-relative tw-order-1">
+        <NuxtLink to="/"
+        >
+          <img
+              :src="logoSrc"
+              alt="Logo"
+              class="tw-w-10 tw-min-w-10 tw-cursor-pointer"
+          />
+        </ NuxtLink>
+      </div>
 
       <!-- MENÚ DE NAVEGACIÓN -->
-      <Navbar :nav-items="navItems" :is-scrolled="isScrolled" />
+      <div class="
+        tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 lg:tw-px-5
+        tw-relative tw-order-1
+      ">
+        <Navbar v-model="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
+      </div>
 
       <!-- BOTONES DE CUENTA, CARRITO, THEME TOGGLE -->
-      <section class="tw-flex tw-items-center">
-        <div 
-          class="
-            tw-flex 
-            tw-flex-col 
-            tw-items-start
-            tw-pr-4
-            tw-border-r
-            tw-border-[#10192333]
-            hover:tw-text-[#DC3545]
-          "
-          :class="{
-            'hover:tw-text-[#DC3545]': !isScrolled,
-            'hover:tw-text-[#F9BA48]': isScrolled
-          }"
-        >
+      <section class="
+        tw-flex tw-items-center tw-justify-end lg:tw-w-3/12 xl:tw-w-4/12
+        tw-min-w-max tw-relative tw-order-2
+      ">
 
-          <!-- loggin -->
-          <q-btn-dropdown 
-            v-if="authStore.isLogged()"
-            :label="user.fullName"
-            flat
-            no-caps
-            padding="0"
-            dropdown-icon="fa-solid fa-angle-down"
-            class="
-              dropdown-sign-in
-              tw-text-[15px]
-            "
-          >
-            <q-list>
-              <q-item clickable v-close-popup>
-                <q-item-section>
-                  <q-item-label>
-                    <NuxtLink           
-                      :to="{ path: getPath('iauth.logout'), query: {redirectTo: 'icommerce.products'} }"
-                      class="dropdown-sign-in tw-text-[15px]"
-                    >
-                    Cerrar sesion 
-                    </NuxtLink>                  
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
+      <!--       Buttons Group-->
+        <NavbarButtons v-if="!isMobile" :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
 
-
-          <NuxtLink
-            v-if="!authStore.isLogged()"
-            :to="{ path: getPath('iauth.login'), query: {redirectTo: 'icommerce.products'} }"
-            class="dropdown-sign-in tw-text-[15px]"
-          >
-            Iniciar sesión
-          </NuxtLink>
-          <!-- /loggin -->
-
-        </div>
-        <div class="tw-pl-4">
-          <NuxtLink 
-            :to="getPath('icommerce.products')"
-            class="
-              tw-text-[15px]
-              tw-cursor-pointer
-            "
-            :class="{
-              'hover:tw-text-[#DC3545]': !isScrolled,
-              'hover:tw-text-[#F9BA48]': isScrolled
-            }"
-          >
-            Ir a Tienda
-          </NuxtLink>
-          <cartComponent 
-            :color="isScrolled ? 'white' : 'black'"
+        <!--    Cart Component -->
+        <div class="tw-pl-1 tw-relative tw-order-3">
+          <cartComponent
+              :color="isScrolled ? 'white' : 'black'"
           />
         </div>
+
       </section>
+
     </div>
   </header>
 </template>
@@ -114,21 +58,20 @@ import Navbar from './Navbar.vue'
 import cartComponent from '../cart'
 import whiteLogo from '../../assets/img/white-logo-imagina.png'
 import redLogo from '../../assets/img/red-logo-imagina.png'
+import NavbarButtons from "./NavbarButtons.vue";
 
-const authStore = useAuthStore()
-
-const user = computed(() => authStore.user)
-
-const props = defineProps({
+const props = defineProps( {
   scrollPosition: Object
-});
+} );
 
-const isScrolled = computed(() => props.scrollPosition?.position > 0);
-const logoSrc = computed(() => 
-  isScrolled.value 
-    ? whiteLogo 
-    : redLogo
+const isScrolled = computed( () => props.scrollPosition?.position > 0 );
+const logoSrc = computed( () =>
+    isScrolled.value
+        ? whiteLogo
+        : redLogo
 );
+
+const isMobile = ref(false);
 
 const navItems = ref([
   { 
