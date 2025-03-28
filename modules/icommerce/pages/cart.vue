@@ -4,10 +4,10 @@
 			<!--cart and products --->
 			<div>
 				<!--title -->
-				<div class="tw-flex tw-justify-between tw-items-center">
+				<div class="tw-flex tw-justify-between tw-items-center"  v-if="showCart">
 					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
 					<!-- currency -->
-					<div v-if="showCart">
+					<div>
 						<div class="tw-flex tw-items-center">
 							<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
 							<template v-for="currencyItem in currencies">
@@ -22,11 +22,10 @@
 					<ProductsComponent :products="cartState.products" :currency="cartState.currency"
 						@removeProduct="(product) => removeProduct(product)" @subtotal="(val) => subtotal = val" />
 				</div>
-				<div v-else>
-					<div>
-						<span>Your car is empty</span>
-						<p>
-							Looks like you have not added anything to your cart. Go ahead & explore our products.
+				<div v-else >
+					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
+					<div class="tw-my-4 tw-text-[14px] tw-font-[400]">
+						<p>Your car is empty, Looks like you have not added anything to your cart. Go ahead & explore our products.
 						</p>
 					</div>
 					<q-btn label="Ir a tienda " text-color="black" color="amber" no-caps unelevated class="
@@ -34,7 +33,8 @@
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
-								tw-mt-4											
+								tw-mt-4
+								tw-my-8
 							" @click="() => {
 								router.push({ path: getPath('icommerce.products') })
 							}" />

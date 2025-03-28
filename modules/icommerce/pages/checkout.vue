@@ -1,131 +1,113 @@
 <template>
 	<ClientOnly>
-		<div
-			class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-pt-6 md:tw-pt-10 lg:tw-pt-16 tw-pb-8 md:tw-pb-16 lg:tw-pb-24">
-			<div class="tw-container !tw-px-4 lg:pb-1">
-				<div class="tw-flex tw-justify-between tw-mb-5 md:tw-mb-8">
-					<q-btn label="Back" icon="chevron_left" flat rounded color="#101923"
-						class="tw-font-bold tw-text-[16px] md:tw-text-[20px]" no-caps @click="redirectToCart()" />
+		<div class="tw-flex tw-flex-wrap md:tw-justify-center tw-py-4 tw-gap-8" v-if="products">
+			<div class="tw-w-[730px]">
+				<div class="tw-my-4">
+					<q-btn label="Back" icon="chevron_left" dense flat rounded color="#101923"
+						class="q-p-0 tw-font-bold tw-text-[16px] md:tw-text-[20px]" no-caps @click="redirectToCart()" />
 				</div>
 
-				<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-12 max-md:tw-place-items-center" v-if="products">
-					<div
-						class="md:tw-col-span-8 md:!tw-pr-2 lg:tw-pr-5 tw-pb-8 sm:tw-pb-16 md:tw-pb-0 max-sm:tw-w-[95vw] max-md:tw-w-[85vw]">
-						<!-- user data -->
-						<div class="shadow-card tw-rounded-3xl md:!tw-pt-8 tw-p-5">
+				<!-- user data -->
+				<div class="shadow-card tw-rounded-3xl md:!tw-pt-8 tw-p-5">
 
-							<h2
-								class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
-								<span
-									class="tw-rounded-full tw-border tw-border-gray-600 tw-h-7 tw-w-7 md:tw-h-10 md:tw-w-10 tw-flex tw-items-center tw-justify-center">1</span>
-									Dirección de facturación
-							</h2>
-							<!-- logging -->
-							<div class="tw-flex tw-justify-center tw-align-middle tw-p-4">
-								<SocialAuthGoogle/>
+					<h2
+						class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
+						<span
+							class="tw-rounded-full tw-border tw-border-gray-600 tw-h-7 tw-w-7 md:tw-h-10 md:tw-w-10 tw-flex tw-items-center tw-justify-center">1</span>
+						Dirección de facturación
+					</h2>
+					<!-- logging -->
+					<div class="tw-flex tw-justify-center tw-align-middle tw-p-4">
+						<SocialAuthGoogle />
 
-								<div v-if="!authStore.isLogged()">
-									<q-btn 
-										@click="redirectToLogin()"										
-										label="Iniciar sesion" 										
-										icon="person"
-										color="primary"
-										unelevated
-										rounded
-										no-caps
-									/>
-								</div>
-							</div>
+						<div v-if="!authStore.isLogged()">
+							<q-btn @click="redirectToLogin()" label="Iniciar sesion" icon="person" color="primary"
+								unelevated rounded no-caps />
+						</div>
+					</div>
 
-							<q-form @submit.prevent.stop="goToPayment" ref="refForm" >								
-								<div class="tw-my-4 tw-grid lg:tw-grid-cols-2 tw-gap-y-5 lg:tw-gap-y-8 tw-gap-x-5">
-									<q-input v-model="form.email" label="Email" dense outlined />
-									<q-input v-model="form.firstName" label="Nombres" dense outlined />
-									<q-input  v-model="form.lastName" label="Apellidos" dense outlined />
+					<q-form @submit.prevent.stop="goToPayment" ref="refForm">
+						<div class="tw-my-4 tw-grid lg:tw-grid-cols-2 tw-gap-y-5 lg:tw-gap-y-8 tw-gap-x-5">
+							<q-input v-model="form.email" label="Email" dense outlined />
+							<q-input v-model="form.firstName" label="Nombres" dense outlined />
+							<q-input v-model="form.lastName" label="Apellidos" dense outlined />
 
 
-									<q-select
-										v-model="form.identificationType"
-										:options="[{value: 'cedula', label: 'Cedula de ciudadania'}]"
-										option-value="value"
-										option-label="label"
-										outlined
-										dense
-										label="Tipo de identificacion"
-									/>
-									
-									<q-input  v-model="form.identification" label="Identificacion" dense outlined />
-									<q-input  v-model="form.mobilePhone" label="Phone" type="tel" dense outlined />
-									
-									<q-input  v-model="form.country" label="Pais de residencia" dense outlined />
-									<q-input  v-model="form.address" label="Direccion" dense outlined />
-									<q-input  v-model="form.city" label="Ciudad" dense outlined />
-									<q-input  v-model="form.region" label="Region" dense outlined />
-									<q-input  v-model="form.zipCode" label="Codigo postal" dense outlined />																	
+							<q-select v-model="form.identificationType"
+								:options="[{ value: 'cedula', label: 'Cedula de ciudadania' }]" option-value="value"
+								option-label="label" outlined dense label="Tipo de identificacion" />
 
-								</div>
-								<div class="tw-my-4 ">															
-									<q-btn no-caps label="Continuar" type="submit" text-color="black" color="amber"
-									unelevated
-									class="tw-font-bold tw-rounded-lg tw-capitalize tw-max-w-[160px] tw-text-[16px] lg:tw-text-[20px] tw-p-[8px 20px] lg:tw-p-[13px 30px]" />
-								</div>	
-								
-							</q-form>
+							<q-input v-model="form.identification" label="Identificacion" dense outlined />
+							<q-input v-model="form.mobilePhone" label="Phone" type="tel" dense outlined />
+
+							<q-input v-model="form.country" label="Pais de residencia" dense outlined />
+							<q-input v-model="form.address" label="Direccion" dense outlined />
+							<q-input v-model="form.city" label="Ciudad" dense outlined />
+							<q-input v-model="form.region" label="Region" dense outlined />
+							<q-input v-model="form.zipCode" label="Codigo postal" dense outlined />
+
+						</div>
+						<div class="tw-my-4 ">
+							<q-btn no-caps label="Continuar" type="submit" text-color="black" color="amber" unelevated
+								class="tw-font-bold tw-rounded-lg tw-capitalize tw-max-w-[160px] tw-text-[16px] lg:tw-text-[20px] tw-p-[8px 20px] lg:tw-p-[13px 30px]" />
 						</div>
 
-					</div>
-					<div class="md:tw-col-span-4 tw-pr-2 lg:tw-pl-5 max-sm:tw-w-[95vw] max-md:tw-w-[85vw]">
-						<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
-							<div class="tw-my-2">
-								<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-									Resumen del pedido
-								</h2>
-							</div>
-							<div class="tw-my-2">
-								<q-expansion-item
-									class="shadow-1 overflow-hidden"
-									style="border-radius: 8px; background-color: #eceded;"
-									:label="`${products.length} artículos`"
-									header-class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg tw-px-4"
-									expand-icon-class=""
-								>
-								<template v-for="product in products" class="tw-my-4">
-									<q-card>										
-										<q-card-section>
-											<span class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-												{{ product.name }}
-											</span>
-											<div class="tw-flex tw-justify-between">
-												<div>
-													<span v-if="productsHelper.hasFrencuency(product)"
-														class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
-														{{ product.frecuency?.label }}
-													</span>
+					</q-form>
+				</div>
 
-												</div>
-												<div>
-													<span class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-														{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}
-													</span>
-												</div>
+			</div>
+			<!-- summary -->
+			<div class="tw-mt-20 tw-w-[360px]">
+				<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
+					<div class="tw-my-2">
+						<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
+							Resumen del pedido
+						</h2>
+					</div>
+					<div class="tw-my-2">
+						<q-expansion-item class="shadow-1 overflow-hidden"
+							style="border-radius: 8px; background-color: #eceded;"
+							:label="`${products.length} artículos`"
+							header-class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg tw-px-4"
+							expand-icon-class="">
+							<template v-for="product in products" class="tw-my-4">
+								<q-card>
+									<q-card-section>
+										<span
+											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
+											{{ product.name }}
+										</span>
+										<div class="tw-flex tw-justify-between">
+											<div>
+												<span v-if="productsHelper.hasFrencuency(product)"
+													class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
+													{{ product.frecuency?.label }}
+												</span>
+
 											</div>
-											
-										</q-card-section>
-									</q-card>
-									</template>
-								</q-expansion-item>	
-							</div>
-							<hr class="tw-my-4"/>
-							<div class="tw-my-2">
-								<strong class="tw-text-base lg:tw-text-lg !tw-text-[#444]">
-									Subtotal {{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-								</strong> 
-							</div>
-						</div>
-					</div>
+											<div>
+												<span
+													class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
+													{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}
+												</span>
+											</div>
+										</div>
 
+									</q-card-section>
+								</q-card>
+							</template>
+						</q-expansion-item>
+					</div>
+					<hr class="tw-my-4" />
+					<div class="tw-my-2">
+						<strong class="tw-text-base lg:tw-text-lg !tw-text-[#444]">
+							Subtotal {{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+						</strong>
+					</div>
 				</div>
 			</div>
+
+
 		</div>
 	</ClientOnly>
 </template>
@@ -165,7 +147,7 @@ const products = computed(() => cartState.value.products)
 const subtotal = computed(() => {
 	let value = 0;
 	if (!cartState?.value?.products.length) return value
-	value = productsHelper.getSubtotal(cartState?.value?.products, cartState.value.currency)  
+	value = productsHelper.getSubtotal(cartState?.value?.products, cartState.value.currency)
 	return value
 })
 
@@ -287,11 +269,4 @@ async function goToPayment() {
 .shadow-card {
 	box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);
 }
-
-
-
-
-
-
-  
 </style>
