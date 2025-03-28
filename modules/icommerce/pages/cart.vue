@@ -54,7 +54,7 @@
 								</div>
 						</div>
 						<div class="tw-mt-6 tw-p-6" v-if="showCart">
-							<div class="card tw-rounded-[20px] tw-px-5 tw-pt-7 tw-pb-5 tw-my-5">
+							<div class="card tw-rounded-[20px] tw-w-[400px] tw-px-5 tw-pt-7 tw-pb-5 tw-my-5">
 								<div class="tw-flex tw-justify-between tw-items-center">
 									<span
 										class="
@@ -65,7 +65,7 @@
 											tw-leading-5
 										"
 									>
-										subtotal
+										Subtotal
 									</span>
 									<span
 										class="											
@@ -74,7 +74,7 @@
 												tw-p-0
 												tw-leading-5
 											">
-										{{  subtotal }} {{ cartState.currency }}
+										{{ productsHelper.priceWithSymbol(subtotal, cartState.currency)}}
 									</span>
 							</div>
 

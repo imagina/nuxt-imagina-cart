@@ -105,7 +105,7 @@
 												</div>
 												<div>
 													<span class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-														{{ productsHelper.getPrice(product, cartState.currency) }} {{ cartState.currency }}
+														{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}
 													</span>
 												</div>
 											</div>
@@ -118,7 +118,7 @@
 							<hr class="tw-my-4"/>
 							<div class="tw-my-2">
 								<strong class="tw-text-base lg:tw-text-lg !tw-text-[#444]">
-									Subtotal ${{ subTotal }} {{ cartState.currency }}
+									Subtotal {{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 								</strong> 
 							</div>
 						</div>
@@ -161,7 +161,7 @@ const refForm = ref(null)
 const user = computed(() => authStore.user)
 const products = computed(() => cartState.value.products)
 
-const subTotal = computed(() => {
+const subtotal = computed(() => {
 	let value = 0;
 	if (!cartState?.value?.products.length) return value
 	value = productsHelper.getSubtotal(cartState?.value?.products, cartState.value.currency)  
@@ -248,7 +248,7 @@ async function goToPayment() {
 
 	const order = {
 		user: { ...form.value },
-		total: subTotal.value,
+		total: subtotal.value,
 
 		products: products.value.map((product) => {
 			return {

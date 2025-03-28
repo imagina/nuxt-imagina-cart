@@ -39,6 +39,10 @@ const helper = {
 		return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
 	},
 
+	priceWithSymbol(value, currency = 'COP'){
+		return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
+	},
+
 	getSubtotal(products, currencyValue){		
 		let subtotal = Number(0);
 		products.forEach(product => {    
@@ -51,7 +55,7 @@ const helper = {
 	getCurrencies(){
 		return [
 			{ value:'COP',  label:'Peso', symbol: '$'}, 
-			{ value: 'USD', label: 'Dollar', symbol: '$'}
+			{ value: 'USD', label: 'Dolar', symbol: '$'}
 		];
 	},
 

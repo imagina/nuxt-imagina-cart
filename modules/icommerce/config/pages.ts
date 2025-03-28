@@ -7,6 +7,7 @@ const pages = [
         meta: {
           layout,
           title: 'icommerce.cms.sidebar.adminProducts',
+          breadcrumb: 'Productos'
         },
     },
 
@@ -17,6 +18,7 @@ const pages = [
       meta: {
         layout,
         title: 'icommerce.cms.sidebar.cart',
+        breadcrumb: 'Carrito'
       }
   },
 
@@ -29,6 +31,7 @@ const pages = [
         meta: {
           layout,
           title: 'icommerce.cms.sidebar.checkout',
+          breadcrumb: 'Checkout'
         }
     }
 ]
