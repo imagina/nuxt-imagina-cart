@@ -19,19 +19,17 @@ const helper = {
 
 	/**/
 	getPrice: (product, currencyValue = 'COP') => {
-
 		const frecuencies = helper.getFrecuencyOptions(product)
-
 		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
 		
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 		if(price > 0 && currencyValue != 'COP'){
 			//Dolar 
-			const trm = helper.getTrm()		
+			const trm = helper.getTrm()
 			price = (price / trm)
 			price = Number.isInteger(price) ? price : price.toFixed(2)
 		}
-		
+		console.log(price)
 		return price 
 	},
 
@@ -65,7 +63,9 @@ const helper = {
 	},
 
 	getTrm(){
-		const trm = Number('4107')
+		const authStore = useAuthStore()
+		let usdRates = authStore.usdRates		
+		const trm = Number(usdRates['USDRates']['COP'])
 		return trm.toFixed(2)
 	},
 	

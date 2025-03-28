@@ -67,7 +67,7 @@
 						<span>Desde</span>
 					</div>
 					<div>
-						<span class="tw-text-[24px] tw-font-[700]">{{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
+						<span class="tw-text-[24px] tw-font-[700]">{{ productsHelper.getPriceWithSymbol(product, cartState.urrency) }}</span>
 					</div>
 				</div>
 				<!-- action buttons -->

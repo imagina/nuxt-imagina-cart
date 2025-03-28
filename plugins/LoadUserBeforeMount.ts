@@ -7,6 +7,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     // Carga los datos del usuario en el store de Pinia
     
     userStore.refreshSession()
-    if(!userStore.settings) userStore.getSettings()    
+    if(!userStore.settings) userStore.getSettings()
+    if(!userStore.usdRates) await userStore.getUsdRates()
+
+    
   }
 })

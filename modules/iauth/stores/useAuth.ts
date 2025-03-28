@@ -25,7 +25,8 @@ export const useAuthStore = defineStore('authStore', {
     facebookClientId: null,
     googleClientId: null,
     captcha: null,
-    settings: null
+    settings: null, 
+    usdRates: null
   }),
   getters: {
     fullUser(state) {
@@ -605,5 +606,8 @@ export const useAuthStore = defineStore('authStore', {
           console.error(e)
         })
     },
-  },
+    async getUsdRates(){
+      await $fetch('https://nflow2.imaginacolombia.com/webhook/imagina/get/trm').then((response) => this.usdRates = response)
+     }
+  },  
 })
