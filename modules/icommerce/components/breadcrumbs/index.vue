@@ -21,7 +21,7 @@
 const route = useRoute(); // Access the current route
 
 const breadcrumbs = computed(() => {
-      const matchedRoutes = route.matched;
+      return route.matched.breadcrumb;
 
       /*
 

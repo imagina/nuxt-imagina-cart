@@ -143,6 +143,7 @@ const cartState = useStorage('shoppingCart', {
 })
 
 const form = useStorage('shoppingCheckoutForm', {
+	coupon: null,
 	email: null,
 	firstName: null,
 	lastName: null,

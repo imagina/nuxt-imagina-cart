@@ -49,9 +49,6 @@ async function login() {
         >
           {{ Helper.tLang('auth.login.title') }}
         </h1>
-        <p class="tw-text-slate-500 tw-mb-3 tw-text-sm tw-font-light">
-          {{ Helper.tLang('auth.login.subtitle') }}
-        </p>
         <div class="tw-w-full tw-flex-1 tw-p-2 tw-animate-fade-in">
           <div class="">
             <q-form @submit.prevent.stop="login" ref="refLogin">
@@ -115,16 +112,13 @@ async function login() {
               </div>
               <transition name="hero">
                 <q-btn
-                    :disabled="loading"
-                    class="glossy tw-tracking-widest"
+                    :disabled="loading"                    
                     type="submit"
                     color="primary"
                     unelevated
                     no-caps
+                    :label="Helper.tLang('auth.login.submitBtn')"
                 >
-                <span class="tw-ml-3">
-                  {{ Helper.tLang('auth.login.submitBtn') }}
-                </span>
                 </q-btn>
               </transition>
             </q-form>
@@ -137,7 +131,7 @@ async function login() {
                     class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md"
                     size="md"
                     color="#64748b"
-                    flat
+                    
                 >
                    {{ Helper.tLang('auth.login.withoutAccount.link') }}
                 </q-btn>
