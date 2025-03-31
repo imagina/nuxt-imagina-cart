@@ -1,6 +1,14 @@
-<template>
-  <div v-for="product in checkoutProducts">
-    <div class="card tw-rounded-[20px] tw-px-5 tw-pt-7 tw-pb-5 tw-my-5">
+<template>  
+    <div v-for="product in checkoutProducts"
+      class="
+        card
+        tw-rounded-[20px]
+        tw-px-5
+        tw-pt-7
+        tw-pb-5
+        tw-my-5
+        "
+    >
       <div class="tw-flex tw-justify-between tw-items-center">
         <h2 
           class="
@@ -23,8 +31,13 @@
         />
       </div>
       <hr class="tw-w-full tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
-      <div class="tw-flex tw-justify-between tw-gap-5">
-        <section>
+      <div class="
+        md:tw-flex
+        md:tw-justify-between 
+        md:tw-justify-center 
+        md:tw-gap-5"
+      >
+        <div>
           <q-select 
             v-if="productsHelper.hasFrencuency(product) && product?.frecuency"
             v-model="product.frecuency"
@@ -55,19 +68,31 @@
               <span class="tw-text-[#444444]">Adquiere el dominio gratis por planes mayores a 12 meses</span>
             </div>
           </div>
-        </section>
-        <section class="tw-flex tw-items-start tw-gap-[30px] tw-text-[#444444]">
-          <div class="tw-flex tw-flex-col">
+        </div>
+        <div class="
+          md:tw-flex
+          md:tw-items-start
+          md:tw-gap-[30px] 
+          tw-text-[#444444]"
+        >
+          <div class="
+            md:tw-flex
+            md:tw-flex-col
+            tw-flex
+            tw-justify-between 
+            tw-justify-center 
+            "
+          >
             <span class="tw-text-[13px]">Tarifa de configuración:</span>
-            <span class="tw-text-lg tw-font-semibold">$000.000 {{ currency }}</span>
+            <span class="tw-text-lg tw-font-semibold"> $000.000 {{ currency }}</span>
           </div>
           <div class="tw-w-fit tw-px-4 tw-py-1.5 tw-rounded-full tw-border tw-border-[#00000033]">
             <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
           </div>
-        </section>
+        </div>
       </div>
     </div>
-  </div>
+  
 </template>
 
 <script lang="ts" setup>

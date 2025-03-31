@@ -29,7 +29,6 @@ const helper = {
 			price = (price / trm)
 			price = Number.isInteger(price) ? price : price.toFixed(2)
 		}
-		console.log(price)
 		return price 
 	},
 

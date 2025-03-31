@@ -1,10 +1,16 @@
 <template>
 	<ClientOnly>
-		<div class="tw-flex tw-flex-wrap md:tw-justify-center tw-py-4">
+		<div class="
+			md:tw-flex
+			tw-flex-wrap
+			tw-justify-center
+			tw-py-4
+			tw-p-4
+		">
 			<!--cart and products --->
 			<div>
 				<!--title -->
-				<div class="tw-flex tw-justify-between tw-items-center"  v-if="showCart">
+				<div class="md:tw-flex md:tw-justify-between md:tw-items-center"  v-if="showCart">
 					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
 					<!-- currency -->
 					<div>
@@ -43,8 +49,21 @@
 
 			<!-- cart-->
 
-			<div class="md:tw-mt-[96px] tw-px-8" v-if="showCart">
-				<div class="card tw-rounded-[20px] tw-w-[400px] tw-px-5 tw-pt-7 tw-pb-5 tw-my-5">
+			<div 
+				v-if="showCart"
+				class="
+				md:tw-ml-8
+				xl:tw-mt-[114px]
+				"
+			>
+				<div class="
+					card
+					tw-rounded-[20px]
+					tw-w-full
+					md:tw-w-[400px]
+					tw-p-4					
+					"
+				>
 					<div class="tw-flex tw-justify-between tw-items-center">
 						<span class="
 											tw-font-semibold 

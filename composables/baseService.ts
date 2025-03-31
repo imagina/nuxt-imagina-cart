@@ -38,8 +38,6 @@ const baseService = {
 			}			
 			
 			const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
-			console.log(api)
-
 			$fetch('/api/base', {
 				method: 'GET',
 				params: {

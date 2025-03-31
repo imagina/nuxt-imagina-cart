@@ -24,7 +24,7 @@
     <footer class="tw-flex tw-items-center tw-flex-col tw-w-full tw-bg-[#101923]">
         <div class="tw-flex tw-items-center tw-flex-col tw-pt-24 tw-pb-14">
             <span class="tw-text-sm tw-text-[#777777]">ESTAMOS LISTOS</span>
-            <h1 class="tw-text-[45px] tw-font-bold tw-text-white tw-mb-11">
+            <h1 class="tw-text-[45px] tw-font-bold tw-text-white tw-mb-11 tw-text-center">
                 ¿Te imaginas un proyecto juntos?
             </h1>
             <q-btn

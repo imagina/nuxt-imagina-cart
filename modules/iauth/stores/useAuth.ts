@@ -357,8 +357,9 @@ export const useAuthStore = defineStore('authStore', {
 
     /* site settings */
     async getSettings(settings: string[]) {
+      /*
       const config = useRuntimeConfig()
-
+      
       return await $fetch(`${config.public.apiRoute}/api${apiRoutes.settings}`, {
         method: 'GET',
         headers: {
@@ -370,6 +371,14 @@ export const useAuthStore = defineStore('authStore', {
           },
         },
       })
+      */
+      const params = {
+        filter: {
+          name: settings,
+        },
+      }
+      console.log('settings')
+      return await baseService.index(apiRoutes.settings, params)
     },
     /* facebook settings */
     async getFacebookSettings() {
