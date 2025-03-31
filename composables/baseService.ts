@@ -38,6 +38,7 @@ const baseService = {
 			}			
 			
 			const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
+			console.log(api)
 
 			$fetch('/api/base', {
 				method: 'GET',
@@ -63,9 +64,12 @@ const baseService = {
 		return new Promise((resolve, reject) => {
 			if (!apiUrl) return reject('apiUrl is required') //Validate config name
 
-			$fetch(apiUrl, {
+			$fetch('/api/base', {
 				method: 'GET',
-				params
+				params: {
+					api:  apiUrl,
+					...params
+				}
 			}).then(response => resolve(response)).catch(error => {
 				reject(error)
 			})

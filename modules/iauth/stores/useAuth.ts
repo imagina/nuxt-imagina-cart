@@ -606,8 +606,8 @@ export const useAuthStore = defineStore('authStore', {
           console.error(e)
         })
     },
-    async getUsdRates(){
-      await $fetch('https://nflow2.imaginacolombia.com/webhook/imagina/get/trm').then((response) => this.usdRates = response)
+    async getUsdRates(){            
+      await baseService.get('https://nflow2.imaginacolombia.com/webhook/imagina/get/trm').then((response) => this.usdRates = response)
      }
   },  
 })
