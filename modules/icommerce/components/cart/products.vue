@@ -33,8 +33,7 @@
       <hr class="tw-w-full tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
       <div class="
         md:tw-flex
-        md:tw-justify-between 
-        md:tw-justify-center 
+        md:tw-justify-between
         md:tw-gap-5"
       >
         <div>
@@ -78,17 +77,40 @@
           <div class="
             md:tw-flex
             md:tw-flex-col
+            md:tw-pr-0
+            tw-pr-4
+            tw-mt-4
             tw-flex
+            tw-align-middle                        
             tw-justify-between 
-            tw-justify-center 
             "
           >
-            <span class="tw-text-[13px]">Tarifa de configuración:</span>
-            <span class="tw-text-lg tw-font-semibold"> $000.000 {{ currency }}</span>
+            <span class="tw-text-[13px]">Tarifa de configuración:&nbsp;</span>
+            <span class="tw-text-lg tw-font-semibold"> $0{{ currency }}</span>
           </div>
-          <div class="tw-w-fit tw-px-4 tw-py-1.5 tw-rounded-full tw-border tw-border-[#00000033]">
-            <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
+
+          <div
+           class="
+            tw-flex
+            tw-align-middle
+            tw-justify-end
+            tw-items-center
+            tw-p-2
+            md:tw-p-4
+           "
+          >
+            <div class="
+              tw-px-4
+              tw-py-1.5
+              tw-rounded-full
+              tw-border
+              tw-border-[#00000033]
+              "
+            >
+              <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
+            </div>
           </div>
+          
         </div>
       </div>
     </div>

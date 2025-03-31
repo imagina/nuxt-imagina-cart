@@ -3,57 +3,67 @@
 		<div class="
 			md:tw-flex
 			tw-flex-wrap
-			tw-justify-center
-			tw-py-4
+			tw-justify-center			
 			tw-p-4
 		">
 			<!--cart and products --->
 			<div>
-				<!--title -->
-				<div class="md:tw-flex md:tw-justify-between md:tw-items-center"  v-if="showCart">
-					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
-					<!-- currency -->
-					<div>
-						<div class="tw-flex tw-items-center">
-							<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
-							<template v-for="currencyItem in currencies">
-								<q-radio v-model="cartState.currency" :val="currencyItem.value"
-									:label="currencyItem.label" />
-							</template>
+				<div v-if="showCart" class="tw-mb-[40px]">
+					<!--title -->
+					<div class="md:tw-flex md:tw-justify-between md:tw-items-center">
+						<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
+						<!-- currency -->
+						<div>
+							<div class="tw-flex tw-items-center">
+								<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
+								<template v-for="currencyItem in currencies">
+									<q-radio v-model="cartState.currency" :val="currencyItem.value"
+										:label="currencyItem.label" />
+								</template>
+							</div>
 						</div>
 					</div>
+					<!-- products -->
+					<ProductsComponent 
+						:products="cartState.products" 
+						:currency="cartState.currency"
+						@removeProduct="(product) => removeProduct(product)" 
+						@subtotal="(val) => subtotal = val" 
+					/>
 				</div>
-				<!-- products -->
-				<div v-if="showCart">
-					<ProductsComponent :products="cartState.products" :currency="cartState.currency"
-						@removeProduct="(product) => removeProduct(product)" @subtotal="(val) => subtotal = val" />
-				</div>
+				<!-- empty cart -->
 				<div v-else >
 					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
 					<div class="tw-my-4 tw-text-[14px] tw-font-[400]">
 						<p>Your car is empty, Looks like you have not added anything to your cart. Go ahead & explore our products.
 						</p>
 					</div>
-					<q-btn label="Ir a tienda " text-color="black" color="amber" no-caps unelevated class="
-								tw-w-2/4
-								tw-justify-center
-								tw-font-bold
-								tw-rounded-lg
-								tw-mt-4
-								tw-my-8
-							" @click="() => {
-								router.push({ path: getPath('icommerce.products') })
-							}" />
+					<q-btn 
+						label="Ir a tienda" 
+						text-color="black"
+						color="amber"
+						no-caps
+						unelevated 
+						class="
+							tw-w-2/4
+							tw-justify-center
+							tw-font-bold
+							tw-rounded-lg
+							tw-mt-4
+							tw-my-8
+						" 
+						@click="() => { router.push({ path: getPath('icommerce.products') })}" 
+					/>
 				</div>
 			</div>
 
 			<!-- cart-->
-
 			<div 
 				v-if="showCart"
 				class="
 				md:tw-ml-8
-				xl:tw-mt-[114px]
+				md:tw-my-[20px]
+				lg:tw-mt-[120px]
 				"
 			>
 				<div class="
@@ -66,21 +76,21 @@
 				>
 					<div class="tw-flex tw-justify-between tw-items-center">
 						<span class="
-											tw-font-semibold 
-											tw-text-[22px] 
-											tw-m-0 
-											tw-p-0
-											tw-leading-5
-										">
+							tw-font-semibold 
+							tw-text-[22px] 
+							tw-m-0 
+							tw-p-0
+							tw-leading-5
+						">
 							Subtotal
 						</span>
 						<span class="											
-												tw-text-[18px] 
-												tw-font-[400]
-												tw-m-0 
-												tw-p-0
-												tw-leading-5
-											">
+							tw-font-[600]
+							tw-text-[20px] 
+							tw-m-0 
+							tw-p-0
+							tw-leading-5
+						">
 							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
@@ -115,22 +125,23 @@
 							<q-input v-model="form.coupon" dense outlined />
 						</div>
 					</div>
-
-
-
-
-
 					<div class="tw-mt-4">
-						<q-btn label="Continuar" text-color="black" color="amber" no-caps unelevated class="
-										tw-w-full
-										tw-justify-center
-										tw-font-bold
-										tw-rounded-lg
-									" @click="redirectCheckout()" />
+						<q-btn 
+							label="Continuar"
+							text-color="black"
+							color="amber"
+							no-caps
+							unelevated
+							class="
+								tw-w-full
+								tw-justify-center
+								tw-font-bold
+								tw-rounded-lg
+							"
+							@click="redirectCheckout()" 
+						/>
 					</div>
 				</div>
-
-
 			</div>
 		</div>
 	</ClientOnly>

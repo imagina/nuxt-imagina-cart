@@ -1,10 +1,33 @@
 <template>
 	<ClientOnly>
-		<div class="tw-flex tw-flex-wrap md:tw-justify-center tw-py-4 tw-gap-8" v-if="products">
-			<div class="tw-w-[730px]">
+		<div
+			v-if="products"
+			class="
+				tw-flex
+				tw-flex-wrap
+				md:tw-justify-center
+		">
+			<div class="
+				tw-w-full
+				sm:tw-w-[730px]
+				tw-px-10
+				md:tw-my-10
+			">
 				<div class="tw-my-4">
-					<q-btn label="Back" icon="chevron_left" dense flat rounded color="#101923"
-						class="q-p-0 tw-font-bold tw-text-[16px] md:tw-text-[20px]" no-caps @click="redirectToCart()" />
+					<q-btn
+						label="Back"
+						icon="chevron_left"
+
+						class="
+							tw-font-[700]
+							tw-text-[20px]
+							q-pa-0
+						"
+						unelevated
+						rounded
+						no-caps
+						@click="redirectToCart()"
+						/>
 				</div>
 
 				<!-- user data -->
@@ -48,8 +71,24 @@
 
 						</div>
 						<div class="tw-my-4 ">
-							<q-btn no-caps label="Continuar" type="submit" text-color="black" color="amber" unelevated
-								class="tw-font-bold tw-rounded-lg tw-capitalize tw-max-w-[160px] tw-text-[16px] lg:tw-text-[20px] tw-p-[8px 20px] lg:tw-p-[13px 30px]" />
+							<q-btn
+								label="Continuar"
+								type="submit"
+								text-color="black"
+								color="amber"
+								class="
+									tw-font-bold
+									tw-rounded-lg
+									tw-capitalize
+									tw-w-full
+									lg:tw-max-w-[160px]
+									tw-text-[16px]
+									lg:tw-text-[20px]
+									tw-p-[8px 20px]
+									lg:tw-p-[13px 30px]"
+								unelevated
+								no-caps
+							/>
 						</div>
 
 					</q-form>
@@ -57,7 +96,14 @@
 
 			</div>
 			<!-- summary -->
-			<div class="tw-mt-20 tw-w-[360px]">
+			<div class="
+				tw-w-full
+				tw-mx-10
+				lg:tw-mx-0
+				md:tw-w-[360px]
+				md:tw-my-[20px]
+				lg:tw-mt-[120px]
+			">
 				<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
 					<div class="tw-my-2">
 						<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
@@ -99,10 +145,79 @@
 						</q-expansion-item>
 					</div>
 					<hr class="tw-my-4" />
-					<div class="tw-my-2">
-						<strong class="tw-text-base lg:tw-text-lg !tw-text-[#444]">
-							Subtotal {{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-						</strong>
+					<div class="tw-flex tw-justify-between tw-items-center">
+						<span class="
+							tw-font-[600]
+							tw-text-[20px]
+							tw-m-0
+							tw-p-0
+							tw-leading-5
+						">
+							Subtotal
+						</span>
+						<span class="
+							tw-text-[18px]
+							tw-font-[400]
+							tw-m-0
+							tw-p-0
+							tw-leading-5
+						">
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+						</span>
+					</div>
+
+
+					<!-- discount -->
+					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
+						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
+							Descuento 00%
+						</span>
+						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
+							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+						</span>
+					</div>
+
+					<div class="tw-my-4 tw-flex-nowrap">
+						<span>Impuestos</span><br/>
+						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
+							Calculado después de la información de facturación
+						</span>
+					</div>
+
+					<hr class="tw-my-4" />
+
+					<!--total--->
+					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
+						<span class="
+							tw-font-[600]
+							tw-text-[20px]
+							tw-my-0
+							tw-p-0
+							tw-leading-5
+						">
+							Total
+						</span>
+						<span class="
+							tw-text-[18px]
+							tw-font-[400]
+							tw-m-0
+							tw-p-0
+							tw-leading-5
+						">
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+						</span>
+					</div>
+
+					<!--coupon -->
+					<div>
+						<div>
+							<q-btn label="¿Tienes código de cupón?"
+								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]" flat no-caps dense
+								@click="showCouponInput = !showCouponInput" />
+						</div>
+						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
+							<q-input v-model="form.coupon" dense outlined />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -140,6 +255,7 @@ const form = useStorage('shoppingCheckoutForm', {
 const router = useRouter()
 
 const refForm = ref(null)
+const showCouponInput = ref(false)
 
 const user = computed(() => authStore.user)
 const products = computed(() => cartState.value.products)
@@ -159,7 +275,7 @@ watch(
 )
 
 onBeforeMount(() => {
-	if (!cartState.value.products.length) redirectToCart() //empty cart 
+	if (!cartState.value.products.length) redirectToCart() //empty cart
 })
 
 
