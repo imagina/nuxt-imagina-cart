@@ -10,8 +10,9 @@
 		">
 			<div class="
 				tw-w-full
+				tw-mb-4
 				lg:tw-w-[800px]
-				lg:tw-mb-4
+				
 			">
 				<div class="tw-my-4">
 					<q-btn
