@@ -12,7 +12,7 @@
 				tw-w-full
 				tw-mb-4
 				lg:tw-w-[800px]
-				
+
 			">
 				<div class="tw-my-4">
 					<q-btn
@@ -52,24 +52,120 @@
 
 					<q-form @submit.prevent.stop="goToPayment" ref="refForm">
 						<div class="tw-my-4 tw-grid lg:tw-grid-cols-2 tw-gap-y-5 lg:tw-gap-y-8 tw-gap-x-5">
-							<q-input v-model="form.email" label="Email" dense outlined />
-							<q-input v-model="form.firstName" label="Nombres" dense outlined />
-							<q-input v-model="form.lastName" label="Apellidos" dense outlined />
+							<q-input
+								v-model="form.email"
+								label="Email"
+								:rules="[
+									(val) => !!val || 'Correo es requerido.',
+									(val) =>
+									/.+@.+\..+/.test(val) ||
+									'Por favor introduzca un correo valido',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.firstName"
+								label="Nombres"
+								:rules="[
+									(val) => !!val || 'Nombre es requerido.',
+									(val) =>
+									val.length >= 3 ||
+									'El nombre debe de tener 3 o más caracteres',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.lastName"
+								label="Apellidos"
+								:rules="[
+									(val) => !!val || 'Apellido requerido.',
+									(val) =>
+									val.length >= 3 ||
+									'El Apellido debe de tener 3 o más caracteres',
+								]"
+								dense
+								outlined
+							/>
 
 
-							<q-select v-model="form.identificationType"
-								:options="[{ value: 'cedula', label: 'Cedula de ciudadania' }]" option-value="value"
-								option-label="label" outlined dense label="Tipo de identificacion" />
+							<q-select
+								v-model="form.identificationType"
+								:options="[{ value: 'cedula', label: 'Cedula de ciudadania' }]"
+								option-value="value"
+								option-label="label"
+								outlined
+								dense
+								label="Tipo de identificacion"
 
-							<q-input v-model="form.identification" label="Identificacion" dense outlined />
-							<q-input v-model="form.mobilePhone" label="Phone" type="tel" dense outlined />
+							/>
 
-							<q-input v-model="form.country" label="Pais de residencia" dense outlined />
-							<q-input v-model="form.address" label="Direccion" dense outlined />
-							<q-input v-model="form.city" label="Ciudad" dense outlined />
-							<q-input v-model="form.region" label="Region" dense outlined />
-							<q-input v-model="form.zipCode" label="Codigo postal" dense outlined />
+							<q-input
+								v-model="form.identification"
+								label="Identificacion"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.mobilePhone"
+								label="Phone"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								type="tel"
+								dense
+								outlined
+							/>
 
+							<q-input
+								v-model="form.country"
+								label="Pais de residencia"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.address"
+								label="Direccion"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.city"
+								label="Ciudad"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.region"
+								label="Region"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+							<q-input
+								v-model="form.zipCode"
+								label="Codigo postal"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
 						</div>
 						<div class="tw-my-4 ">
 							<q-btn
@@ -269,6 +365,10 @@ const subtotal = computed(() => {
 	return value
 })
 
+const disableButton = computed( () => refForm.value.validate() )
+
+//const disableButton = ref(true)
+
 watch(
 	() => cartState.value.products,
 	(newValue, oldValue) => {
@@ -359,12 +459,13 @@ async function goToPayment() {
 				url: product.url,
 				discount: product.discount,
 				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
-				price: productsHelper.getPrice(product, cartState.currency)
+				price: productsHelper.getPrice(product, cartState.currency),
+				currency: cartState.value.currency
 			}
 		})
 	}
 
-	console.log(JSON.stringify(order))
+	console.log(JSON.stringify(order))	
 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
@@ -373,7 +474,10 @@ async function goToPayment() {
 		console.log(response)
 		//WIP
 		window.location.replace('https://clientes.imaginacolombia.com');
-		cartState.value = { products: [] }
+		cartState.value = { 
+			products: [],
+			currency:  cartState.value.currency
+		}
 	})
 
 

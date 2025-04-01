@@ -17,7 +17,7 @@ const auth = reactive<{
 }>({
   username: '',
   password: '',
-  remember_me: false,
+  remember_me: true,
 })
 const loading = computed(() => store.loading)
 
@@ -86,56 +86,43 @@ async function login() {
                 </template>
               </q-input>
               <div class="tw-flex tw-justify-between tw-flex-col sm:tw-flex-row tw-mb-3">
-                <label class="tw-flex tw-items-center tw-mb-2">
-                  <q-checkbox
-                      class="tw-bg-input !tw-border-input"
-                      v-model="auth.remember_me"
-                  ></q-checkbox>
-                  <span class="tw-ml-2 tw-text-sm lg:tw-text-md tw-text-slate-500">
-                  {{ Helper.tLang('auth.login.inputs.rememberMe') }}
-                </span>
-                </label>
-                <NuxtLink :to="getPath('iauth.resetPassword')">
-                <q-btn
-                    class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md mx-auto sm-mx-0 tw-flex tw-mx-auto"
-                    size="md"
-                    color="#64748b"
-                    flat
-                >
-                    {{ Helper.tLang('auth.login.forgotPassword') }}
-                  </q-btn>
-                </NuxtLink>
+                
+                
               </div>
               <div class="tw-flex tw-justify-center tw-mb-1">
                 <SocialAuthGoogle/>
                 <SocialAuthFacebook/>
               </div>
-              <transition name="hero">
+              <div class="tw-flex tw-justify-between">
+                <NuxtLink :to="getPath('iauth.register')">
+                <q-btn
+                  class="tw-capitalize !tw-text-[#64748b] tw-rounded-md"
+                  size="md"
+                  label="Crear cuenta"
+                />                                 
+              </NuxtLink>
+                
                 <q-btn
                     :disabled="loading"                    
                     type="submit"
                     color="primary"
+                    class="tw-rounded-md"
                     unelevated
                     no-caps
-                    :label="Helper.tLang('auth.login.submitBtn')"
-                >
-                </q-btn>
-              </transition>
+                    label="Iniciar Sesíon"
+                />
+              </div>
             </q-form>
-            <div class="max-[400px]:tw-flex-col tw-flex tw-items-center justify-center tw-mt-8 tw-gap-4">
-              <p class="tw-text-slate-700 tw-text-sm tw-font-light tw-text-center">
-                {{ Helper.tLang('auth.login.withoutAccount.content') }}
-              </p>
-              <NuxtLink :to="getPath('iauth.register')">
-                <q-btn
-                    class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md"
-                    size="md"
-                    color="#64748b"
-                    
-                >
-                   {{ Helper.tLang('auth.login.withoutAccount.link') }}
-                </q-btn>
-              </NuxtLink>
+            <div class="tw-m-4">
+              <NuxtLink :to="getPath('iauth.resetPassword')">
+                  <q-btn
+                      class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md mx-auto sm-mx-0 tw-flex tw-mx-auto"
+                      label="Recuperar Contraseña"
+                      size="md"
+                      color="#64748b"
+                      flat
+                  />
+                </NuxtLink>
             </div>
           </div>
         </div>

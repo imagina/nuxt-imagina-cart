@@ -14,10 +14,25 @@
 			">
 				<div v-if="showCart" class="tw-mb-[40px]">
 					<!--title -->
-					<div class="md:tw-flex md:tw-justify-between md:tw-items-center">
-						<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
+					<div class="tw-flex tw-justify-between tw-items-center">
+						<div>
+							<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
+						</div>
+						
 						<!-- currency -->
 						<div>
+							<q-select
+								label="Divisa"
+								class="tw-w-[200px]"
+								v-model="cartState.currency"
+								:options="currencies"
+								emit-value
+								map-options									
+								outlined
+								dense								
+							/>
+						</div>
+						<div v-if="false">
 							<div class="tw-flex tw-items-center">
 								<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
 								<template v-for="currencyItem in currencies">
@@ -25,7 +40,7 @@
 										:label="currencyItem.label" />
 								</template>
 							</div>
-						</div>
+						</div>						
 					</div>
 					<!-- products -->
 					<ProductsComponent
@@ -34,6 +49,13 @@
 						@removeProduct="(product) => removeProduct(product)"
 						@subtotal="(val) => subtotal = val"
 					/>
+
+					<!--aditional cards -->
+
+					<div>
+						<span class="tw-text-xl tw-font-bold">Protege tu marca:&nbsp;</span>
+						<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
+					</div>
 				</div>
 				<!-- empty cart -->
 				<div v-else >

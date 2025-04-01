@@ -230,18 +230,12 @@ async function getCaptcha() {
               />
             </ClientOnly>
             <div class="max-[400px]:tw-flex-col tw-flex tw-items-center justify-center tw-mt-8 tw-gap-4">
-              <p class="tw-text-slate-700 tw-text-sm tw-font-light tw-text-center">
-                {{ Helper.tLang('auth.register.existAccount.content') }}
-              </p>
               <NuxtLink :to="getPath('iauth.login')">
                 <q-btn
-                    class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md"
-                    size="md"
-                    color="#64748b"
-                    flat
-                >
-                  {{ Helper.tLang('auth.register.existAccount.link') }}
-                </q-btn>
+                  class="tw-capitalize tw-text-[#64748b] tw-rounded-md"
+                  size="md"
+                  label="Iniciar Sesíon"                  
+              />
               </NuxtLink>
             </div>
           </div>
