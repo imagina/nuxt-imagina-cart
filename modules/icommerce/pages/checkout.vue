@@ -6,12 +6,12 @@
 				tw-flex
 				tw-flex-wrap
 				md:tw-justify-center
+				tw-p-4
 		">
 			<div class="
 				tw-w-full
-				sm:tw-w-[730px]
-				tw-px-10
-				md:tw-my-10
+				lg:tw-w-[800px]
+				lg:tw-mb-4
 			">
 				<div class="tw-my-4">
 					<q-btn
@@ -98,11 +98,12 @@
 			<!-- summary -->
 			<div class="
 				tw-w-full
-				tw-mx-10
-				lg:tw-mx-0
-				md:tw-w-[360px]
 				md:tw-my-[20px]
-				lg:tw-mt-[120px]
+				lg:tw-w-[800px]
+				lg:tw-mt-0
+				xl:tw-w-[400px]
+				xl:tw-mt-[80px]
+				xl:tw-ml-8
 			">
 				<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
 					<div class="tw-my-2">

@@ -1,13 +1,17 @@
 <template>
 	<ClientOnly>
 		<div class="
-			md:tw-flex
+			lg:tw-flex
 			tw-flex-wrap
-			tw-justify-center			
+			tw-justify-center
 			tw-p-4
 		">
 			<!--cart and products --->
-			<div>
+			<div class="
+			tw-w-full
+			lg:tw-w-[800px]
+			lg:tw-mb-4
+			">
 				<div v-if="showCart" class="tw-mb-[40px]">
 					<!--title -->
 					<div class="md:tw-flex md:tw-justify-between md:tw-items-center">
@@ -24,11 +28,11 @@
 						</div>
 					</div>
 					<!-- products -->
-					<ProductsComponent 
-						:products="cartState.products" 
+					<ProductsComponent
+						:products="cartState.products"
 						:currency="cartState.currency"
-						@removeProduct="(product) => removeProduct(product)" 
-						@subtotal="(val) => subtotal = val" 
+						@removeProduct="(product) => removeProduct(product)"
+						@subtotal="(val) => subtotal = val"
 					/>
 				</div>
 				<!-- empty cart -->
@@ -38,12 +42,12 @@
 						<p>Your car is empty, Looks like you have not added anything to your cart. Go ahead & explore our products.
 						</p>
 					</div>
-					<q-btn 
-						label="Ir a tienda" 
+					<q-btn
+						label="Ir a tienda"
 						text-color="black"
 						color="amber"
 						no-caps
-						unelevated 
+						unelevated
 						class="
 							tw-w-2/4
 							tw-justify-center
@@ -51,43 +55,46 @@
 							tw-rounded-lg
 							tw-mt-4
 							tw-my-8
-						" 
-						@click="() => { router.push({ path: getPath('icommerce.products') })}" 
+						"
+						@click="() => { router.push({ path: getPath('icommerce.products') })}"
 					/>
 				</div>
 			</div>
 
 			<!-- cart-->
-			<div 
+			<div
 				v-if="showCart"
 				class="
-				md:tw-ml-8
+				tw-w-full
 				md:tw-my-[20px]
-				lg:tw-mt-[120px]
+				lg:tw-w-[800px]
+				lg:tw-mt-0
+				xl:tw-w-[400px]
+				xl:tw-mt-[114px]
+				xl:tw-ml-8
 				"
 			>
 				<div class="
 					card
 					tw-rounded-[20px]
 					tw-w-full
-					md:tw-w-[400px]
-					tw-p-4					
+					tw-p-6
 					"
 				>
 					<div class="tw-flex tw-justify-between tw-items-center">
 						<span class="
-							tw-font-semibold 
-							tw-text-[22px] 
-							tw-m-0 
+							tw-font-semibold
+							tw-text-[22px]
+							tw-m-0
 							tw-p-0
 							tw-leading-5
 						">
 							Subtotal
 						</span>
-						<span class="											
+						<span class="
 							tw-font-[600]
-							tw-text-[20px] 
-							tw-m-0 
+							tw-text-[20px]
+							tw-m-0
 							tw-p-0
 							tw-leading-5
 						">
@@ -126,7 +133,7 @@
 						</div>
 					</div>
 					<div class="tw-mt-4">
-						<q-btn 
+						<q-btn
 							label="Continuar"
 							text-color="black"
 							color="amber"
@@ -138,7 +145,7 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							@click="redirectCheckout()" 
+							@click="redirectCheckout()"
 						/>
 					</div>
 				</div>

@@ -30,7 +30,7 @@
           @click="$emit('removeProduct', product)"
         />
       </div>
-      <hr class="tw-w-full tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
+      <hr class="tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
       <div class="
         md:tw-flex
         md:tw-justify-between
