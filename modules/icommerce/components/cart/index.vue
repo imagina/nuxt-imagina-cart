@@ -31,7 +31,7 @@ const props = defineProps({
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
-	currency: ''
+	currency: 'COP'
 })
 const isHovered = ref(false);
 const path = getPath('icommerce.cart')

@@ -153,7 +153,7 @@ import productsHelper from '../helpers/products'
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
-	currency: ''
+	currency: 'COP'
 })
 
 const form = useStorage('shoppingCheckoutForm', {
