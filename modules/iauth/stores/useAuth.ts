@@ -142,7 +142,6 @@ export const useAuthStore = defineStore('authStore', {
       localStorage.setItem('userToken', this.token)
       localStorage.setItem('expiresIn', userData.expiresIn)
       localStorage.setItem('username', this.user.email)
-      Helper.redirectTo(routes.home)
     },
 
     async login(credentials: {
@@ -210,7 +209,15 @@ export const useAuthStore = defineStore('authStore', {
             this.username = dataForm.email
             this.password = dataForm.password
 
+            
+            const route = useRoute()
+          if(route.query?.redirectTo){
+            this.login({ username: dataForm.email, password: dataForm.password })
+          } else {
             Helper.redirectTo(apiRoutes.login)
+          }
+
+            
             Notify.create({
               message: '¡Usuario creado! Ahora puedes iniciar sesión.',
               type: 'positive',
@@ -355,12 +362,11 @@ export const useAuthStore = defineStore('authStore', {
       return setting && setting?.value ? setting.value : null
     }, 
 
-    /* site settings */
-    async getSettings(settings: string[]) {
-      /*
+
+    async getOldSettings(settings: string[]) {
       const config = useRuntimeConfig()
       
-      return await $fetch(`${config.public.apiRoute}/api${apiRoutes.settings}`, {
+      await $fetch(`${config.public.apiRoute}/api${apiRoutes.settings}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -370,15 +376,23 @@ export const useAuthStore = defineStore('authStore', {
             name: settings,
           },
         },
+      }).then(response => {
+        if(response?.data) this.settings = response.data
       })
-      */
+
+    },
+
+    /* site settings */
+    async getSettings(settings: string[]) {      
       const params = {
         filter: {
           name: settings,
         },
       }
-      console.log('settings')
-      return await baseService.index(apiRoutes.settings, params)
+      console.log('loading settings')
+      return await baseService.index(apiRoutes.settings, params).then(response => {
+        if(response?.data) this.settings = response.data
+      })
     },
     /* facebook settings */
     async getFacebookSettings() {

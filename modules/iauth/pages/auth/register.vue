@@ -14,6 +14,7 @@ definePageMeta({
 const refRegister: any = ref(null)
 const isPwd = ref(true)
 const store = useAuthStore()
+const route = useRoute()
 
 const auth = reactive<{
   firstName: string
@@ -36,6 +37,7 @@ const auth = reactive<{
 })
 const loading = false
 const captchaRef = ref('captchaRef')
+const routeQuery = computed(() => route?.query ||  null)
 
 async function register() {
   try {
@@ -160,81 +162,38 @@ async function getCaptcha() {
                       @click="isPwd = !isPwd"
                   />
                 </template>
-              </q-input>
-              <div class="tw-mb-6">
-                <label class="tw-flex tw-items-center">
-                  <q-checkbox
-                      v-model="auth.agreement"
+              </q-input> 
+              <!-- captcha -->            
+              <div class="tw-flex tw-justify-center">
+                <ClientOnly>
+                  <captchaComponent
+                    ref="captchaRef"
                   />
-                  <span class="tw-ml-2 tw-text-sm md:tw-text-md tw-text-slate-500">
-                    <!-- <i18n-t keypath="auth.register.inputs.termsAndCond.content">
-                      <template #highlight1>
-                        <NuxtLink
-                          to="/termsAndConditions"
-                          class="tw-text-primary tw-font-bold"
-                        >
-                          {{ $t('auth.register.inputs.termsAndCond.highlight1') }}
-                        </NuxtLink>
-                      </template>
-                      <template #highlight2>
-                        <NuxtLink
-                          to="/privacyPolicy"
-                          class="tw-text-primary tw-font-bold"
-                        >
-                          {{ $t('auth.register.inputs.termsAndCond.highlight2') }}
-                        </NuxtLink>
-                      </template>
-                    </i18n-t> -->
-                    Acepto el
-                    <a
-                        href="/termsAndConditions"
-                        target="_blank"
-                        class="tw-px-1 tw-font-[500] tw-duration-150 hover:tw-text-secondary"
-                    >
-                      Acuerdo de usuario
-                    </a>
-                    y la
-                    <a
-                        href="/dataProcessingPolicy"
-                        target="_blank"
-                        class="tw-pl-1 tw-font-[500] tw-duration-150 hover:tw-text-secondary"
-                    >
-                      Política de privacidad
-                    </a>
-                    .
-                  </span>
-                </label>
+                </ClientOnly>
               </div>
-              <transition name="hero">
+              <div class="tw-flex tw-justify-end">
                 <q-btn
                     :disabled="
                     loading ||
-                    !auth.agreement ||
                     auth.password !== auth.passwordAgain
                   "
+                    class="tw-rounded-md"
                     type="submit"
-                    class="glossy tw-tracking-widest"
                     color="primary"
                     unelevated
                     no-caps
-                >
-                  <span class="tw-ml-3">
-                    {{ Helper.tLang('auth.register.submitBtn') }}
-                  </span>
-                </q-btn>
-              </transition>
+                    :label="Helper.tLang('auth.register.submitBtn')"
+                />
+              </div>              
             </q-form>
-            <ClientOnly>
-              <captchaComponent
-                  ref="captchaRef"
-              />
-            </ClientOnly>
-            <div class="max-[400px]:tw-flex-col tw-flex tw-items-center justify-center tw-mt-8 tw-gap-4">
-              <NuxtLink :to="getPath('iauth.login')">
+            <div class="tw-flex tw-items-center justify-center tw-mt-4">
+              <NuxtLink :to="{ path: getPath('iauth.login'), query: routeQuery }">
                 <q-btn
-                  class="tw-capitalize tw-text-[#64748b] tw-rounded-md"
+                  class="tw-text-[#64748b]"
                   size="md"
-                  label="Iniciar Sesíon"                  
+                  label="Iniciar Sesíon"
+                  flat
+                  no-caps
               />
               </NuxtLink>
             </div>

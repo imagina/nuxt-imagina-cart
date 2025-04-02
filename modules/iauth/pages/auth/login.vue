@@ -3,9 +3,13 @@ import { reactive, ref } from 'vue'
 import PasswordValidator from '@/utils/validators/passwordValidator'
 import logo from "../../assets/images/red-logo-imagina.png"
 
+import SocialAuthGoogle from '../../components/socialAuth/google.vue'
+import SocialAuthFacebook from '../../components/socialAuth/facebook.vue'
+
 const refLogin: any = ref(null)
 const isPwd = ref(true)
 const store = useAuthStore()
+const route = useRoute()
 definePageMeta({
   // middleware: 'auth',
   //layout: 'dark-bg',
@@ -20,6 +24,7 @@ const auth = reactive<{
   remember_me: true,
 })
 const loading = computed(() => store.loading)
+const routeQuery = computed(() => route?.query ||  null) 
 
 onMounted(() => {
   if (store.username) auth.username = store.username
@@ -88,13 +93,10 @@ async function login() {
               <div class="tw-flex tw-justify-between tw-flex-col sm:tw-flex-row tw-mb-3">
                 
                 
-              </div>
-              <div class="tw-flex tw-justify-center tw-mb-1">
-                <SocialAuthGoogle/>
-                <SocialAuthFacebook/>
-              </div>
+              </div>              
               <div class="tw-flex tw-justify-between">
-                <NuxtLink :to="getPath('iauth.register')">
+                
+                <NuxtLink :to="{ path: getPath('iauth.register'), query: routeQuery }">
                 <q-btn
                   class="tw-capitalize !tw-text-[#64748b] tw-rounded-md"
                   size="md"
@@ -124,6 +126,10 @@ async function login() {
                   />
                 </NuxtLink>
             </div>
+            <div class="tw-flex tw-justify-center tw-mb-1">
+                <SocialAuthGoogle/>
+                <SocialAuthFacebook v-if="false"/>
+              </div>
           </div>
         </div>
       </div>

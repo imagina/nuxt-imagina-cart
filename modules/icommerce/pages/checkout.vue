@@ -41,13 +41,18 @@
 						Dirección de facturación
 					</h2>
 					<!-- logging -->
-					<div class="tw-flex tw-justify-center tw-align-middle tw-p-4">
+					<div class="tw-flex tw-justify-center tw-align-middle tw-p-4 tw-gap-4">
 						<SocialAuthGoogle />
-
-						<div v-if="!authStore.isLogged()">
-							<q-btn @click="redirectToLogin()" label="Iniciar sesion" icon="person" color="primary"
-								unelevated rounded no-caps />
-						</div>
+						<q-btn
+							v-if="!authStore.isLogged()"
+							@click="redirectToLogin()"
+							label="Iniciar sesion"
+							icon="person"
+							color="primary"
+							unelevated
+							rounded
+							no-caps
+						/>
 					</div>
 
 					<q-form @submit.prevent.stop="goToPayment" ref="refForm">
@@ -328,6 +333,7 @@
 import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
+import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
 
 
 const quasar = useQuasar()
@@ -465,7 +471,7 @@ async function goToPayment() {
 		})
 	}
 
-	console.log(JSON.stringify(order))	
+	console.log(JSON.stringify(order))
 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
@@ -474,7 +480,7 @@ async function goToPayment() {
 		console.log(response)
 		//WIP
 		window.location.replace('https://clientes.imaginacolombia.com');
-		cartState.value = { 
+		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency
 		}

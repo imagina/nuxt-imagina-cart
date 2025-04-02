@@ -12,10 +12,10 @@ const state = reactive({
 })
 
 onMounted(() => {
-  store.getFacebookSettings().then(() => addCDN())
+  init()
 })
 
-const appIdFacebook = computed(() => store.getFacebookClientId)
+const appIdFacebook = computed(() => getSetting('isite::facebookClientId') )
 
 ////add CDN  to head
 async function addCDN() {
@@ -41,6 +41,11 @@ async function addCDN() {
   })(document, 'script', 'facebook-jssdk')
 }
 
+async function init(){
+  //store.getFacebookSettings().then(() => addCDN())
+  await store.getSettings()
+  addCDN()
+}
 //SignIn method
 async function signIn() {
   //let app = this //assigned this to another variable

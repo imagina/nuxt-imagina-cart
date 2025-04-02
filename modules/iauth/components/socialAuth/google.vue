@@ -11,10 +11,11 @@ const state = reactive({
 })
 
 onMounted(() => {
-  store.getGoogleSettings().then(() => addCDN())
+  //store.getGoogleSettings().then(() => addCDN())
+  init()
 })
 
-const clientIdGoogle = computed(() => store.getGoogleClientId)
+const clientIdGoogle = computed(() => getSetting('isite::googleClientId'))
 
 async function addCDN() {
   let cdn = document.createElement('script') //create CDN google recaptcha
@@ -48,6 +49,10 @@ async function loadClientId() {
   }, 800)
 }
 
+async function init(){
+  await store.getSettings()
+  addCDN()
+}
 //SignIn method
 async function signIn(response) {
   google.accounts.id.prompt()

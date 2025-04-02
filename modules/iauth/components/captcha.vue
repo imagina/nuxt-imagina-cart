@@ -4,7 +4,7 @@
           <!--Widget V2-->
           <div v-if="captcha.version == '2'" id="g-recaptcha"></div>
           <!--Text V3-->
-          <div v-if="captcha.version == '3'" class="text-info-v3" v-html="'isite.cms.message.captcha'"></div>
+          <div v-if="captcha.version == '3'" class="text-info-v3" v-html="message"></div>
         </div>
     </ClientOnly>
   </template>
@@ -14,7 +14,12 @@
     props: {},
     emits: ['update:modelValue'],
     setup(){
-
+      const store = useAuthStore()
+      const message = 'Este sitio está protegido por reCaptcha y se aplican las <a href="https://policies.google.com/privacy" target="_blank">Politicas de Privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank">Terminos de servicios</a> de Google.'
+      return {
+        store,
+        message
+      }
     },
     mounted() {
         this.init()
@@ -43,13 +48,16 @@
     },
     methods: {
       //Init
-      init() {
+      async init() {
         //if (process.env.CLIENT) {
+
+          await this.store.getSettings()
           this.loadCaptcha()
         //}
       },
       //add CDN captcha
       loadCaptcha() {
+        console.log('config captcha')
         if (this.captcha.key) {
           try {
             //Instance attributes by version
