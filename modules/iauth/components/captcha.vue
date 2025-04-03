@@ -7,8 +7,8 @@
           <div v-if="captcha.version == '3'" class="text-info-v3" v-html="message"></div>
         </div>
     </ClientOnly>
-  </template>
-  <script>
+</template>
+<script>
   export default {
     name: 'captchaComponent',
     props: {},
@@ -114,27 +114,25 @@
   }
   </script>
   
-  <style lang="scss">
-  #masterCaptchaComponent {
+  <style >
+    
     #g-recaptcha {
       width: max-content;
       margin: auto;
     }
   
     .text-info-v3 {
-      color: $grey-5;
+      color: #bdbdbd;
       font-size: 14px;
       text-align: justify;
-  
-      a {
-        color: $light-blue-13;
-      }
     }
-  }
   
-  //Hidden badage
-  .grecaptcha-badge {
-    visibility: hidden;
-  }
+    .text-info-v3 > a {
+      color: #00b0ff !important;
+    }    
+  
+    .grecaptcha-badge {
+      visibility: hidden;
+    }
   </style>
   
