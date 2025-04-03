@@ -389,7 +389,6 @@ export const useAuthStore = defineStore('authStore', {
           name: settings,
         },
       }
-      console.log('loading settings')
       return await baseService.index(apiRoutes.settings, params).then(response => {
         if(response?.data) this.settings = response.data
       })

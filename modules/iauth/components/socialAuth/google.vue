@@ -11,7 +11,6 @@ const state = reactive({
 })
 
 onMounted(() => {
-  //store.getGoogleSettings().then(() => addCDN())
   init()
 })
 

@@ -57,7 +57,6 @@
       },
       //add CDN captcha
       loadCaptcha() {
-        console.log('config captcha')
         if (this.captcha.key) {
           try {
             //Instance attributes by version

@@ -35,7 +35,11 @@ const baseService = {
 				  way: way
 				};
 				
-			}			
+			}
+
+			params.setting = {
+				locale: 'en'
+			}
 			
 			const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
 			$fetch('/api/base', {

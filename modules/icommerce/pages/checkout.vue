@@ -471,13 +471,12 @@ async function goToPayment() {
 		})
 	}
 
-	console.log(JSON.stringify(order))
+	//console.log(JSON.stringify(order))
 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
 		body: JSON.stringify(order)
 	}).then((response) => {
-		console.log(response)
 		//WIP
 		window.location.replace('https://clientes.imaginacolombia.com');
 		cartState.value = {
