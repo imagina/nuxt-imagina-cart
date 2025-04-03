@@ -13,7 +13,8 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@pinia/nuxt',
     '@vesp/nuxt-fontawesome',
-    'nuxt-quasar-ui'
+    'nuxt-quasar-ui',
+    '@nuxtjs/i18n'
   ],
   shadcn: {
     /**
