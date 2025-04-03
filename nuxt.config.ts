@@ -27,6 +27,25 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui'
   },
+  i18n: {
+    defaultLocale: 'en',
+    locales: [
+      {
+        code: 'en',
+        file: 'en.js', 
+        name: 'English'
+      },
+      {
+        code: 'es',
+        file: 'es.js', 
+        name: 'Español'
+      },      
+    ],
+    lazy: true,
+    langDir: "locales",
+    detectBrowserLanguage: false
+    
+  },
   pinia: {
     storesDirs: ['./stores/**', './modules/*/stores/**'],
   },

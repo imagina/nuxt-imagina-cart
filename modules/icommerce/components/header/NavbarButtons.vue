@@ -1,6 +1,14 @@
 <script setup>
 import { computed } from 'vue';
 
+const { locale, locales } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
+
+const availableLocales = computed(() => {
+  return locales.value.filter(i => i.code !== locale.value)
+})
+
+
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 
@@ -45,6 +53,14 @@ const props = defineProps({
           </q-item>
         </q-list>
       </q-btn-dropdown>
+
+      <div>
+    <div>
+      <NuxtLink v-for="locale in availableLocales" :key="locale.code" :to="switchLocalePath(locale.code)">
+        {{ locale.name }}
+      </NuxtLink>
+    </div>
+  </div>
 
       <NuxtLink
           v-if="!authStore.isLogged()"
