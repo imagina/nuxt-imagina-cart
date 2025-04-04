@@ -43,6 +43,7 @@ async function login() {
 </script>
 
 <template>
+  <ClientOnly>
   <div class="tw-max-w-[90vw] sm:tw-max-w-md tw-mx-auto tw-h-screen">
     <div class="tw-flex tw-items-center tw-justify-center tw-h-full">
       <div class="tw-flex tw-flex-col tw-items-center tw-w-full">
@@ -135,6 +136,7 @@ async function login() {
       </div>
     </div>
   </div>
+</ClientOnly>
 </template>
 
 <style scoped>
