@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     componentDir: './components/ui'
   },
   i18n: {
-    defaultLocale: 'en',
+    defaultLocale: 'es',
     locales: [
       {
         code: 'en',
@@ -43,6 +43,8 @@ export default defineNuxtConfig({
     ],
     lazy: true,
     langDir: "locales",
+    strategy: 'no_prefix',
+
     detectBrowserLanguage: false
     
   },

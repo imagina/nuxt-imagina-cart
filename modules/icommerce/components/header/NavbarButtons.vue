@@ -1,16 +1,20 @@
 <script setup>
-import { computed } from 'vue';
-
+const { $i18n } = useNuxtApp();
 const { locale, locales } = useI18n()
+
 const switchLocalePath = useSwitchLocalePath()
 
 const availableLocales = computed(() => {
-  return locales.value.filter(i => i.code !== locale.value)
+  return locales.value
 })
 
 
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
+
+async function setLocale(code){
+    await $i18n.setLocale(code);
+}
 
 const props = defineProps({
   scrollPosition: Object,
@@ -31,6 +35,8 @@ const props = defineProps({
             'hover:tw-text-[#F9BA48] lg:tw-border-white': isScrolled
       }"
     >
+    {{ $t('icommerce.test') }}
+    {{ getPath('icommerce.cart') }}
       <q-btn-dropdown
           v-if="authStore.isLogged()"
           :label="user.fullName"
@@ -56,9 +62,14 @@ const props = defineProps({
 
       <div>
     <div>
-      <NuxtLink v-for="locale in availableLocales" :key="locale.code" :to="switchLocalePath(locale.code)">
-        {{ locale.name }}
-      </NuxtLink>
+      <template v-for="locale in locales">
+      <q-btn
+        no-caps
+        :label="locale.code"
+        @click="setLocale(locale.code)"
+        />
+      </template>
+      
     </div>
   </div>
 
