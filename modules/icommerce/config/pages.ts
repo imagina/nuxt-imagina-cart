@@ -2,7 +2,11 @@ const layout = 'icommerce'
 const pages = [
   {
     name: 'icommerce.products',
-    path: '/commerce/products',
+    //path: '/commerce/products',
+    paths:{
+      es: '/tienda/productos',
+      en: '/store/products',
+    },    
     page: 'pages/products.vue',
     meta: {
       layout,
@@ -14,6 +18,10 @@ const pages = [
   {
     name: 'icommerce.cart',
     path: '/commerce/cart',
+    paths:{
+      es: '/tienda/carrito',
+      en: '/store/cart',
+    },
     page: 'pages/cart.vue',
     meta: {
       layout,

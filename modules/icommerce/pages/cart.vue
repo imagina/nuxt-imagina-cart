@@ -199,6 +199,7 @@ const form = useStorage('shoppingCheckoutForm', {
 	zipCode: null
 })
 
+
 const router = useRouter()
 
 const subtotal = ref(0)
@@ -209,6 +210,7 @@ const showCouponInput = ref(false)
 const currencies = productsHelper.getCurrencies()
 
 const showCart = computed(() => cartState.value?.products?.length || false)
+const checkoutPath = getPath('icommerce.checkout')
 
 function removeProduct(product) {
 	const products = cartState.value.products.filter(obj => obj.id != product.id);
@@ -221,7 +223,7 @@ function removeProduct(product) {
 
 function redirectCheckout() {
 	router.push({
-		path: getPath('icommerce.checkout')
+		path: checkoutPath
 	})
 }
 

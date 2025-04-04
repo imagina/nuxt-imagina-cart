@@ -35,6 +35,11 @@
         tw-flex tw-items-center tw-justify-end lg:tw-w-3/12 xl:tw-w-4/12
         tw-min-w-max tw-relative tw-order-2
       ">
+      <div class="tw-mx-4">
+        <LocaleSelector 
+         :dark="isScrolled"
+        />
+      </div>
 
       <!--       Buttons Group-->
         <NavbarButtons v-if="!isMobile" :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
