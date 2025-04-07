@@ -2,7 +2,7 @@ const layout = 'icommerce'
 const pages = [
   {
     name: 'icommerce.products',
-    //path: '/commerce/products',
+    path: '/commerce/products',
     paths:{
       es: '/tienda/productos',
       en: '/store/products',

@@ -14,7 +14,7 @@ export default defineNuxtModule({
         pages.unshift({
           name: page.name,
           path: page?.path || '',
-          alias: page?.paths ? Object.values(page.paths) : '',          
+          // alias: page?.paths ? Object.values(page.paths) : '',   /* multi lang paths experimental*/
           /* file is the component/page to render */
           file: resolver.resolve(page.page),  // when the page is in inside the module
           //file: '~/pages/coffee.vue',  //when the page is  in absoulte route
