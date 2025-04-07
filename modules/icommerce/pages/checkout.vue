@@ -33,7 +33,6 @@
 
 				<!-- user data -->
 				<div class="shadow-card tw-rounded-3xl md:!tw-pt-8 tw-p-5">
-
 					<h2
 						class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
 						<span
@@ -41,10 +40,24 @@
 						Dirección de facturación
 					</h2>
 					<!-- logging -->
-					<div class="tw-flex tw-justify-center tw-align-middle tw-p-4 tw-gap-4">
+					<q-inner-loading
+						:showing="authStore.loading"
+						label="Please wait..."
+					> 
+					<q-spinner-mat size="50px" color="primary"></q-spinner-mat>
+					</q-inner-loading>
+					<div 
+						v-if="!authStore.isLogged()"
+						class="
+						tw-flex 
+						tw-justify-center
+						tw-align-middle
+						tw-p-4
+						tw-gap-4
+						" 
+					>
 						<SocialAuthGoogle />
 						<q-btn
-							v-if="!authStore.isLogged()"
 							@click="redirectToLogin()"
 							label="Iniciar sesion"
 							icon="person"
@@ -323,9 +336,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
-
-
+			</div>			
 		</div>
 	</ClientOnly>
 </template>
@@ -371,7 +382,7 @@ const subtotal = computed(() => {
 	return value
 })
 
-const disableButton = computed( () => refForm.value.validate() )
+//const disableButton = computed( () => refForm.value.validate() )
 
 //const disableButton = ref(true)
 
@@ -380,6 +391,13 @@ watch(
 	(newValue, oldValue) => {
 		if (!newValue.length) redirectToCart()
 	},
+)
+
+watch(
+	() => user.value, 
+	(newValue, oldValue) => {
+		setFormData()
+	}
 )
 
 onBeforeMount(() => {
@@ -393,6 +411,7 @@ onMounted(() => {
 
 function init() {
 	setFormData()
+	addRedirect()
 }
 
 function setFormData() {
@@ -404,13 +423,34 @@ function setFormData() {
 			identification: getField('identification'),
 			mobilePhone: getField('cellularPhone')
 		}
+	} else {		
+		resetFormData()
+	}
+
+}
+
+function resetFormData(){
+	console.log('RESET')
+	form.value = {
+		coupon: null,
+		email: null,
+		firstName: null,
+		lastName: null,
+		identification: null,
+		mobilePhone: null,
+		country: null,
+		address: null,
+		city: null,
+		region: null,
+		zipCode: null
 	}
 }
 
 function getField(name) {
 	const field = user.value.fields.find((field) => field.name == name)
-	if (field) return field.value
-	return false
+	console.warn(name, field)
+	if (field && field?.value) return field.value
+	return null
 }
 
 function redirectToCart() {
@@ -429,8 +469,11 @@ function redirectToLogin() {
 	})
 }
 
-function redirectToLogout() {
-	const path = getPath('iauth.logout')
+
+
+function addRedirect() {
+	if (authStore.isLogged()) return 
+	const path = getPath('icommerce.checkout')
 	router.push({
 		path,
 		query: {

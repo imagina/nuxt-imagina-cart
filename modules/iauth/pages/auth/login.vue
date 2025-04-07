@@ -8,7 +8,7 @@ import SocialAuthFacebook from '../../components/socialAuth/facebook.vue'
 
 const refLogin: any = ref(null)
 const isPwd = ref(true)
-const store = useAuthStore()
+const authStore = useAuthStore()
 const route = useRoute()
 definePageMeta({
   // middleware: 'auth',
@@ -23,19 +23,19 @@ const auth = reactive<{
   password: '',
   remember_me: true,
 })
-const loading = computed(() => store.loading)
+const loading = computed(() => authStore.loading)
 const routeQuery = computed(() => route?.query ||  null) 
 
 onMounted(() => {
-  if (store.username) auth.username = store.username
-  if (store.password) auth.password = store.password
+  if (authStore.username) auth.username = authStore.username
+  if (authStore.password) auth.password = authStore.password
 })
 
 async function login() {
   try {
     const validateLogin = await refLogin.value.validate()
     if (!validateLogin) return
-    await store.login(auth)
+    await authStore.login(auth)
   } catch (error) {
     console.log(error)
   }
@@ -44,6 +44,10 @@ async function login() {
 
 <template>
   <ClientOnly>
+  <q-inner-loading
+      :showing="authStore.loading"
+      label="Please wait..."
+  />
   <div class="tw-max-w-[90vw] sm:tw-max-w-md tw-mx-auto tw-h-screen">
     <div class="tw-flex tw-items-center tw-justify-center tw-h-full">
       <div class="tw-flex tw-flex-col tw-items-center tw-w-full">

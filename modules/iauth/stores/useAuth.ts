@@ -119,15 +119,19 @@ export const useAuthStore = defineStore('authStore', {
           type: params.type,
         }
         this.token = ''
+        this.loading = true
         apiCluster
           .post(requestUrl, requestParams)
           .then((response: any) => {
             if (response?.data) {
               this.authSuccess(response.data)
+              this.loading = false
+              this.redirectTo(routes.home)
               resolve(response.data)
             }
           })
           .catch((error) => {
+            this.loading = false
             console.warn(error)
             reject(error)
           })
@@ -154,12 +158,14 @@ export const useAuthStore = defineStore('authStore', {
           .post(apiRoutes.authLogin, credentials)
           .then(async (response: any) => {
             if (response?.data) {
+              this.loading = false
               this.authSuccess(response.data)
               this.redirectTo(routes.home)
             }
           })
       } catch (error: any) {
         console.error('Login failed:', error)
+        this.loading = false
         let msg = 'Algo salio mal en el login'
         if (error.data.errors) msg = 'Usuario o contraseña invalido'
 
@@ -172,12 +178,12 @@ export const useAuthStore = defineStore('authStore', {
       }
     },
     async logout() {
+      this.loading = true
       await apiCluster.get(apiRoutes.authLogout).then((response) => {
         this.clearToken()
       })
-
+      this.loading = false
       this.redirectTo(apiRoutes.login)
-
 
       Notify.create({
         message: 'Has cerrado sesión exitosamente. ¡Hasta pronto!',
