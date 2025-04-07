@@ -16,13 +16,13 @@
 					<!--title -->
 					<div class="tw-flex tw-justify-between tw-items-center">
 						<div>
-							<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
+							<h1 class="tw-text-[35px] tw-font-[700]">{{ $t('icommerce.cart.yourCart') }}</h1>
 						</div>
 						
 						<!-- currency -->
 						<div>
 							<q-select
-								label="Divisa"
+								:label="$t('icommerce.cart.currency')"
 								class="tw-w-[200px]"
 								v-model="cartState.currency"
 								:options="currencies"
@@ -61,11 +61,12 @@
 				<div v-else >
 					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
 					<div class="tw-my-4 tw-text-[14px] tw-font-[400]">
-						<p>Your car is empty, Looks like you have not added anything to your cart. Go ahead & explore our products.
+						<p>
+							{{ $t('icommerce.cart.emptyCart') }}
 						</p>
 					</div>
 					<q-btn
-						label="Ir a tienda"
+						:label="$t('icommerce.goToStore')"
 						text-color="black"
 						color="amber"
 						no-caps
@@ -111,7 +112,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							Subtotal
+							{{ $t('icommerce.cart.subtotal') }}
 						</span>
 						<span class="
 							tw-font-[600]
@@ -126,7 +127,7 @@
 
 					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
 						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
-							el subtotal aun no incluye impuestos
+							{{ $t('icommerce.cart.subtotalNoTaxes') }}
 						</span>
 						<span class="tw-text-[18px] tw-font-[600]">
 							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
@@ -136,7 +137,7 @@
 					<!-- discount -->
 					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
 						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							Descuento 00%
+							{{ $t('icommerce.cart.discount') }} 00%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
 							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
@@ -146,9 +147,14 @@
 					<!--coupon -->
 					<div>
 						<div>
-							<q-btn label="¿Tienes código de cupón?"
-								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]" flat no-caps dense
-								@click="showCouponInput = !showCouponInput" />
+							<q-btn 
+								:label="$t('icommerce.cart.coupon')"
+								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]"
+								flat
+								no-caps
+								dense
+								@click="showCouponInput = !showCouponInput" 
+							/>
 						</div>
 						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
 							<q-input v-model="form.coupon" dense outlined />
@@ -156,7 +162,7 @@
 					</div>
 					<div class="tw-mt-4">
 						<q-btn
-							label="Continuar"
+							:label="$t('icommerce.cart.continue')"
 							text-color="black"
 							color="amber"
 							no-caps

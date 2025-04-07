@@ -157,10 +157,10 @@ export const useAuthStore = defineStore('authStore', {
         await apiCluster
           .post(apiRoutes.authLogin, credentials)
           .then(async (response: any) => {
-            if (response?.data) {
-              this.loading = false
+            if (response?.data) {              
               this.authSuccess(response.data)
               this.redirectTo(routes.home)
+              this.loading = false
             }
           })
       } catch (error: any) {
@@ -181,9 +181,9 @@ export const useAuthStore = defineStore('authStore', {
       this.loading = true
       await apiCluster.get(apiRoutes.authLogout).then((response) => {
         this.clearToken()
-      })
-      this.loading = false
+      })      
       this.redirectTo(apiRoutes.login)
+      this.loading = false
 
       Notify.create({
         message: 'Has cerrado sesión exitosamente. ¡Hasta pronto!',

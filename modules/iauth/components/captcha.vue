@@ -4,7 +4,7 @@
           <!--Widget V2-->
           <div v-if="captcha.version == '2'" id="g-recaptcha"></div>
           <!--Text V3-->
-          <div v-if="captcha.version == '3'" class="text-info-v3" v-html="message"></div>
+          <div v-if="captcha.version == '3'" class="text-info-v3" v-html="$t('iauth.captcha')"></div>
         </div>
     </ClientOnly>
 </template>
@@ -14,11 +14,9 @@
     props: {},
     emits: ['update:modelValue'],
     setup(){
-      const store = useAuthStore()
-      const message = 'Este sitio está protegido por reCaptcha y se aplican las <a href="https://policies.google.com/privacy" target="_blank">Politicas de Privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank">Terminos de servicios</a> de Google.'
+      const store = useAuthStore();      
       return {
-        store,
-        message
+        store        
       }
     },
     mounted() {

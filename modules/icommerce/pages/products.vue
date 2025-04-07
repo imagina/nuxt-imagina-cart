@@ -31,9 +31,9 @@
                     />
                 </div>
                 <div class="tw-pt-5 tw-mt-2.5">
-                    <span class="tw-text-4xl tw-font-semibold">Hosting Cpanel (PHP)</span>
+                    <span class="tw-text-4xl tw-font-semibold">{{ t('title') }}</span>
                     <p class="tw-text-base tw-mt-3.5">
-                        CPanel Última versión con Cloudlinux, Softaculous, Imunify360 y JetBackup. Máxima Velocidad con Litespeed Incluido. Ahora con PHP 8!   
+                        {{ t('description') }}
                     </p>
                 </div>
                 <hr  class="tw-my-6" />
@@ -58,6 +58,23 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
+const { t } = useI18n({
+  useScope: 'local'
+})
+
 const authStore = useAuthStore()
 
 </script>
+
+<i18n lang="json">
+    {
+        "en": {
+            "title": "Hosting Cpanel (PHP)", 
+            "description": "CPanel Latest version with CloudLinux, Softaculous, Imunify360, and JetBackup. Maximum speed with Litespeed included. Now with PHP 8!"            
+        },
+        "es": {
+            "title": "Hosting Cpanel (PHP)",
+            "description": "CPanel Última versión con Cloudlinux, Softaculous, Imunify360 y JetBackup. Máxima Velocidad con Litespeed Incluido. Ahora con PHP 8!"
+        }
+    }
+</i18n>

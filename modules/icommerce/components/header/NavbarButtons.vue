@@ -64,7 +64,7 @@ const props = defineProps({
             'hover:tw-text-[#F9BA48] tw-border-white': isScrolled
           }"
       >
-          Ir a Tienda
+          {{ $t('icommerce.goToStore') }}
       </NuxtLink>
     </div>
   </div>

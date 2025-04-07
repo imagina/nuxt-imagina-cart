@@ -45,12 +45,12 @@ async function login() {
 <template>
   <ClientOnly>
   <q-inner-loading
-      :showing="authStore.loading"
+      :showing="loading"
       label="Please wait..."
   />
   <div class="tw-max-w-[90vw] sm:tw-max-w-md tw-mx-auto tw-h-screen">
     <div class="tw-flex tw-items-center tw-justify-center tw-h-full">
-      <div class="tw-flex tw-flex-col tw-items-center tw-w-full">
+      <div class="tw-flex tw-flex-col tw-items-center tw-w-full" v-if="!loading">
         <div class="tw-mb-5">
           <img :src="logo" :alt="logo" class="tw-h-12 tw-w-12 tw-object-contain">
         </div>
@@ -60,7 +60,7 @@ async function login() {
           {{ Helper.tLang('auth.login.title') }}
         </h1>
         <div class="tw-w-full tw-flex-1 tw-p-2 tw-animate-fade-in">
-          <div class="">
+          <div>
             <q-form @submit.prevent.stop="login" ref="refLogin">
               <q-input
                   dense
