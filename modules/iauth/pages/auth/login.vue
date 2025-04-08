@@ -57,7 +57,7 @@ async function login() {
         <h1
             class="tw-text-[18px] tw-leading-none tw-font-medium tw-text-slate-500 tw-mb-2"
         >
-          {{ Helper.tLang('auth.login.title') }}
+          {{ $t('iauth.login.title') }}
         </h1>
         <div class="tw-w-full tw-flex-1 tw-p-2 tw-animate-fade-in">
           <div>
@@ -67,7 +67,7 @@ async function login() {
                   outlined
                   class="tw-mb-0"
                   v-model="auth.username"
-                  :label="Helper.tLang('auth.login.inputs.email')"
+                  :label="$t('iauth.login.inputs.email')"
                   lazy-rules
                   :rules="[
                 (val) => !!val || 'Correo es requerido.',
@@ -81,7 +81,7 @@ async function login() {
                   outlined
                   class="tw-mb-3"
                   v-model="auth.password"
-                  :label="Helper.tLang('auth.login.inputs.password')"
+                  :label="$t('iauth.login.inputs.password')"
                   lazy-rules
                   :rules="PasswordValidator.rules"
                   :type="isPwd ? 'password' : 'text'"
@@ -105,7 +105,7 @@ async function login() {
                 <q-btn
                   class="tw-capitalize !tw-text-[#64748b] tw-rounded-md"
                   size="md"
-                  label="Crear cuenta"
+                  :label="$t('iauth.login.withoutAccount.link')"
                 />                                 
               </NuxtLink>
                 
@@ -116,7 +116,7 @@ async function login() {
                     class="tw-rounded-md"
                     unelevated
                     no-caps
-                    label="Iniciar Sesíon"
+                    :label="$t('iauth.login.submitBtn')"
                 />
               </div>
             </q-form>
@@ -124,7 +124,7 @@ async function login() {
               <NuxtLink :to="getPath('iauth.resetPassword')">
                   <q-btn
                       class="btn-register !tw-font-normal !tw-capitalize !tw-text-[#64748b] tw-rounded-md mx-auto sm-mx-0 tw-flex tw-mx-auto"
-                      label="Recuperar Contraseña"
+                      :label="$t('iauth.login.forgotPassword')"
                       size="md"
                       color="#64748b"
                       flat

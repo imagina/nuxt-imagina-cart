@@ -73,7 +73,7 @@ async function getCaptcha() {
         <h1
             class="tw-text-[18px] tw-leading-none tw-font-medium tw-text-slate-500 tw-mb-5"
         >
-          {{ Helper.tLang('auth.register.title') }}
+          {{ $t('iauth.register.title') }}
         </h1>
         <div class="tw-w-full tw-flex-1 tw-p2 tw-animate-fade-in">
           <div class="">
@@ -85,7 +85,7 @@ async function getCaptcha() {
                       outlined
                       class="tw-mb-0 lg:tw-mb-2"
                       v-model="auth.firstName"
-                      :label="Helper.tLang('auth.register.inputs.firstName')"
+                      :label="$t('iauth.register.inputs.firstName')"
 
                       :rules="[
                       (val) => !!val || 'Nombre es requerido.',
@@ -101,7 +101,7 @@ async function getCaptcha() {
                       outlined
                       class="tw-mb-0 lg:tw-mb-2"
                       v-model="auth.lastName"
-                      :label="Helper.tLang('auth.register.inputs.lastName')"
+                      :label="$t('iauth.register.inputs.lastName')"
 
                       :rules="[
                       (val) => !!val || 'Apellido es requerido.',
@@ -117,7 +117,7 @@ async function getCaptcha() {
                   outlined
                   class="tw-mb-0 lg:tw-mb-2"
                   v-model="auth.email"
-                  :label="Helper.tLang('auth.register.inputs.email')"
+                  :label="$t('iauth.register.inputs.email')"
 
                   :rules="[
                   (val) => !!val || 'Correo es requerido.',
@@ -132,7 +132,7 @@ async function getCaptcha() {
                   outlined
                   class="tw-mb-6"
                   v-model="auth.password"
-                  :label="Helper.tLang('auth.register.inputs.password')"
+                  :label="$t('iauth.register.inputs.password')"
 
                   :rules="PasswordValidator.rules"
                   :type="isPwd ? 'password' : 'text'"
@@ -150,7 +150,7 @@ async function getCaptcha() {
                   outlined
                   class="tw-mb-4"
                   v-model="auth.passwordAgain"
-                  :label="Helper.tLang('auth.register.inputs.passwordAgain')"
+                  :label="$t('iauth.register.inputs.passwordAgain')"
 
                   :rules="PasswordValidator.rules"
                   :type="isPwd ? 'password' : 'text'"
@@ -182,7 +182,7 @@ async function getCaptcha() {
                     color="primary"
                     unelevated
                     no-caps
-                    :label="Helper.tLang('auth.register.submitBtn')"
+                    :label="$t('iauth.register.submitBtn')"
                 />
               </div>              
             </q-form>
@@ -191,7 +191,7 @@ async function getCaptcha() {
                 <q-btn
                   class="tw-text-[#64748b]"
                   size="md"
-                  label="Iniciar Sesíon"
+                  :label="$t('iauth.login.submitBtn')"
                   flat
                   no-caps
               />

@@ -33,7 +33,7 @@ async function reset() {
           <h1
             class="tw-text-[18px] tw-leading-none tw-font-medium tw-text-slate-500 tw-mb-5"
           >
-            {{ Helper.tLang('auth.reset.title') }}
+            {{ $t('iauth.reset.title') }}
           </h1>
           <div class="tw-w-full tw-flex-1 tw-p2 tw-animate-fade-in">
             <div class="">
@@ -43,7 +43,7 @@ async function reset() {
                     outlined
                     class="tw-mb-0 lg:tw-mb-2"
                   v-model="auth.username"
-                  :label="Helper.tLang('auth.register.inputs.email')"
+                  :label="$t('iauth.register.inputs.email')"
                   lazy-rules
                   :rules="[
                     (val) => !!val || 'Correo es requerido.',
@@ -65,14 +65,14 @@ async function reset() {
                     no-caps
                   >
                     <span class="tw-ml-3">
-                      {{ Helper.tLang('auth.reset.submitBtn') }}
+                      {{ $t('iauth.reset.submitBtn') }}
                     </span>
                   </q-btn>
                 </transition>
               </q-form>
               <div class="max-[400px]:tw-flex-col tw-flex tw-items-center justify-center tw-mt-8 tw-gap-4">
                 <p class="tw-text-slate-700 tw-text-sm tw-font-light tw-text-center">
-                  {{ Helper.tLang('auth.register.existAccount.content') }}
+                  {{ $t('iauth.register.existAccount.content') }}
                 </p>
                 <NuxtLink :to="getPath('iauth.register')">
                   <q-btn
@@ -81,7 +81,7 @@ async function reset() {
                       size="md"
                       flat
                   >
-                    {{ Helper.tLang('auth.register.existAccount.link') }}
+                    {{ $t('iauth.register.existAccount.link') }}
                   </q-btn>
                 </NuxtLink>
               </div>
