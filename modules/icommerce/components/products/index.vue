@@ -1,10 +1,10 @@
 <template>
 	<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8">
 		<div class="tw-flex items-center">
-			<p>{{ products.length }} Artículos</p>
+			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
 		</div>
 		<div class="tw-flex items-center">
-			Ordenar&nbsp;&nbsp;
+			{{ $t('icommerce.products.order') }} &nbsp;&nbsp;
 			<q-select
 				borderless
 				v-model="sort"

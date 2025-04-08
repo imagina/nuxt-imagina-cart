@@ -1,10 +1,4 @@
 <template>
-    <q-inner-loading
-        :showing="authStore.loading"
-        label="Please wait..."
-        label-class="text-teal"
-        label-style="font-size: 1.1em"
-    />
     <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
         <div 
             class="

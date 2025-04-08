@@ -12,13 +12,11 @@
 				tw-w-full
 				tw-mb-4
 				lg:tw-w-[800px]
-
 			">
 				<div class="tw-my-4">
 					<q-btn
-						label="Back"
+						:label="$t('icommerce.checkout.back')"
 						icon="chevron_left"
-
 						class="
 							tw-font-[700]
 							tw-text-[20px]
@@ -28,16 +26,14 @@
 						rounded
 						no-caps
 						@click="redirectToCart()"
-						/>
+					/>
 				</div>
 
 				<!-- user data -->
 				<div class="shadow-card tw-rounded-3xl md:!tw-pt-8 tw-p-5">
-					<h2
-						class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
-						<span
-							class="tw-rounded-full tw-border tw-border-gray-600 tw-h-7 tw-w-7 md:tw-h-10 md:tw-w-10 tw-flex tw-items-center tw-justify-center">1</span>
-						Dirección de facturación
+					<h2 class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
+						<span class="tw-rounded-full tw-border tw-border-gray-600 tw-h-7 tw-w-7 md:tw-h-10 md:tw-w-10 tw-flex tw-items-center tw-justify-center">1</span>
+						{{ $t('icommerce.checkout.billingAddress') }}
 					</h2>
 					<!-- logging -->
 					<q-inner-loading
@@ -59,7 +55,7 @@
 						<SocialAuthGoogle />
 						<q-btn
 							@click="redirectToLogin()"
-							label="Iniciar sesion"
+							:label="$t('iauth.login.submitBtn')"
 							icon="person"
 							color="primary"
 							unelevated
@@ -223,13 +219,13 @@
 				<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
 					<div class="tw-my-2">
 						<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-							Resumen del pedido
+							{{ $t('icommerce.checkout.orderSummary') }}
 						</h2>
 					</div>
 					<div class="tw-my-2">
 						<q-expansion-item class="shadow-1 overflow-hidden"
 							style="border-radius: 8px; background-color: #eceded;"
-							:label="`${products.length} artículos`"
+							:label="`${products.length} ${$t('icommerce.checkout.articles')}`"
 							header-class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg tw-px-4"
 							expand-icon-class="">
 							<template v-for="product in products" class="tw-my-4">
@@ -269,7 +265,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							Subtotal
+							{{ $t('icommerce.cart.subtotal') }}
 						</span>
 						<span class="
 							tw-text-[18px]
@@ -286,7 +282,7 @@
 					<!-- discount -->
 					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
 						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							Descuento 00%
+							{{ $t('icommerce.cart.discount')}} 00%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
 							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}

@@ -4,7 +4,7 @@
 		:options="locales" 
 		option-label="name"
 		option-value="code"		
-		@update:model-value="setLocale()"
+		@update:model-value="changeLocale()"
 		outlined		
 		hide-bottom-space
 		dense
@@ -15,10 +15,11 @@
 </template>
 <script setup>
 const { $i18n } = useNuxtApp();
-const { locale, locales } = useI18n()
+const { locale, locales, setLocale } = useI18n()
 const localeRef = ref(locale)
 
-async function setLocale(){
-	await $i18n.setLocale(localeRef.value);
+async function changeLocale(){
+	//await $i18n.setLocale(localeRef.value);
+	setLocale(localeRef.value)
 }
 </script>

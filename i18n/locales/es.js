@@ -14,7 +14,8 @@ export default {
       "withoutAccount": {
         "content": "¿No tienes una cuenta?",
         "link": "Regístrate"
-      }
+      }, 
+      "entering": "Iniciando sesión, por favor espera un momento..."      
     },
     "register": {
       "title": "Registro",
@@ -52,6 +53,16 @@ export default {
       "yourCart": "Tu Carrito",
       "subtotal": "Subtotal", 
       "subtotalNoTaxes": "el subtotal aun no incluye impuestos"
+    },
+    "products": {
+      "articles": "Artículos",
+      "order": "Ordenar"
+    },
+    "checkout": {
+      "back": "Volver", 
+      "billingAddress": "Dirección de facturación", 
+      "orderSummary": "Resumen del pedido",
+      "articles": "articulos",
     },
     "goToStore": "Ir a Tienda"
   }

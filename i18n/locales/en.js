@@ -14,7 +14,8 @@ export default {
       "withoutAccount": {
         "content": "Don't have an account?",
         "link": "Sign up"
-      }
+      }, 
+      "entering": "Logging in, please wait a moment..."
     },
     "register": {
       "title": "Register",
@@ -53,6 +54,16 @@ export default {
       "yourCart": "Your Cart",
       "subtotal": "Subtotal", 
       "subtotalNoTaxes": "The subtotal does not include taxes yet."
+    },
+    "products": {
+      "articles": "Articles",
+      "order": "Order"
+    },
+    "checkout": {
+    "back": "Back",
+    "billingAddress": "Billing Address",
+    "orderSummary": "Order Summary",
+    "articles": "Articles"
     },
     "goToStore": "Go to Store"
   }
