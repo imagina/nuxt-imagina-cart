@@ -15,11 +15,14 @@
 </template>
 <script setup>
 const { $i18n } = useNuxtApp();
+const router = useRouter()
 const { locale, locales, setLocale } = useI18n()
 const localeRef = ref(locale)
 
 async function changeLocale(){
 	//await $i18n.setLocale(localeRef.value);
 	setLocale(localeRef.value)
+	window.location.reload(true)
+	
 }
 </script>
