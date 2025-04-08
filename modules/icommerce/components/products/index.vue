@@ -111,6 +111,10 @@ import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 
+const props = defineProps({
+  categoryId: String
+});
+
 const settings = {
 	justOneProdcut: false //one product and redirects to checkout
 }
@@ -139,6 +143,14 @@ const cartState = useStorage('shoppingCart', {
 	const productLabel = computed(() => settings.justOneProdcut ? 'Comprar'	: 'Añadir')
 	const frecuencyId = 1 //frecuency option
 
+
+	watch(
+		() => props.categoryId,
+		(newQuery, oldQuery) => {
+			getProducts()
+		},
+	)
+
 	function disableButton(index) {
 		return (!products.value[index].quantity != 0)
 	}
@@ -158,6 +170,13 @@ const cartState = useStorage('shoppingCart', {
 			order: sort.value.value,
 			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
+
+		if(props.categoryId){
+			params.filter = {
+				parentId: props.categoryId.id
+			}
+		}
+
 		baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
 

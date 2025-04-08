@@ -10,7 +10,9 @@
             "
         >
             <div>
-                <CategoriesComponent />
+                <CategoriesComponent 
+                    @selectedCategory="(value) => category = value"
+                />
             </div>
             <div>
                 <div>
@@ -31,8 +33,10 @@
                     </p>
                 </div>
                 <hr  class="tw-my-6" />
-                <div class="">
-                    <ProductsComponent/>
+                <div class="">                    
+                    <ProductsComponent
+                        :categoryId="category"
+                    />
                 </div>
             </div>
         </div>
@@ -56,7 +60,7 @@ const { t } = useI18n({
   useScope: 'local'
 })
 
-const authStore = useAuthStore()
+const category = ref(null)
 
 </script>
 
