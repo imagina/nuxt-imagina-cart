@@ -163,7 +163,7 @@ function configProducts(){
   checkoutProducts.value.forEach((product) =>{
     if(productsHelper.hasFrencuency(product)){
       const options = productsHelper.getFrecuencyOptions(product)
-      if(options.length) {
+      if(options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }      
     }
