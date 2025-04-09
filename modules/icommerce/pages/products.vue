@@ -1,5 +1,5 @@
-<template>
-    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8">
+    <template>
+    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8 tw-w-full">
         <div 
             class="
                 tw-flex 
@@ -9,41 +9,41 @@
                 tw-px-3.5
             "
         >
-            <div>
+            <div
+                class="tw-max-w-[500px] "
+            >
                 <CategoriesComponent 
                     @selectedCategory="(value) => category = value"
                 />
             </div>
-            <div>
-                <div>
-                    <img 
-                        v-if="bannerImage"
+            <div 
+                class="
+                    tw-w-lg[1024px]
+                    tw-w-full
+                "
+            >
+                
+                    
+                    <img
+                        v-if="false"
                         class="
-                            tw-h-auto 
-                            tw-w-full 
+                            tw-h-auto                             
                             tw-rounded
+                            tw-w-lg[1024px]
+                            tw-w-full
                         "
                         alt="Category"
-                        :src="bannerImage"
+                        src='https://picsum.photos/700/400?random'
                     />
-                    <img 
-                        v-else                      
-                        class="
-                            tw-h-auto 
-                            tw-w-full 
-                            tw-rounded
-                        "
-                        alt="Category"
-                        src=".././assets/img/category.png"
-                    />
-                </div>
-                <div class="tw-pt-5 tw-mt-2.5" v-if="category">
+                
+                <div class="tw-pt-5 tw-mt-2.5 " v-if="category">
                     <span class="tw-text-4xl tw-font-semibold">{{ category.title }}</span>
                     <p v-html="category.description" class="tw-text-base tw-mt-3.5">                        
                     </p>
                 </div>
-                <hr  class="tw-my-6" />
-                <div class="">                    
+                <hr  class="tw-my-6 tw-w-lg[1024px]
+                            tw-w-full" />
+                <div>
                     <ProductsComponent
                         :categoryId="category"
                     />
@@ -57,40 +57,29 @@
 import ProductsComponent from '../components/products';
 import CategoriesComponent from '../components/categories';
 
+const { t } = useI18n({
+  useScope: 'local'
+})
+
+//const category = ref(null)
+const category = useState('icommerce.products.selectedCategory', () => null)
+
 useSeoMeta({
-  title: 'Products Site',
-  ogTitle: 'Products Site',
-  description: 'Products Site',
-  ogDescription: 'Products Site',
+  title: () =>  category.value?.title ||  'Products Site',
+  ogTitle: () =>  category.value?.title ||  'Products Site',
+  description: () =>  category.value?.description ||  'Description',
+  ogDescription: () =>  category.value?.description ||  'Description',
   ogImage: 'https://example.com/image.png',
   twitterCard: 'summary_large_image',
 })
 
 
 
-const { t } = useI18n({
-  useScope: 'local'
-})
 
-
-
-//const category = ref(null)
-const category = useState('icommerce.products.selectedCategory', () => null)
 
 const fallbackBanner = '.././assets/img/category.png'
-const bannerImage = computed( () => category.value?.mediaFiles?.bannerindeximage.url && category.value?.mediaFiles?.bannerindeximage.id|| null )
+const bannerImage = computed( () =>  {
+ return category.value?.mediaFiles?.bannerindeximage.id ? category.value?.mediaFiles?.bannerindeximage.url:  null 
+})
 
 </script>
-
-<i18n lang="json">
-    {
-        "en": {
-            "title": "Hosting Cpanel (PHP)", 
-            "description": "CPanel Latest version with CloudLinux, Softaculous, Imunify360, and JetBackup. Maximum speed with Litespeed included. Now with PHP 8!"            
-        },
-        "es": {
-            "title": "Hosting Cpanel (PHP)",
-            "description": "CPanel Última versión con Cloudlinux, Softaculous, Imunify360 y JetBackup. Máxima Velocidad con Litespeed Incluido. Ahora con PHP 8!"
-        }
-    }
-</i18n>

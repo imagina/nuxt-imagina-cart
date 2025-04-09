@@ -80,7 +80,7 @@ async function init(){
 async function getCategories(){
 
 	const params = {
-		take: 20,
+		take: 60,
 		page: 1,
 		//order: sort.value,
 	}
@@ -89,12 +89,13 @@ async function getCategories(){
 		let  data =  response?.data || []
 
 		/*for testing */
-		
+		/*
 		const ids = data.map(item => item.id)
 		data.forEach(element => {
 			const n  = Math.floor(Math.random() * ids.length)
 			element.parentId = n < 5 ? null : ids[n]
 		});
+		*/
 		
 		/*for testing */	
 

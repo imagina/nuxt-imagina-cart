@@ -3,7 +3,7 @@
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
 		</div>
-		<div class="tw-flex items-center">
+		<div class="tw-flex items-center" v-if="products.length">
 			{{ $t('icommerce.products.order') }} &nbsp;&nbsp;
 			<q-select
 				borderless
@@ -16,14 +16,59 @@
 			/>
 		</div>
 	</div>
-	<!-- products list -->
-
-  	<div class="
+	
+	<!-- loading -->
+	
+	  <div 
+	  	v-if="loading"		
+		class="
 			tw-grid
 			tw-grid-cols-1
 			md:tw-grid-cols-2
 			xl:tw-grid-cols-3
 			tw-gap-10"
+		>
+		
+		<q-card 
+			v-for="index in 9" key="index"
+			class="
+				product
+				tw-p-4
+				tw-rounded-2xl
+				tw-w-full					
+				lg:tw-max-w-[390px]		
+			"
+		>
+			<div>
+				<q-skeleton type="text" />
+			</div>
+
+				<div class="tw-flex tw-justify-between tw-align-top">					
+					<q-skeleton type="text" height="100px" class="tw-w-full
+					lg:tw-max-w-[360px]"/>
+				</div>
+				<div class="tw-py-6">
+					<q-skeleton height="120px" square />
+				</div>				
+				<!-- action buttons -->
+					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
+						<q-skeleton type="QBtn" class="tw-w-2/3"/>
+
+						<q-skeleton type="QBtn" class="tw-w-2/3"/>
+
+					</div>
+			</q-card>
+		</div>
+		<!-- products list -->		
+  	<div 
+			v-if="products.length && !loading"
+			class="
+				tw-grid
+				tw-grid-cols-1
+				md:tw-grid-cols-2
+				xl:tw-grid-cols-3
+				tw-gap-10
+			"
 		>
 			<q-card
 				v-for="(product, index) in products"
@@ -32,6 +77,7 @@
 					tw-p-4
 					tw-rounded-2xl
 					tw-w-full					
+					tw-min-w-[200px]
 					lg:tw-max-w-[390px]
 				"
 			>
@@ -104,6 +150,8 @@
 					</div>
 			</q-card>
 		</div>
+	
+		
   </template>
   <script setup>
 
@@ -121,6 +169,8 @@ const settings = {
 const router = useRouter()
 const { t } = useI18n()
 const products = ref([])
+const loading = ref(false)
+
 const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
@@ -174,12 +224,13 @@ const cartState = useStorage('shoppingCart', {
 
 		if(props.categoryId){
 			params.filter = {
-				parentId: props.categoryId.id
+				categoryId: props.categoryId.id
 			}
 		}
-
-		baseService.index(apiRoutes.products, params).then(response => {
+		loading.value = true
+		await baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
+			
 
 			//add quantity
 			products.value.forEach((product) => {
@@ -187,6 +238,7 @@ const cartState = useStorage('shoppingCart', {
 			})
 
 		})
+		loading.value = false
 	}
 
 	function addTocart(index){
@@ -230,4 +282,11 @@ const cartState = useStorage('shoppingCart', {
 		}
 		box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.07), 0px 3.85185px 33.1259px rgba(0, 0, 0, 0.0425185), 0px 0.814815px 8.47407px rgba(0, 0, 0, 0.0274815);
 	}
+
+.fade-enter-active, .fade-leave-active {
+transition: opacity .8s
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0
+}
 </style>
