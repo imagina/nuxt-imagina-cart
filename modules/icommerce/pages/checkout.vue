@@ -7,7 +7,9 @@
 				tw-flex-wrap
 				md:tw-justify-center
 				tw-p-4
-		">
+		"
+		style="background-color:  #FAFAFA;"
+		>
 			<div class="
 				tw-w-full
 				tw-mb-4
@@ -30,7 +32,7 @@
 				</div>
 
 				<!-- user data -->
-				<div class="shadow-card tw-rounded-3xl md:!tw-pt-8 tw-p-5">
+				<div class="shadow-card tw-bg-white tw-rounded-3xl md:!tw-pt-8 tw-p-5">
 					<h2 class="tw-leading-none tw-flex tw-items-center tw-gap-3 tw-text-[17px] md:tw-text-[22px] tw-font-bold tw-mb-5 lg:tw-mb-8">
 						<span class="tw-rounded-full tw-border tw-border-gray-600 tw-h-7 tw-w-7 md:tw-h-10 md:tw-w-10 tw-flex tw-items-center tw-justify-center">1</span>
 						{{ $t('icommerce.checkout.billingAddress') }}
@@ -216,7 +218,7 @@
 				xl:tw-mt-[80px]
 				xl:tw-ml-8
 			">
-				<div class="shadow-card tw-rounded-3xl !tw-pt-8 tw-p-5">
+				<div class="shadow-card tw-bg-white  tw-rounded-3xl !tw-pt-8 tw-p-5">
 					<div class="tw-my-2">
 						<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
 							{{ $t('icommerce.checkout.orderSummary') }}
@@ -533,6 +535,6 @@ async function goToPayment() {
 </script>
 <style>
 .shadow-card {
-	box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);
+	/*box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.08), 0px 3.8px 33px rgba(0, 0, 0, 0.04), 0px 0.8px 8.4px rgba(0, 0, 0, 0.02);*/
 }
 </style>

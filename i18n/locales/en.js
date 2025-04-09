@@ -57,7 +57,9 @@ export default {
     },
     "products": {
       "articles": "Articles",
-      "order": "Order"
+      "order": "Order",
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now"
     },
     "checkout": {
     "back": "Back",

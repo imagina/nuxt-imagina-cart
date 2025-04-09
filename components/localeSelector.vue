@@ -20,9 +20,11 @@ const { locale, locales, setLocale } = useI18n()
 const localeRef = ref(locale)
 
 async function changeLocale(){
-	//await $i18n.setLocale(localeRef.value);
-	setLocale(localeRef.value)
-	window.location.reload(true)
+	await $i18n.setLocale(localeRef.value);
+	
+	// for i18n prefix ?
+	//setLocale(localeRef.value)
+	//window.location.reload(true)
 	
 }
 </script>

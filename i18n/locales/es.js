@@ -56,7 +56,9 @@ export default {
     },
     "products": {
       "articles": "Artículos",
-      "order": "Ordenar"
+      "order": "Ordenar", 
+      "addToCart": "Añadir",
+      "buyNow": "Comprar"
     },
     "checkout": {
       "back": "Volver", 

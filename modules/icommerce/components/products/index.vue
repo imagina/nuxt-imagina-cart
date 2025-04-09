@@ -119,6 +119,7 @@ const settings = {
 	justOneProdcut: false //one product and redirects to checkout
 }
 const router = useRouter()
+const { t } = useI18n()
 const products = ref([])
 const cartState = useStorage('shoppingCart', {
 	products: [],
@@ -140,7 +141,7 @@ const cartState = useStorage('shoppingCart', {
 		const sort = ref([sortOptions[0].value])	
 
 	//peding to check on cart..
-	const productLabel = computed(() => settings.justOneProdcut ? 'Comprar'	: 'Añadir')
+	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))
 	const frecuencyId = 1 //frecuency option
 
 

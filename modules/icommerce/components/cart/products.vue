@@ -2,6 +2,7 @@
     <div v-for="product in checkoutProducts"
       class="
         card
+        tw-bg-white
         tw-rounded-[20px]
         tw-px-5
         tw-pt-7
@@ -180,6 +181,6 @@ function calcSubtotal(){
 
 <style>
 .card {
-  box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.07), 0px 3.85185px 33.1259px rgba(0, 0, 0, 0.0425185), 0px 0.814815px 8.47407px rgba(0, 0, 0, 0.0274815);
+  /*box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.07), 0px 3.85185px 33.1259px rgba(0, 0, 0, 0.0425185), 0px 0.814815px 8.47407px rgba(0, 0, 0, 0.0274815);*/
 }
 </style>

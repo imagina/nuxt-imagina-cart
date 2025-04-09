@@ -5,7 +5,9 @@
 			tw-flex-wrap
 			tw-justify-center
 			tw-p-4
-		">
+		"
+		style="background-color:  #FAFAFA;"
+		>
 			<!--cart and products --->
 			<div class="
 			tw-w-full
@@ -20,7 +22,8 @@
 						</div>
 						
 						<!-- currency -->
-						<div>
+						<div
+						class="tw-bg-white">
 							<q-select
 								:label="$t('icommerce.cart.currency')"
 								class="tw-w-[200px]"
@@ -99,6 +102,7 @@
 			>
 				<div class="
 					card
+					tw-bg-white
 					tw-rounded-[20px]
 					tw-w-full
 					tw-p-6
