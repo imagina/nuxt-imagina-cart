@@ -14,7 +14,8 @@ onMounted(() => {
 <template>
   <q-inner-loading
       :showing="authStore.loading"
-      label="Please wait..."
+      :label="$t('iauth.loading.logout')"
+      color="primary"
   />
 </template>
 

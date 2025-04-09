@@ -46,7 +46,7 @@ async function login() {
   <ClientOnly>
   <q-inner-loading
       :showing="loading"
-      :label="$t('iauth.login.entering')"
+      :label="$t('iauth.loading.login')"
       color="primary"      
   />
   <div class="tw-max-w-[90vw] sm:tw-max-w-md tw-mx-auto tw-h-screen">

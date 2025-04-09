@@ -14,8 +14,11 @@ export default {
       "withoutAccount": {
         "content": "Don't have an account?",
         "link": "Sign up"
-      }, 
-      "entering": "Logging in, please wait a moment..."
+      }      
+    },
+    "loading": {
+        "login": "Logging in, please wait a moment...",
+        "logout": "Logging out, please wait a moment..."
     },
     "register": {
       "title": "Register",
