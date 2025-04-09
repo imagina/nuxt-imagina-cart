@@ -112,7 +112,7 @@ import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 
 const props = defineProps({
-  categoryId: String
+  categoryId: Object
 });
 
 const settings = {

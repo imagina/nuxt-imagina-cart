@@ -16,7 +16,18 @@
             </div>
             <div>
                 <div>
-                    <img
+                    <img 
+                        v-if="bannerImage"
+                        class="
+                            tw-h-auto 
+                            tw-w-full 
+                            tw-rounded
+                        "
+                        alt="Category"
+                        :src="bannerImage"
+                    />
+                    <img 
+                        v-else                      
                         class="
                             tw-h-auto 
                             tw-w-full 
@@ -26,10 +37,9 @@
                         src=".././assets/img/category.png"
                     />
                 </div>
-                <div class="tw-pt-5 tw-mt-2.5">
-                    <span class="tw-text-4xl tw-font-semibold">{{ t('title') }}</span>
-                    <p class="tw-text-base tw-mt-3.5">
-                        {{ t('description') }}
+                <div class="tw-pt-5 tw-mt-2.5" v-if="category">
+                    <span class="tw-text-4xl tw-font-semibold">{{ category.title }}</span>
+                    <p v-html="category.description" class="tw-text-base tw-mt-3.5">                        
                     </p>
                 </div>
                 <hr  class="tw-my-6" />
@@ -56,11 +66,19 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
+
+
 const { t } = useI18n({
   useScope: 'local'
 })
 
-const category = ref(null)
+
+
+//const category = ref(null)
+const category = useState('icommerce.products.selectedCategory', () => null)
+
+const fallbackBanner = '.././assets/img/category.png'
+const bannerImage = computed( () => category.value?.mediaFiles?.bannerindeximage.url && category.value?.mediaFiles?.bannerindeximage.id|| null )
 
 </script>
 

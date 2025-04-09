@@ -22,11 +22,10 @@
 						</div>
 						
 						<!-- currency -->
-						<div
-						class="tw-bg-white">
+						<div>
 							<q-select
 								:label="$t('icommerce.cart.currency')"
-								class="tw-w-[200px]"
+								class="tw-w-[120px] tw-bg-white"
 								v-model="cartState.currency"
 								:options="currencies"
 								emit-value

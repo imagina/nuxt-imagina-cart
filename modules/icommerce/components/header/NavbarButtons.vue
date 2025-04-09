@@ -1,15 +1,3 @@
-<script setup>
-
-const authStore = useAuthStore();
-const user = computed(() => authStore.user);
-
-const props = defineProps({
-  scrollPosition: Object,
-  isScrolled :Boolean
-});
-
-</script>
-
 <template>
   <div class="tw-flex tw-items-center">
     <div
@@ -50,7 +38,7 @@ const props = defineProps({
           :to="{ path: getPath('iauth.login'), query: { redirectTo: 'icommerce.products' } }"
           class="dropdown-sign-in tw-text-[15px] tw-duration-200"
       >
-        <span class="tw-block lg:tw-hidden xl:tw-block">Iniciar sesión</span>
+        <span class="tw-block lg:tw-hidden xl:tw-block">{{ $t('iauth.login.title') }}</span>
         <i class="tw-hidden lg:tw-block xl:tw-hidden fa fa-user" />
       </NuxtLink>
     </div>
@@ -58,14 +46,32 @@ const props = defineProps({
     <div class="tw-pr-4 lg:tw-pl-4 tw-relative tw-order-1 lg:tw-order-2">
       <NuxtLink
           :to="getPath('icommerce.products')"
+          @click="() => resetCategory()"
           class="tw-text-[15px] tw-cursor-pointer tw-border-r tw-border-[#10192333] tw-pr-3 tw-duration-300"
           :class="{
             'hover:tw-text-secondary tw-border-[#10192333]': !isScrolled,
             'hover:tw-text-[#F9BA48] tw-border-white': isScrolled
           }"
-      >
+      >      
           {{ $t('icommerce.goToStore') }}
       </NuxtLink>
     </div>
   </div>
 </template>
+<script setup>
+
+const props = defineProps({
+  scrollPosition: Object,
+  isScrolled :Boolean
+});
+
+const authStore = useAuthStore();
+const user = computed(() => authStore.user);
+const category = useState('icommerce.products.selectedCategory')
+
+function resetCategory(){
+  category.value = null
+}
+
+
+</script>
