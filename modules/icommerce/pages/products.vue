@@ -4,7 +4,8 @@
             class="
                 tw-flex 
                 tw-gap-3.5 
-                md:tw-gap-[30px] 
+                md:tw-gap-[30px]                 
+                tw-w-full
                 tw-max-w-[1680px] 
                 tw-px-3.5
             "
@@ -25,11 +26,10 @@
                 
                     
                     <img
-                        v-if="false"
+                        v-if="true"
                         class="
-                            tw-h-auto                             
+                            tw-h-[400px]                             
                             tw-rounded
-                            tw-w-lg[1024px]
                             tw-w-full
                         "
                         alt="Category"

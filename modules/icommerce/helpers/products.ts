@@ -33,11 +33,14 @@ const helper = {
 	},
 
 	getPriceWithSymbol(product, currency = 'COP'){
-		return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
+		const price = helper.getPrice(product, currency)
+		return helper.currencyFormat(price, currency)
+		//return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
 	},
 
 	priceWithSymbol(value, currency = 'COP'){
-		return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
+		return helper.currencyFormat(value, currency)
+		//return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
 	},
 
 	getSubtotal(products, currencyValue){		
@@ -67,6 +70,47 @@ const helper = {
 		const trm = Number(usdRates['USDRates']['COP'])
 		return trm.toFixed(2)
 	},
+
+	currencyFormat(value, currency){
+		const currencies = {
+			'USD' : new Intl.NumberFormat('en-US', {
+						style: 'currency',
+						currency: 'USD',
+					}), 
+			'COP': new Intl.NumberFormat('es-CO', {
+				style: 'currency',
+				currency: 'COP',
+			}), 
+
+
+		}
+
+		
+		/*
+		// format number to British pounds
+		let pounds = Intl.NumberFormat('en-GB', {
+			style: 'currency',
+			currency: 'GBP',
+		});
+
+		// format number to Indian rupee
+		let rupee = new Intl.NumberFormat('en-IN', {
+			style: 'currency',
+			currency: 'INR',
+		});
+
+		// format number to Euro
+		let euro = Intl.NumberFormat('en-DE', {
+			style: 'currency',
+			currency: 'EUR',
+		});
+
+
+		if(currency == 'COP') return COP.format(value)
+		if(currency == 'USD') return USDollar.format(value)	
+		*/
+		return currencies[currency].format(value)
+	}
 	
 }
 

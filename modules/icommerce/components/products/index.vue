@@ -1,5 +1,5 @@
 <template>
-	<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8">
+	<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
 		</div>
@@ -16,49 +16,17 @@
 			/>
 		</div>
 	</div>
+	<div
+		v-if="loading" 
+		class="tw-w-full tw-h-[400px]" 
+		style="position: relative;"
+	>
+		<q-inner-loading
+		:showing="loading"
+		color="primary"      
+		/>
+	</div>	
 	
-	<!-- loading -->
-	
-	  <div 
-	  	v-if="loading"		
-		class="
-			tw-grid
-			tw-grid-cols-1
-			md:tw-grid-cols-2
-			xl:tw-grid-cols-3
-			tw-gap-10"
-		>
-		
-		<q-card 
-			v-for="index in 9" key="index"
-			class="
-				product
-				tw-p-4
-				tw-rounded-2xl
-				tw-w-full					
-				lg:tw-max-w-[390px]		
-			"
-		>
-			<div>
-				<q-skeleton type="text" />
-			</div>
-
-				<div class="tw-flex tw-justify-between tw-align-top">					
-					<q-skeleton type="text" height="100px" class="tw-w-full
-					lg:tw-max-w-[360px]"/>
-				</div>
-				<div class="tw-py-6">
-					<q-skeleton height="120px" square />
-				</div>				
-				<!-- action buttons -->
-					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
-						<q-skeleton type="QBtn" class="tw-w-2/3"/>
-
-						<q-skeleton type="QBtn" class="tw-w-2/3"/>
-
-					</div>
-			</q-card>
-		</div>
 		<!-- products list -->		
   	<div 
 			v-if="products.length && !loading"

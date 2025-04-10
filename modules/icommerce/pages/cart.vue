@@ -5,6 +5,7 @@
 			tw-flex-wrap
 			tw-justify-center
 			tw-p-4
+			tw-h-full
 		"
 		style="background-color:  #FAFAFA;"
 		>

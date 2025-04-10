@@ -12,7 +12,9 @@
 			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px]">
 				CATEGORÍAS
 			</h1>
-			<q-list>				
+			<q-list
+			class="tw-h-full tw-overflow-y-auto"
+			>
 				<template v-for="category in categories">
 
 					<q-expansion-item
@@ -109,7 +111,8 @@ async function getCategories(){
 	})
 }
 
-function selectedCategory(category){
+function selectedCategory(category){	
+	//window.scrollTo(0, 0);
 	emits('selectedCategory', category)
 }
 
