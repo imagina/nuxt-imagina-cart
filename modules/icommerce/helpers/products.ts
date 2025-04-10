@@ -25,9 +25,15 @@ const helper = {
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 		if(price > 0 && currencyValue != 'COP'){
 			//Dolar 
-			const trm = helper.getTrm()
-			price = (price / trm)
-			price = Number.isInteger(price) ? price : price.toFixed(2)
+			if(currencyValue == 'USD'){
+				const trm = helper.getTrm(currencyValue)
+				price = (price / trm)
+				price = Number.isInteger(price) ? price : price.toFixed(2)
+			}
+			if(currencyValue == 'EUR'){
+				const trm = helper.getTrm(currencyValue)
+				console.log(trm)
+			}
 		}
 		return price 
 	},
@@ -55,7 +61,8 @@ const helper = {
 	getCurrencies(){
 		return [
 			{ value:'COP',  label:'Peso', symbol: '$'}, 
-			{ value: 'USD', label: 'Dolar', symbol: '$'}
+			{ value: 'USD', label: 'Dolar', symbol: '$'},
+			{ value: 'EUR', label: 'Euro', symbol: '€'}
 		];
 	},
 
@@ -64,12 +71,16 @@ const helper = {
 		return currency?.symbol
 	},
 
-	getTrm(){
+	getTrm(currency){
 		const authStore = useAuthStore()
 		let usdRates = authStore.usdRates		
-		const trm = Number(usdRates['USDRates']['COP'])
+		console.log(usdRates)
+		const trm = Number(usdRates['USDRates'][currency])
 		return trm.toFixed(2)
 	},
+
+
+	
 
 	currencyFormat(value, currency){
 		const currencies = {
@@ -80,35 +91,21 @@ const helper = {
 			'COP': new Intl.NumberFormat('es-CO', {
 				style: 'currency',
 				currency: 'COP',
+				maximumSignificantDigits: 2,
+
 			}), 
 
+			// format number to British pounds
+			'GBP': Intl.NumberFormat('en-GB', {
+				style: 'currency',
+				currency: 'GBP',
+			}),
 
+			'EUR': Intl.NumberFormat('en-DE', {
+				style: 'currency',
+				currency: 'EUR',
+			}),
 		}
-
-		
-		/*
-		// format number to British pounds
-		let pounds = Intl.NumberFormat('en-GB', {
-			style: 'currency',
-			currency: 'GBP',
-		});
-
-		// format number to Indian rupee
-		let rupee = new Intl.NumberFormat('en-IN', {
-			style: 'currency',
-			currency: 'INR',
-		});
-
-		// format number to Euro
-		let euro = Intl.NumberFormat('en-DE', {
-			style: 'currency',
-			currency: 'EUR',
-		});
-
-
-		if(currency == 'COP') return COP.format(value)
-		if(currency == 'USD') return USDollar.format(value)	
-		*/
 		return currencies[currency].format(value)
 	}
 	
