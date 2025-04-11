@@ -24,16 +24,7 @@
 						
 						<!-- currency -->
 						<div>
-							<q-select
-								:label="$t('icommerce.cart.currency')"
-								class="tw-w-[120px] tw-bg-white"
-								v-model="cartState.currency"
-								:options="currencies"
-								emit-value
-								map-options									
-								outlined
-								dense								
-							/>
+							<CurrencySelector />
 						</div>
 						<div v-if="false">
 							<div class="tw-flex tw-items-center">
@@ -189,6 +180,7 @@
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
 import productsHelper from '../helpers/products'
+import CurrencySelector from '../components/currencySelector'
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
@@ -215,10 +207,6 @@ const router = useRouter()
 const subtotal = ref(0)
 
 const showCouponInput = ref(false)
-
-
-const currencies = productsHelper.getCurrencies()
-
 const showCart = computed(() => cartState.value?.products?.length || false)
 const checkoutPath = getPath('icommerce.checkout')
 

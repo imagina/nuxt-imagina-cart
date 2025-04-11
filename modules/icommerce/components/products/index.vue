@@ -2,15 +2,17 @@
 	<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
-		</div>
-		<div class="tw-flex items-center" v-if="products.length">
-			{{ $t('icommerce.products.order') }} &nbsp;&nbsp;
+		</div>		
+		<div class="tw-flex items-center tw-gap-4" v-if="products.length">
+			<div>
+				<CurrencySelector />
+			</div>
+			<span>{{ $t('icommerce.products.order') }}</span>
 			<q-select
 				borderless
 				v-model="sort"
 				:options="sortOptions"
-				option-value="value"
-				option-label="name"
+				
 				class="tw-w-[160px]"
 				@update:model-value="getProducts()"
 			/>
@@ -126,6 +128,7 @@
 import apiRoutes from '../../config/apiRoutes'
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
+import CurrencySelector from '../../components/currencySelector'
 
 const props = defineProps({
   categoryId: Object
@@ -148,15 +151,15 @@ const cartState = useStorage('shoppingCart', {
 	
 	const sortOptions = [
 		{
-			name: 'A-Z',
+			label: 'A-Z',
 			value: 'desc'
 		},
 		{
-			name: 'Z-A',
+			label: 'Z-A',
 			value: 'asc'
 		}]
 
-		const sort = ref([sortOptions[0].value])	
+		const sort = ref([sortOptions[0].label])	
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))

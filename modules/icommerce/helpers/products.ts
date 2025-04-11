@@ -25,18 +25,30 @@ const helper = {
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 		if(price > 0 && currencyValue != 'COP'){
 			//Dolar 
-			if(currencyValue == 'USD'){
-				const trm = helper.getTrm(currencyValue)
-				price = (price / trm)
-				price = Number.isInteger(price) ? price : price.toFixed(2)
-			}
-			if(currencyValue == 'EUR'){
-				const trm = helper.getTrm(currencyValue)
-				console.log(trm)
-			}
+			if(currencyValue == 'USD') price = helper.COPtoUSD(price)
+			if(currencyValue == 'EUR') price = helper.COPtoEUR(price)
 		}
 		return price 
 	},
+
+	/* currency helper */
+
+	COPtoUSD(value){
+		const trm = helper.getTrm('COP')
+		value = (value / trm)
+		value = Number.isInteger(value) ? value : value.toFixed(2)
+		return value
+	},
+
+	COPtoEUR(value){
+		const trm = helper.getTrm('EUR')
+		value = helper.COPtoUSD(value)
+		value = (value * trm)
+		value = Number.isInteger(value) ? value : value.toFixed(2)
+		return value
+	},
+
+
 
 	getPriceWithSymbol(product, currency = 'COP'){
 		const price = helper.getPrice(product, currency)
@@ -60,9 +72,9 @@ const helper = {
 
 	getCurrencies(){
 		return [
-			{ value:'COP',  label:'Peso', symbol: '$'}, 
-			{ value: 'USD', label: 'Dolar', symbol: '$'},
-			{ value: 'EUR', label: 'Euro', symbol: '€'}
+			{ value: 'COP', label: 'COP - peso colombiano', symbol: '$'}, 
+			{ value: 'USD', label: 'USD - dólar estaunidense', symbol: '$'},
+			{ value: 'EUR', label: 'EUR - euro' , symbol: '€'}
 		];
 	},
 
@@ -73,14 +85,10 @@ const helper = {
 
 	getTrm(currency){
 		const authStore = useAuthStore()
-		let usdRates = authStore.usdRates		
-		console.log(usdRates)
+		let usdRates = authStore.usdRates
 		const trm = Number(usdRates['USDRates'][currency])
 		return trm.toFixed(2)
-	},
-
-
-	
+	},	
 
 	currencyFormat(value, currency){
 		const currencies = {
@@ -94,13 +102,7 @@ const helper = {
 				maximumSignificantDigits: 2,
 
 			}), 
-
-			// format number to British pounds
-			'GBP': Intl.NumberFormat('en-GB', {
-				style: 'currency',
-				currency: 'GBP',
-			}),
-
+			
 			'EUR': Intl.NumberFormat('en-DE', {
 				style: 'currency',
 				currency: 'EUR',
