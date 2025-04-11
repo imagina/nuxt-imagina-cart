@@ -52,12 +52,12 @@ const helper = {
 
 	getPriceWithSymbol(product, currency = 'COP'){
 		const price = helper.getPrice(product, currency)
-		return helper.currencyFormat(price, currency)
+		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}` 
 		//return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
 	},
 
-	priceWithSymbol(value, currency = 'COP'){
-		return helper.currencyFormat(value, currency)
+	priceWithSymbol(value, currency = 'COP'){		
+		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}` 
 		//return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
 	},
 
@@ -82,6 +82,13 @@ const helper = {
 		const currency = helper.getCurrencies().find(x => x.value == currencyValue)
 		return currency?.symbol
 	},
+
+	getCurrency(currencyValue = 'COP'){
+		const currency = helper.getCurrencies().find(x => x.value == currencyValue)
+		return currency
+	},
+
+
 
 	getTrm(currency){
 		const authStore = useAuthStore()

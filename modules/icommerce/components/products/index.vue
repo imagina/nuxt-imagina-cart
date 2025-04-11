@@ -120,6 +120,15 @@
 					</div>
 			</q-card>
 		</div>
+		<!--pagination-->
+        <master-pagination
+			v-if="paginationModel.rowsNumber"		  
+			v-model="paginationModel"
+			:pagesNumber="pagination.lastPage"
+			:isFirstPage="paginationModel.page == 1"
+			:isLastPage="paginationModel.page == pagination.lastPage"
+			@update:modelValue="getProducts()"
+        />
 	
 		
   </template>
@@ -141,6 +150,18 @@ const router = useRouter()
 const { t } = useI18n()
 const products = ref([])
 const loading = ref(false)
+
+const paginationModel = ref({
+      page: 1,
+      rowsNumber: null,
+      rowsPerPage: 12,
+      descending: true,
+      maxPages: 6
+    })
+
+const pagination = ref({
+	lastPage: 0,
+})
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
@@ -169,6 +190,7 @@ const cartState = useStorage('shoppingCart', {
 	watch(
 		() => props.categoryId,
 		(newQuery, oldQuery) => {
+			paginationModel.value.page = 1
 			getProducts()
 		},
 	)
@@ -187,8 +209,8 @@ const cartState = useStorage('shoppingCart', {
 
 	async function getProducts(){
 		const params = {
-			take: 40,
-			page: 1,
+			take: paginationModel?.value?.rowsPerPage || 10,
+			page: paginationModel?.value?.page || 1,
 			order: sort.value.value,
 			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
@@ -199,8 +221,19 @@ const cartState = useStorage('shoppingCart', {
 			}
 		}
 		loading.value = true
+		/* reset pagination */
+		pagination.value.lastPage = 0
+		paginationModel.value.rowsNumber = 0
+		
 		await baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
+			if(response.meta?.page){
+				pagination.value.lastPage = response.meta.page.lastPage || pagination.value.lastPage				
+				paginationModel.value.rowsNumber = response.meta.page.total
+			}
+			
+			 
+
 			
 
 			//add quantity
