@@ -56,7 +56,7 @@ const helper = {
 		//return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
 	},
 
-	priceWithSymbol(value, currency = 'COP'){		
+	valueWithSymbol(value, currency = 'COP'){		
 		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}` 
 		//return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
 	},

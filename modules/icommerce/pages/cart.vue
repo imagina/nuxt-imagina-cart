@@ -43,13 +43,7 @@
 						@removeProduct="(product) => removeProduct(product)"
 						@subtotal="(val) => subtotal = val"
 					/>
-
-					<!--aditional cards -->
-
-					<div>
-						<span class="tw-text-xl tw-font-bold">Protege tu marca:&nbsp;</span>
-						<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-					</div>
+					
 				</div>
 				<!-- empty cart -->
 				<div v-else >
@@ -116,7 +110,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -125,7 +119,7 @@
 							{{ $t('icommerce.cart.subtotalNoTaxes') }}
 						</span>
 						<span class="tw-text-[18px] tw-font-[600]">
-							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
@@ -135,7 +129,7 @@
 							{{ $t('icommerce.cart.discount') }} 00%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
@@ -168,8 +162,10 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							@click="redirectCheckout()"
+							@click="redirectCheckout()"	
+							:disable="!disableContinue"						
 						/>
+						{{ disableContinue }}
 					</div>
 				</div>
 			</div>
@@ -186,6 +182,8 @@ const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
 })
+
+const disableContinue = useState('icommerce.cart.continue')
 
 const form = useStorage('shoppingCheckoutForm', {
 	coupon: null,
