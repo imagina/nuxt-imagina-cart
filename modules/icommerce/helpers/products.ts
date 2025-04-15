@@ -52,13 +52,20 @@ const helper = {
 
 	getPriceWithSymbol(product, currency = 'COP'){
 		const price = helper.getPrice(product, currency)
-		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}` 
-		//return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
+		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}`
 	},
 
 	valueWithSymbol(value, currency = 'COP'){		
-		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}` 
-		//return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
+		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}`
+	},
+
+	extractPrice(str) {
+		  // Match digits and commas, then remove commas
+		  const match = str.match(/[\d,]+/);
+		  if (match) {
+			return parseInt(match[0].replace(/,/g, ''), 10);
+		  }
+		  return null; // Return null if no price found
 	},
 
 	getSubtotal(products, currencyValue){		

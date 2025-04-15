@@ -147,8 +147,8 @@
               tw-border-[#d5dfff]"
             >
             <p>{{ extension.tld }}</p>
-            <p>{{ extension.shortestPeriod.register }}</p>
-            <p>{{ productsHelper.valueWithSymbol('57000') }}</p>
+            <p>{{ productsHelper.currencyFormat(extension.shortestPeriod.register, currency) }}</p>
+            <p>{{ productsHelper.extractPrice(extension.shortestPeriod.register) }}</p>
           </div>      
 
           </template>
