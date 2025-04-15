@@ -26,20 +26,9 @@
 						<div>
 							<CurrencySelector />
 						</div>
-						<div v-if="false">
-							<div class="tw-flex tw-items-center">
-								<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
-								<template v-for="currencyItem in currencies">
-									<q-radio v-model="cartState.currency" :val="currencyItem.value"
-										:label="currencyItem.label" />
-								</template>
-							</div>
-						</div>						
 					</div>
 					<!-- products -->
 					<ProductsComponent
-						:products="cartState.products"
-						:currency="cartState.currency"
 						@removeProduct="(product) => removeProduct(product)"
 						@subtotal="(val) => subtotal = val"
 					/>

@@ -105,6 +105,7 @@ const helper = {
 	},	
 
 	currencyFormat(value, currency){
+		
 		const currencies = {
 			'USD' : new Intl.NumberFormat('en-US', {
 						style: 'currency',
@@ -112,8 +113,9 @@ const helper = {
 					}), 
 			'COP': new Intl.NumberFormat('es-CO', {
 				style: 'currency',
-				currency: 'COP',
-				maximumSignificantDigits: 2,
+				currency: 'COP',				
+				minimumFractionDigits: 0, //removes decimal places.
+				maximumFractionDigits: 0 //ensures no cents are shown.
 
 			}), 
 			

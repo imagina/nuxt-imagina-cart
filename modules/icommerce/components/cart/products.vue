@@ -1,9 +1,5 @@
 <template>
-  validateProducts : {{ validateProducts }}
-  <br>
-  disableContinue : {{ disableContinue }}
-
-  <div v-for="product in checkoutProducts" class="
+  <div v-for="product in cartState.products" class="
         card
         tw-bg-white
         tw-rounded-[20px]
@@ -32,7 +28,7 @@
         md:tw-gap-5">
       <div>
         <q-select v-if="productsHelper.hasFrencuency(product) && product?.frecuency" v-model="product.frecuency"
-          :options="productsHelper.getFrecuencyOptions(product)" @update:model-value="calcSubtotal()"
+          :options="getFrecuencyOptions(product)" @update:model-value="calcSubtotal()"
           option-value="value" option-label="label" outlined class="tw-w-52 tw-mb-1 tw-rounded-lg"
           input-class="tw-w-52 tw-mb-1 tw-rounded-lg" label="Periodo" />
         <span class="tw-text-xs tw-text-[#818181]">
@@ -68,7 +64,7 @@
             tw-justify-between 
             ">
           <span class="tw-text-[13px]">Tarifa de configuración:&nbsp;</span>
-          <span class="tw-text-lg tw-font-semibold"> $0{{ currency }}</span>
+          <span class="tw-text-lg tw-font-semibold"> $0{{ cartState.currency }}</span>
         </div>
 
         <div class="
@@ -86,7 +82,7 @@
               tw-border
               tw-border-[#00000033]
               ">
-            <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, currency) }}</span>
+            <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}</span>
           </div>
         </div>
       </div>
@@ -94,7 +90,7 @@
 
 
     <!-- domain check-->
-    <div v-if="isDomainProduct(product)" class="tw-p-6">
+    <div v-if="isDomainProduct(product) && product?.domain" class="tw-p-6">
       <div class="tw-flex tw-justify-center tw-p-2">
         <span class="tw-text-lg tw-font-[600]">Search for a domain name&nbsp;</span>
       </div>
@@ -118,13 +114,18 @@
         </q-input>
       </div>
       <!-- results -->
-      <div class="tw-flex-col">
-        <div class="tw-flex tw-justify-center tw-p-2" v-if="product.domain.isAvailable">
+       
+      <div class="tw-flex-col" v-if="product?.domain.isAvailable">
+        <div class="tw-flex tw-justify-center tw-p-2" >
           <span class="
             tw-text-lg
             tw-font-[800]
             tw-text-[#5cb85c]
           ">{{ product.domain.domainName }} ¡está disponible!&nbsp;</span>
+          <q-btn 
+            label="make it yours"
+            no-caps
+          />
         </div>
 
         <div class="tw-my-5">
@@ -132,9 +133,9 @@
           <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
         </div>
 
-        <div class="tw-flex tw-p-4 tw-gap-4">
+        <div class="tw-grid tw-grid-cols-4  tw-gap-4">
 
-          <!--aditional cards -->
+          <!--extension cards -->
           <template v-for="extension in product.spotlight">
             <div 
               v-if="extension.isAvailable"
@@ -142,13 +143,42 @@
               tw-bg-[#fafbff]
               tw-rounded-[10px]
               tw-border-[1px]
-              tw-w-[120px]
-              tw-h-[90px]
-              tw-border-[#d5dfff]"
+              tw-w-full
+              tw-h-full
+              tw-border-[#d5dfff]
+              tw-p-4"
+              
             >
-            <p>{{ extension.tld }}</p>
-            <p>{{ productsHelper.currencyFormat(extension.shortestPeriod.register, currency) }}</p>
-            <p>{{ productsHelper.extractPrice(extension.shortestPeriod.register) }}</p>
+            <div>
+                <span
+                    class="tw-text-[20px] tw-font-[600]"
+                >.{{ extension.tld }}
+                </span>
+            </div>
+            <div class
+            >
+                <span
+                    class="tw-text-[18px] tw-font-[700]"
+                >
+                {{ productsHelper.valueWithSymbol(productsHelper.extractPrice(extension.shortestPeriod.register), cartState.currency) }} /Year
+                </span>
+            </div>
+            <div class="tw-flex tw-justify-center tw-my-2">
+                <q-btn
+                    label="Add"
+                    text-color="black"
+                    color="amber"
+                    no-caps                    
+                    unelevated
+                    class="
+                        tw-w-full
+                            tw-justify-center
+                            tw-font-bold
+                            tw-rounded-lg
+                    "
+
+                />
+            </div>
           </div>      
 
           </template>
@@ -163,22 +193,17 @@
 <script lang="ts" setup>
 
 import productsHelper from '../../helpers/products.ts';
+import { useStorage } from '@vueuse/core'
 
-const props = defineProps({
-  products: {
-    type: Array,
-    required: false
-  },
-  currency: {
-    type: String,
-    required: false
-  }
-});
+const cartState = useStorage('shoppingCart', {
+	products: [],
+	currency: 'COP'
+})
 
 const emits = defineEmits(['removeProduct', 'subtotal'])
-const checkoutProducts = ref([])
 
-const validateProducts = computed(() => checkoutProducts.value.every(product => (isDomainProduct(product) ? product.domain.isAvailable : true) === true))
+
+const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ? product?.domain?.isAvailable : true) === true))
 const disableContinue = useState('icommerce.cart.continue', () => false)
 
 
@@ -187,9 +212,9 @@ onMounted(() => {
 })
 
 watch(
-  () => props.products,
+  () => cartState.value.products,
   (newQuery, oldQuery) => {
-    configProducts()
+    //configProducts()
   },
 )
 
@@ -202,7 +227,7 @@ watch(
 
 
 watch(
-  () => props.currency,
+  () => cartState.value.currency,
   (newQuery, oldQuery) => {
     calcSubtotal()
   },
@@ -213,8 +238,8 @@ function init() {
 }
 
 function configProducts() {
-  checkoutProducts.value = props.products
-  checkoutProducts.value.forEach((product) => {
+  
+    cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
       const options = productsHelper.getFrecuencyOptions(product)
       if (options.length && !product?.frecuency) {
@@ -235,7 +260,7 @@ function configProducts() {
 }
 
 function calcSubtotal() {
-  const subtotal = productsHelper.getSubtotal(checkoutProducts.value, props.currency)
+  const subtotal = productsHelper.getSubtotal(cartState.value.products, cartState.value.currency)
   emits('subtotal', subtotal)
 }
 
@@ -321,6 +346,7 @@ async function checkDomain(product) {
   if (result.isAvailable) {
     product.domain.domainName = result.domainName    
     product.domain.isAvailable = true
+    
     getExtensions(product)
   } else {
     product.domain.isAvailable = false
@@ -330,6 +356,12 @@ async function checkDomain(product) {
   
 
 
+}
+
+
+function getFrecuencyOptions(product){
+    if(product?.frecuencyOptions?.length) return product?.frecuencyOptions
+    return productsHelper.getFrecuencyOptions(product)
 }
 
 function addDomainExtension(product, extension){
