@@ -1,9 +1,9 @@
 const helper = {
-	
+
 	/**/
 	hasFrencuency: (product) => {
-		return product?.optionsPivot.length || false
-	}, 
+		return product?.optionsPivot?.length || false
+	},
 
 	/* */
 	getFrecuencyOptions: (product, frecuencyId = 1) => {
@@ -21,14 +21,17 @@ const helper = {
 	getPrice: (product, currencyValue = 'COP') => {
 		const frecuencies = helper.getFrecuencyOptions(product)
 		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
-		
+
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 		if(price > 0 && currencyValue != 'COP'){
-			//Dolar 
-			if(currencyValue == 'USD') price = helper.COPtoUSD(price)
-			if(currencyValue == 'EUR') price = helper.COPtoEUR(price)
+			price = helper.COPtoCurrency(price, currencyValue)			
 		}
-		return price 
+		return price
+	},
+
+	COPtoCurrency(value, currency){
+			if(currency == 'USD') return helper.COPtoUSD(value)
+			if(currency == 'EUR') return helper.COPtoEUR(value)
 	},
 
 	/* currency helper */
@@ -55,7 +58,7 @@ const helper = {
 		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}`
 	},
 
-	valueWithSymbol(value, currency = 'COP'){		
+	valueWithSymbol(value, currency = 'COP'){
 		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}`
 	},
 
@@ -68,18 +71,18 @@ const helper = {
 		  return null; // Return null if no price found
 	},
 
-	getSubtotal(products, currencyValue){		
+	getSubtotal(products, currencyValue){
 		let subtotal = Number(0);
-		products.forEach(product => {    
-			const price = helper.getPrice(product, currencyValue)    			
-			subtotal  = Number(subtotal) + Number(price)			
+		products.forEach(product => {
+			const price = helper.getPrice(product, currencyValue)
+			subtotal  = Number(subtotal) + Number(price)
 		});
 		return Number.isInteger(subtotal) ? subtotal : subtotal.toFixed(2)
 	},
 
 	getCurrencies(){
 		return [
-			{ value: 'COP', label: 'COP - peso colombiano', symbol: '$'}, 
+			{ value: 'COP', label: 'COP - peso colombiano', symbol: '$'},
 			{ value: 'USD', label: 'USD - dólar estaunidense', symbol: '$'},
 			{ value: 'EUR', label: 'EUR - euro' , symbol: '€'}
 		];
@@ -102,23 +105,23 @@ const helper = {
 		let usdRates = authStore.usdRates
 		const trm = Number(usdRates['USDRates'][currency])
 		return trm.toFixed(2)
-	},	
+	},
 
 	currencyFormat(value, currency){
-		
+
 		const currencies = {
 			'USD' : new Intl.NumberFormat('en-US', {
 						style: 'currency',
 						currency: 'USD',
-					}), 
+					}),
 			'COP': new Intl.NumberFormat('es-CO', {
 				style: 'currency',
-				currency: 'COP',				
+				currency: 'COP',
 				minimumFractionDigits: 0, //removes decimal places.
 				maximumFractionDigits: 0 //ensures no cents are shown.
 
-			}), 
-			
+			}),
+
 			'EUR': Intl.NumberFormat('en-DE', {
 				style: 'currency',
 				currency: 'EUR',
@@ -126,7 +129,7 @@ const helper = {
 		}
 		return currencies[currency].format(value)
 	}
-	
+
 }
 
 

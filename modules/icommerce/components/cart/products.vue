@@ -16,7 +16,7 @@
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }} - {{ product.category.id }} {{ isDomainProduct(product) }}
+        {{ product.name }} {{ isDomainProduct(product) }}
       </h2>
       <q-btn icon="fa-solid fa-trash" round flat text-color="primary" size="sm"
         @click="$emit('removeProduct', product)" />
@@ -26,8 +26,8 @@
         md:tw-flex
         md:tw-justify-between
         md:tw-gap-5">
-      <div>
-        <q-select v-if="productsHelper.hasFrencuency(product) && product?.frecuency" v-model="product.frecuency"
+      <div>				
+        <q-select v-if="productsHelper.hasFrencuency(product) || product?.frecuency" v-model="product.frecuency"
           :options="getFrecuencyOptions(product)" @update:model-value="calcSubtotal()"
           option-value="value" option-label="label" outlined class="tw-w-52 tw-mb-1 tw-rounded-lg"
           input-class="tw-w-52 tw-mb-1 tw-rounded-lg" label="Periodo" />
@@ -103,13 +103,20 @@
             <q-icon name="search" />
           </template>
           <template v-slot:append>
-            <q-btn @click="checkDomain(product)" label="Search" class="
-                    cursor-pointer
-                    tw-w-[140px]
-                    tw-rounded-md
-                    tw-text-base
-                    
-                  " rounded no-caps color="primary" unelevated />
+            <q-btn 
+							@click="checkDomain(product)" 
+							label="Search" 
+							color="primary"
+							class="
+									cursor-pointer
+									tw-w-[140px]
+									tw-rounded-md
+									tw-text-base                    
+								"
+							rounded 
+							no-caps
+							unelevated 
+            />
           </template>
         </q-input>
       </div>
@@ -176,7 +183,7 @@
                             tw-font-bold
                             tw-rounded-lg
                     "
-
+										@click="addDomainExtension(extension)"
                 />
             </div>
           </div>      
@@ -267,7 +274,7 @@ function calcSubtotal() {
 function isDomainProduct(product) {
   // domain categories
   const domainCategories = [32, 61, 58]
-  return domainCategories.includes(product.category.id)
+  return domainCategories.includes(product?.category?.id) || false
 }
 
 async function checkDomain(product) {
@@ -364,8 +371,28 @@ function getFrecuencyOptions(product){
     return productsHelper.getFrecuencyOptions(product)
 }
 
-function addDomainExtension(product, extension){
-  product.domain.extensions.push(extension)
+function addDomainExtension(extension){ 
+
+
+	const newProduct = {
+		name: extension.domainName,
+		price: 0
+		
+	}
+
+	const frecuencyOptions = Object.keys(extension.pricing).map(x =>   {
+
+		//const label = productsHelper.valueWithSymbol(productsHelper.extractPrice(extension.pricing[x].register), cartState.value.currency)
+		const label = `Register ${x}`
+		const value = productsHelper.extractPrice(extension.pricing[x].register)
+		
+		return { label, value, id: x }
+	}) || [] 
+	console.log(frecuencyOptions)
+	newProduct.frecuencyOptions = frecuencyOptions
+	newProduct.frecuency = frecuencyOptions[0] 
+
+	cartState.value.products.push(newProduct)
 }
 
 
