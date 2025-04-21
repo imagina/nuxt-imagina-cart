@@ -1,7 +1,7 @@
 <template>
 	<q-select
         :label="$t('icommerce.cart.currency')"
-        class="tw-w-[220px] tw-bg-white"
+        class="tw-w-[240px] tw-bg-white"
         v-model="cartState.currency"
         :options="currencies"
         emit-value
@@ -19,6 +19,6 @@ const cartState = useStorage('shoppingCart', {
 	currency: 'COP'
 })
 
-const currencies = productsHelper.getCurrencies()
+const currencies = computed(() => productsHelper.getCurrencies())  
 
 </script>

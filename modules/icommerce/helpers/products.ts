@@ -1,3 +1,4 @@
+
 const helper = {
 
 	/**/
@@ -83,10 +84,12 @@ const helper = {
 	},
 
 	getCurrencies(){
+		const { t } = useI18n()
+		console.log(t("icommerce.currencies.usd"))
 		return [
-			{ value: 'COP', label: 'COP - peso colombiano', symbol: '$'},
-			{ value: 'USD', label: 'USD - dólar estaunidense', symbol: '$'},
-			{ value: 'EUR', label: 'EUR - euro' , symbol: '€'}
+			{ value: 'COP', label: `COP - ${t("icommerce.currencies.cop")}`, symbol: '$'},
+			{ value: 'USD', label: `USD - ${t("icommerce.currencies.usd")}`, symbol: '$'},
+			{ value: 'EUR', label: `EUR - ${t("icommerce.currencies.eur")}` , symbol: '€'}
 		];
 	},
 

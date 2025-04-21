@@ -4,8 +4,7 @@
         card
         tw-bg-white
         tw-rounded-[20px]
-        tw-px-5
-        tw-pt-7
+        tw-px-5        
         tw-pb-5
         tw-my-5
         "
@@ -301,6 +300,30 @@ function isDomainProduct(product) {
 }
 
 async function checkDomain(product) {
+
+
+
+    const postUrl = 'https://nflow3.imaginacolombia.com/webhook/domain/search'
+
+    const body = {
+        domain: product.domain.domainName,
+        ext: ''
+    }
+
+    console.log(body)
+    
+
+    
+
+
+    const res = await $fetch(postUrl, {
+		method: 'POST',
+		body: JSON.stringify(body)
+	}).then((response) => {
+        console.log(response)
+    })
+    
+
 
   /*make the api call*/
   const result = {
