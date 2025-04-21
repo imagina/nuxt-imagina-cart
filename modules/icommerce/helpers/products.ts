@@ -32,6 +32,7 @@ const helper = {
 	COPtoCurrency(value, currency){
 			if(currency == 'USD') return helper.COPtoUSD(value)
 			if(currency == 'EUR') return helper.COPtoEUR(value)
+			return value	
 	},
 
 	/* currency helper */
@@ -62,6 +63,7 @@ const helper = {
 		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}`
 	},
 
+	/* extr*/
 	extractPrice(str) {
 		  // Match digits and commas, then remove commas
 		  const match = str.match(/[\d,]+/);

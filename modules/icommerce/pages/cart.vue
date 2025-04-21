@@ -29,7 +29,6 @@
 					</div>
 					<!-- products -->
 					<ProductsComponent
-						@removeProduct="(product) => removeProduct(product)"
 						@subtotal="(val) => subtotal = val"
 					/>
 					
@@ -65,7 +64,7 @@
 			<div
 				v-if="showCart"
 				class="
-				tw-w-full
+				tw-w-full				
 				md:tw-my-[20px]
 				lg:tw-w-[800px]
 				lg:tw-mt-0
@@ -79,6 +78,8 @@
 					tw-bg-white
 					tw-rounded-[20px]
 					tw-w-full
+					tw-sticky
+					tw-top-[220px]
 					tw-p-6
 					"
 				>
@@ -197,14 +198,7 @@ const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
 const checkoutPath = getPath('icommerce.checkout')
 
-function removeProduct(product) {
-	const products = cartState.value.products.filter(obj => obj.id != product.id);
-	cartState.value = { products: products, currency: cartState.value.currency }
 
-	if (cartState.value.products.length == 0) {
-		// router.push({ path: getPath('icommerce.products') })
-	}
-}
 
 function redirectCheckout() {
 	router.push({

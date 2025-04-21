@@ -1,5 +1,6 @@
 <template>
-  <div v-for="product in cartState.products" class="
+  <div v-for="product in cartState.products" 
+    class="
         card
         tw-bg-white
         tw-rounded-[20px]
@@ -7,7 +8,121 @@
         tw-pt-7
         tw-pb-5
         tw-my-5
-        ">
+        "
+    >
+
+    <!-- domain check-->
+    <div v-if="isDomainProduct(product) && product?.domain" class="tw-px-2 tw-py-6">
+      <div class="tw-flex tw-justify-center tw-p-2">
+        <span class="tw-text-lg tw-font-[600]">Search for a domain name&nbsp;</span>
+      </div>
+      <div class="tw-flex">
+        <q-input 
+            v-model="product.domain.domainName"
+            placeholder="Find a domain"
+            class="tw-w-full"
+            outlined 
+            no-error-icon 
+            :rules="[
+                (val) => !!val || 'Este campo es requerido.',
+                (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
+                ]"
+            >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+          <template v-slot:append>
+            <q-btn 
+                @click="checkDomain(product)" 
+                label="Search" 
+                color="amber"
+                class="
+                    cursor-pointer
+                    tw-w-[140px]
+                    tw-rounded-md
+                    tw-text-base                    
+                "
+                rounded 
+                no-caps
+                unelevated 
+            />
+          </template>
+        </q-input>
+      </div>
+      <!-- results -->
+       
+      <div class="tw-flex-col" v-if="product?.domain.isAvailable">
+        <div class="tw-flex tw-justify-center tw-p-2" >
+          <span class="
+            tw-text-lg
+            tw-font-[800]
+            tw-text-[#5cb85c]
+          ">{{ product.domain.domainName }} ¡está disponible!&nbsp;</span>
+          <q-btn 
+            label="make it yours"
+            no-caps
+          />
+        </div>
+
+        <div class="tw-my-5">
+          <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
+          <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
+        </div>
+
+        <div class="tw-grid tw-grid-cols-4  tw-gap-4">
+
+          <!--extension cards -->
+          <template v-for="extension in product.spotlight">
+            <div 
+              v-if="extension.isAvailable"
+              class="
+              tw-bg-[#fafbff]
+              tw-rounded-[10px]
+              tw-border-[1px]
+              tw-w-full
+              tw-h-full
+              tw-border-[#d5dfff]
+              tw-p-4"
+              
+            >
+            <div>
+                <span
+                    class="tw-text-[20px] tw-font-[600]"
+                >.{{ extension.tld }}
+                </span>
+            </div>
+            <div class
+            >
+                <span
+                    class="tw-text-[18px] tw-font-[700]"
+                >
+                {{ productsHelper.valueWithSymbol(productsHelper.COPtoCurrency(productsHelper.extractPrice(extension.shortestPeriod.register), cartState.currency), cartState.currency) }} /Year
+                
+                </span>
+            </div>
+            <div class="tw-flex tw-justify-center tw-my-2">
+                <q-btn
+                    label="Add"
+                    text-color="black"
+                    color="amber"
+                    no-caps                    
+                    unelevated
+                    class="
+                        tw-w-full
+                            tw-justify-center
+                            tw-font-bold
+                            tw-rounded-lg
+                    "
+										@click="addDomainExtension(extension)"
+                />
+            </div>
+          </div>      
+
+          </template>
+              
+        </div>
+      </div>
+    </div>    
     <div class="tw-flex tw-justify-between tw-items-center">
       <h2 class="
             tw-font-semibold 
@@ -16,10 +131,10 @@
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }} {{ isDomainProduct(product) }}
+        {{ product.name }} - id: {{ product.id }} {{ isDomainProduct(product) }}
       </h2>
       <q-btn icon="fa-solid fa-trash" round flat text-color="primary" size="sm"
-        @click="$emit('removeProduct', product)" />
+        @click="removeProduct(product)" />
     </div>
     <hr class="tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
     <div class="
@@ -89,110 +204,7 @@
     </div>
 
 
-    <!-- domain check-->
-    <div v-if="isDomainProduct(product) && product?.domain" class="tw-p-6">
-      <div class="tw-flex tw-justify-center tw-p-2">
-        <span class="tw-text-lg tw-font-[600]">Search for a domain name&nbsp;</span>
-      </div>
-      <div class="tw-flex">
-        <q-input v-model="product.domain.domainName" class="tw-w-full" placeholder="Find a domain" outlined no-error-icon :rules="[
-          (val) => !!val || 'Este campo es requerido.',
-          (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
-        ]">
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-          <template v-slot:append>
-            <q-btn 
-							@click="checkDomain(product)" 
-							label="Search" 
-							color="primary"
-							class="
-									cursor-pointer
-									tw-w-[140px]
-									tw-rounded-md
-									tw-text-base                    
-								"
-							rounded 
-							no-caps
-							unelevated 
-            />
-          </template>
-        </q-input>
-      </div>
-      <!-- results -->
-       
-      <div class="tw-flex-col" v-if="product?.domain.isAvailable">
-        <div class="tw-flex tw-justify-center tw-p-2" >
-          <span class="
-            tw-text-lg
-            tw-font-[800]
-            tw-text-[#5cb85c]
-          ">{{ product.domain.domainName }} ¡está disponible!&nbsp;</span>
-          <q-btn 
-            label="make it yours"
-            no-caps
-          />
-        </div>
-
-        <div class="tw-my-5">
-          <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
-          <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-        </div>
-
-        <div class="tw-grid tw-grid-cols-4  tw-gap-4">
-
-          <!--extension cards -->
-          <template v-for="extension in product.spotlight">
-            <div 
-              v-if="extension.isAvailable"
-              class="
-              tw-bg-[#fafbff]
-              tw-rounded-[10px]
-              tw-border-[1px]
-              tw-w-full
-              tw-h-full
-              tw-border-[#d5dfff]
-              tw-p-4"
-              
-            >
-            <div>
-                <span
-                    class="tw-text-[20px] tw-font-[600]"
-                >.{{ extension.tld }}
-                </span>
-            </div>
-            <div class
-            >
-                <span
-                    class="tw-text-[18px] tw-font-[700]"
-                >
-                {{ productsHelper.valueWithSymbol(productsHelper.extractPrice(extension.shortestPeriod.register), cartState.currency) }} /Year
-                </span>
-            </div>
-            <div class="tw-flex tw-justify-center tw-my-2">
-                <q-btn
-                    label="Add"
-                    text-color="black"
-                    color="amber"
-                    no-caps                    
-                    unelevated
-                    class="
-                        tw-w-full
-                            tw-justify-center
-                            tw-font-bold
-                            tw-rounded-lg
-                    "
-										@click="addDomainExtension(extension)"
-                />
-            </div>
-          </div>      
-
-          </template>
-              
-        </div>
-      </div>
-    </div>
+    
   </div>
 
 </template>
@@ -207,7 +219,7 @@ const cartState = useStorage('shoppingCart', {
 	currency: 'COP'
 })
 
-const emits = defineEmits(['removeProduct', 'subtotal'])
+const emits = defineEmits(['subtotal'])
 
 
 const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ? product?.domain?.isAvailable : true) === true))
@@ -266,6 +278,15 @@ function configProducts() {
   calcSubtotal()
 }
 
+function removeProduct(product) {
+	const products = cartState.value.products.filter(obj => obj.id != product.id);
+	cartState.value = { products: products, currency: cartState.value.currency }
+
+	if (cartState.value.products.length == 0) {
+		// router.push({ path: getPath('icommerce.products') })
+	}
+}
+
 function calcSubtotal() {
   const subtotal = productsHelper.getSubtotal(cartState.value.products, cartState.value.currency)
   emits('subtotal', subtotal)
@@ -273,8 +294,10 @@ function calcSubtotal() {
 
 function isDomainProduct(product) {
   // domain categories
-  const domainCategories = [32, 61, 58]
+  const domainCategories = [1, 32, 61, 58]
+  console.log(product?.category?.id)
   return domainCategories.includes(product?.category?.id) || false
+
 }
 
 async function checkDomain(product) {
@@ -351,17 +374,13 @@ async function checkDomain(product) {
     
 
   if (result.isAvailable) {
-    product.domain.domainName = result.domainName    
-    product.domain.isAvailable = true
-    
+    //product.domain.domainName = result.domainName    
+    product.domain.isAvailable = true    
     getExtensions(product)
   } else {
     product.domain.isAvailable = false
   }
-
   getSuggestions(product)
-  
-
 
 }
 
@@ -375,6 +394,7 @@ function addDomainExtension(extension){
 
 
 	const newProduct = {
+        id: extension.domainName,
 		name: extension.domainName,
 		price: 0
 		
@@ -390,8 +410,7 @@ function addDomainExtension(extension){
 	}) || [] 
 	console.log(frecuencyOptions)
 	newProduct.frecuencyOptions = frecuencyOptions
-	newProduct.frecuency = frecuencyOptions[0] 
-
+	newProduct.frecuency = frecuencyOptions[0]
 	cartState.value.products.push(newProduct)
 }
 
