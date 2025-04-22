@@ -10,16 +10,29 @@
         "
     >
 
+    
+    <div class="tw-flex tw-justify-between tw-items-center">
+      <h2 class="
+            tw-font-semibold 
+            tw-text-[22px] 
+            tw-m-0 
+            tw-p-0
+            tw-leading-5
+          ">
+        {{ product.name }}         
+      </h2>      
+      <q-btn icon="fa-solid fa-trash" round flat text-color="primary" size="sm"
+        @click="removeProduct(product)" />        
+      
+    </div>
     <!-- domain check-->
     <div v-if="isDomainProduct(product) && product?.domain" class="tw-px-2 tw-py-6">
-      <div class="tw-flex tw-justify-center tw-p-2">
-        <span class="tw-text-lg tw-font-[600]">Search for a domain name&nbsp;</span>
-      </div>
+      
       <div class="tw-flex">
         <q-input 
-            v-model="product.domain.domainName"
+            v-model="domainCheck.domainName"
             placeholder="Find a domain"
-            class="tw-w-full"
+            class="tw-w-1/2"
             outlined 
             no-error-icon 
             :rules="[
@@ -32,7 +45,7 @@
           </template>
           <template v-slot:append>
             <q-btn 
-                @click="checkDomain(product)" 
+                @click="checkDomain()" 
                 label="Search" 
                 color="amber"
                 class="
@@ -49,31 +62,59 @@
         </q-input>
       </div>
       <!-- results -->
+
+
+      <div
+		v-if="loading" 
+		class="tw-w-full tw-h-[400px]" 
+		style="position: relative;"
+	>
+		<q-inner-loading
+		:showing="loading"
+		color="primary"      
+		/>
+	</div>	
        
-      <div class="tw-flex-col" v-if="product?.domain.isAvailable">
-        <div class="tw-flex tw-justify-center tw-p-2" >
-          <span class="
-            tw-text-lg
-            tw-font-[800]
-            tw-text-[#5cb85c]
-          ">{{ product.domain.domainName }} ¡está disponible!&nbsp;</span>
-          <q-btn 
-            label="make it yours"
-            no-caps
-          />
+      <div class="tw-flex-col" >
+        <div
+            v-if="domainCheck?.exactMatch?.isAvaliable" 
+            class="
+                tw-flex 
+                tw-justify-center 
+                tw-p-2
+                tw-bg-[#fafbff]
+                tw-rounded-[10px]
+                tw-border-[1px]
+                tw-w-full
+                tw-h-full
+                tw-border-[#d5dfff]
+                tw-p-4
+            "
+        >     
+            <div>
+                <span class="tw-text-lg tw-font-[800] tw-text-[#5cb85c]"> {{ domainCheck.exactMatch.name }} <br> ¡está disponible!&nbsp;</span>
+            </div>              
+            
+            <div>
+                <q-btn 
+                    v-if="!product?.domain?.domainName"
+                    label="make it yours"
+                    no-caps
+                    @click="selectDomain(product, domainCheck.exactMatch.name)"
+                />
+            </div>
         </div>
 
-        <div class="tw-my-5">
+        <div class="tw-my-5" v-if="domainCheck.results.length">
           <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
           <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
         </div>
 
         <div class="tw-grid tw-grid-cols-4  tw-gap-4">
-
           <!--extension cards -->
-          <template v-for="extension in product.spotlight">
+          <template v-for="result in domainCheck.results">
             <div 
-              v-if="extension.isAvailable"
+              v-if="result.isAvaliable"
               class="
               tw-bg-[#fafbff]
               tw-rounded-[10px]
@@ -85,17 +126,25 @@
               
             >
             <div>
-                <span
-                    class="tw-text-[20px] tw-font-[600]"
-                >.{{ extension.tld }}
+                <span class="tw-text-[20px] tw-font-[600]">
+                    .{{ result.ext }}
                 </span>
+                <br>
+                <span class="tw-text-[14px] tw-font-[500]">
+                    {{ result.name }} 
+                </span>
+                <br>
+                <span class="tw-text-[16px] tw-font-[600]">
+                    {{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
+                </span>
+
             </div>
             <div class
             >
                 <span
                     class="tw-text-[18px] tw-font-[700]"
                 >
-                {{ productsHelper.valueWithSymbol(productsHelper.COPtoCurrency(productsHelper.extractPrice(extension.shortestPeriod.register), cartState.currency), cartState.currency) }} /Year
+                <!-- {{ productsHelper.valueWithSymbol(productsHelper.COPtoCurrency(productsHelper.extractPrice(result.shortestPeriod.register), cartState.currency), cartState.currency) }} /Year-->
                 
                 </span>
             </div>
@@ -112,7 +161,7 @@
                             tw-font-bold
                             tw-rounded-lg
                     "
-										@click="addDomainExtension(extension)"
+                    @click="addDomainExtension(product, result)"
                 />
             </div>
           </div>      
@@ -123,18 +172,19 @@
       </div>
     </div>    
     <div class="tw-flex tw-justify-between tw-items-center">
-      <h2 class="
+        <h2 
+        v-if="product?.domain?.domainName"
+            class="
             tw-font-semibold 
             tw-text-[22px] 
             tw-m-0 
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }} - id: {{ product.id }} {{ isDomainProduct(product) }}
-      </h2>
-      <q-btn icon="fa-solid fa-trash" round flat text-color="primary" size="sm"
-        @click="removeProduct(product)" />
+        {{ product?.domain?.domainName }}         
+        </h2>
     </div>
+    
     <hr class="tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
     <div class="
         md:tw-flex
@@ -201,9 +251,6 @@
         </div>
       </div>
     </div>
-
-
-    
   </div>
 
 </template>
@@ -211,7 +258,11 @@
 <script lang="ts" setup>
 
 import productsHelper from '../../helpers/products.ts';
+import apiRoutes from '../../config/apiRoutes.js';
 import { useStorage } from '@vueuse/core'
+
+
+const { locale, locales, setLocale } = useI18n()
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
@@ -221,8 +272,21 @@ const cartState = useStorage('shoppingCart', {
 const emits = defineEmits(['subtotal'])
 
 
-const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ? product?.domain?.isAvailable : true) === true))
+const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ?   (product?.domain?.domainName != '') : true) === true)   )
 const disableContinue = useState('icommerce.cart.continue', () => false)
+
+const domainPricing = ref(null)
+const loading = ref(false)
+
+
+
+const domainCheck = ref({
+    domainName: null,
+    exactMatch: null,    
+    results: [], 
+    suggestions: [], 
+
+})
 
 
 onMounted(() => {
@@ -252,8 +316,24 @@ watch(
 )
 
 function init() {
-  configProducts()
+    getDomainPricing()
+    configProducts()
 }
+
+
+async function getDomainPricing(){
+    await baseService.get(apiRoutes.domainPricing).then((response) => {
+        const pricingList =  JSON.parse(response)
+        domainPricing.value = Object.keys(pricingList).map(x => { return { ext: x, ...pricingList[x] } })
+    })
+}
+
+/*keys: ext , domainregister , domaintransfer, domainrenew */
+function getExtPrice(ext){
+    return domainPricing.value.find(x => x.ext ==  `.${ext}`)
+}
+
+
 
 function configProducts() {
   
@@ -267,9 +347,7 @@ function configProducts() {
     if (isDomainProduct(product)) {
 
       product.domain = {
-        domainName: '',
-        extensions: [], 
-        isAvailable: false         
+        domainName: '',        
       }
 
     }
@@ -294,117 +372,35 @@ function calcSubtotal() {
 function isDomainProduct(product) {
   // domain categories
   const domainCategories = [1, 32, 61, 58]
-  console.log(product?.category?.id)
   return domainCategories.includes(product?.category?.id) || false
 
 }
 
-async function checkDomain(product) {
-
-
-
-    const postUrl = 'https://nflow3.imaginacolombia.com/webhook/domain/search'
+async function checkDomain() {  
+    
+    loading.value = true
+    
+    const lang = locale.value == 'es' ? 'esp' : 'eng'
 
     const body = {
-        domain: product.domain.domainName,
+        domain: domainCheck.value.domainName,
+        lang,
         ext: ''
     }
 
-    console.log(body)
+    domainCheck.value.exactMatch = false
+    domainCheck.value.results =  []
+    domainCheck.value.suggestions = null
     
-
-    
-
-
-    const res = await $fetch(postUrl, {
+    const res = await $fetch(apiRoutes.domainCheck, {
 		method: 'POST',
 		body: JSON.stringify(body)
 	}).then((response) => {
-        console.log(response)
-    })
-    
-
-
-  /*make the api call*/
-  const result = {
-        "domainName": "tesingh.com",
-        "idnDomainName": "tesingh.com",
-        "tld": "com",
-        "tldNoDots": "com",
-        "sld": "tesingh",
-        "idnSld": "tesingh",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$57,000 pesos",
-                "transfer": "$59,100 pesos",
-                "renew": "$59,100 pesos"
-            },
-            "2": {
-                "register": "$116,100 pesos",
-                "renew": "$118,200 pesos"
-            },
-            "3": {
-                "register": "$175,200 pesos",
-                "renew": "$177,300 pesos"
-            },
-            "4": {
-                "register": "$234,200 pesos",
-                "renew": "$236,400 pesos"
-            },
-            "5": {
-                "register": "$293,300 pesos",
-                "renew": "$295,500 pesos"
-            },
-            "6": {
-                "register": "$352,400 pesos",
-                "renew": "$354,600 pesos"
-            },
-            "7": {
-                "register": "$411,500 pesos",
-                "renew": "$413,700 pesos"
-            },
-            "8": {
-                "register": "$470,600 pesos",
-                "renew": "$472,800 pesos"
-            },
-            "9": {
-                "register": "$529,700 pesos",
-                "renew": "$531,900 pesos"
-            },
-            "10": {
-                "register": "$588,800 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$57,000 pesos",
-            "transfer": "$59,100 pesos",
-            "renew": "$59,100 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    }
-    
-
-  if (result.isAvailable) {
-    //product.domain.domainName = result.domainName    
-    product.domain.isAvailable = true    
-    getExtensions(product)
-  } else {
-    product.domain.isAvailable = false
-  }
-  getSuggestions(product)
-
+        loading.value = false
+        domainCheck.value.exactMatch = response.exactMatch || false
+        domainCheck.value.results = response?.results?.filter(x => x.isAvaliable == true) || []
+        domainCheck.value.suggestions = response.suggestions 
+    } )
 }
 
 
@@ -413,16 +409,22 @@ function getFrecuencyOptions(product){
     return productsHelper.getFrecuencyOptions(product)
 }
 
-function addDomainExtension(extension){ 
+function selectDomain(product, domainName){
+    //product.id = domainName
+    product.domain.domainName = domainName
+}
 
+function addDomainExtension(product, extension){    
 
-	const newProduct = {
-        id: extension.domainName,
-		name: extension.domainName,
-		price: 0
-		
-	}
+    const newProduct =  {...product}
 
+    newProduct.id  = extension.name    
+    newProduct.category = null
+    newProduct.domain.domainName = extension.name
+	
+
+    
+    /*
 	const frecuencyOptions = Object.keys(extension.pricing).map(x =>   {
 
 		//const label = productsHelper.valueWithSymbol(productsHelper.extractPrice(extension.pricing[x].register), cartState.value.currency)
@@ -431,842 +433,16 @@ function addDomainExtension(extension){
 		
 		return { label, value, id: x }
 	}) || [] 
-	console.log(frecuencyOptions)
-	newProduct.frecuencyOptions = frecuencyOptions
-	newProduct.frecuency = frecuencyOptions[0]
-	cartState.value.products.push(newProduct)
+     */
+    
+	
+	//newProduct.frecuencyOptions = frecuencyOptions
+	//newProduct.frecuency = frecuencyOptions[0]
+	
+    
+    cartState.value.products.push(newProduct)
+    
 }
-
-
-function getExtensions(product){
-  product.spotlight = [
-    {
-        "domainName": "oldrobotto.com",
-        "idnDomainName": "oldrobotto.com",
-        "tld": "com",
-        "tldNoDots": "com",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$57,000 pesos",
-                "transfer": "$59,100 pesos",
-                "renew": "$59,100 pesos"
-            },
-            "2": {
-                "register": "$116,100 pesos",
-                "renew": "$118,200 pesos"
-            },
-            "3": {
-                "register": "$175,200 pesos",
-                "renew": "$177,300 pesos"
-            },
-            "4": {
-                "register": "$234,200 pesos",
-                "renew": "$236,400 pesos"
-            },
-            "5": {
-                "register": "$293,300 pesos",
-                "renew": "$295,500 pesos"
-            },
-            "6": {
-                "register": "$352,400 pesos",
-                "renew": "$354,600 pesos"
-            },
-            "7": {
-                "register": "$411,500 pesos",
-                "renew": "$413,700 pesos"
-            },
-            "8": {
-                "register": "$470,600 pesos",
-                "renew": "$472,800 pesos"
-            },
-            "9": {
-                "register": "$529,700 pesos",
-                "renew": "$531,900 pesos"
-            },
-            "10": {
-                "register": "$588,800 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$57,000 pesos",
-            "transfer": "$59,100 pesos",
-            "renew": "$59,100 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.net",
-        "idnDomainName": "oldrobotto.net",
-        "tld": "net",
-        "tldNoDots": "net",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$63,800 pesos",
-                "transfer": "$65,900 pesos",
-                "renew": "$65,900 pesos"
-            },
-            "2": {
-                "register": "$129,600 pesos",
-                "renew": "$131,800 pesos"
-            },
-            "3": {
-                "register": "$195,500 pesos",
-                "renew": "$197,700 pesos"
-            },
-            "4": {
-                "register": "$261,400 pesos",
-                "renew": "$263,500 pesos"
-            },
-            "5": {
-                "register": "$327,300 pesos",
-                "renew": "$329,400 pesos"
-            },
-            "6": {
-                "register": "$393,100 pesos",
-                "renew": "$395,300 pesos"
-            },
-            "7": {
-                "register": "$459,000 pesos",
-                "renew": "$461,200 pesos"
-            },
-            "8": {
-                "register": "$524,900 pesos",
-                "renew": "$527,000 pesos"
-            },
-            "9": {
-                "register": "$590,800 pesos",
-                "renew": "$592,900 pesos"
-            },
-            "10": {
-                "register": "$656,600 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$63,800 pesos",
-            "transfer": "$65,900 pesos",
-            "renew": "$65,900 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.app",
-        "idnDomainName": "oldrobotto.app",
-        "tld": "app",
-        "tldNoDots": "app",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$76,900 pesos",
-                "transfer": "$76,900 pesos",
-                "renew": "$76,900 pesos"
-            },
-            "2": {
-                "register": "$153,800 pesos",
-                "renew": "$153,800 pesos"
-            },
-            "3": {
-                "register": "$230,600 pesos",
-                "renew": "$230,600 pesos"
-            },
-            "4": {
-                "register": "$307,500 pesos",
-                "renew": "$307,500 pesos"
-            },
-            "5": {
-                "register": "$384,300 pesos",
-                "renew": "$384,300 pesos"
-            },
-            "6": {
-                "register": "$461,200 pesos",
-                "renew": "$461,200 pesos"
-            },
-            "7": {
-                "register": "$538,000 pesos",
-                "renew": "$538,000 pesos"
-            },
-            "8": {
-                "register": "$614,900 pesos",
-                "renew": "$614,900 pesos"
-            },
-            "9": {
-                "register": "$691,700 pesos",
-                "renew": "$691,700 pesos"
-            },
-            "10": {
-                "register": "$768,600 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$76,900 pesos",
-            "transfer": "$76,900 pesos",
-            "renew": "$76,900 pesos"
-        },
-        "group": "",
-        "minLength": 0,
-        "maxLength": 0,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.guru",
-        "idnDomainName": "oldrobotto.guru",
-        "tld": "guru",
-        "tldNoDots": "guru",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$21,700 pesos",
-                "transfer": "$158,200 pesos",
-                "renew": "$158,200 pesos"
-            },
-            "2": {
-                "register": "$179,900 pesos",
-                "renew": "$316,400 pesos"
-            },
-            "3": {
-                "register": "$338,000 pesos",
-                "renew": "$474,500 pesos"
-            },
-            "4": {
-                "register": "$496,200 pesos",
-                "renew": "$632,700 pesos"
-            },
-            "5": {
-                "register": "$654,300 pesos",
-                "renew": "$790,900 pesos"
-            },
-            "6": {
-                "register": "$812,500 pesos",
-                "renew": "$949,000 pesos"
-            },
-            "7": {
-                "register": "$970,700 pesos",
-                "renew": "$1,107,200 pesos"
-            },
-            "8": {
-                "register": "$1,128,800 pesos",
-                "renew": "$1,265,300 pesos"
-            },
-            "9": {
-                "register": "$1,287,000 pesos",
-                "renew": "$1,423,500 pesos"
-            },
-            "10": {
-                "register": "$1,445,200 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$21,700 pesos",
-            "transfer": "$158,200 pesos",
-            "renew": "$158,200 pesos"
-        },
-        "group": "",
-        "minLength": 0,
-        "maxLength": 0,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.club",
-        "idnDomainName": "oldrobotto.club",
-        "tld": "club",
-        "tldNoDots": "club",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$71,500 pesos",
-                "transfer": "$71,500 pesos",
-                "renew": "$71,500 pesos"
-            },
-            "2": {
-                "register": "$142,900 pesos",
-                "renew": "$142,900 pesos"
-            },
-            "3": {
-                "register": "$214,300 pesos",
-                "renew": "$214,300 pesos"
-            },
-            "4": {
-                "register": "$285,700 pesos",
-                "renew": "$285,700 pesos"
-            },
-            "5": {
-                "register": "$357,100 pesos",
-                "renew": "$357,100 pesos"
-            },
-            "6": {
-                "register": "$428,500 pesos",
-                "renew": "$428,500 pesos"
-            },
-            "7": {
-                "register": "$499,900 pesos",
-                "renew": "$499,900 pesos"
-            },
-            "8": {
-                "register": "$571,300 pesos",
-                "renew": "$571,300 pesos"
-            },
-            "9": {
-                "register": "$642,700 pesos",
-                "renew": "$642,700 pesos"
-            },
-            "10": {
-                "register": "$714,100 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$71,500 pesos",
-            "transfer": "$71,500 pesos",
-            "renew": "$71,500 pesos"
-        },
-        "group": "hot",
-        "minLength": 0,
-        "maxLength": 0,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.com.co",
-        "idnDomainName": "oldrobotto.com.co",
-        "tld": "com.co",
-        "tldNoDots": "comco",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$54,900 pesos",
-                "transfer": "$57,000 pesos",
-                "renew": "$57,000 pesos"
-            },
-            "2": {
-                "register": "$111,800 pesos",
-                "renew": "$114,000 pesos"
-            },
-            "3": {
-                "register": "$168,800 pesos",
-                "renew": "$171,000 pesos"
-            },
-            "4": {
-                "register": "$225,800 pesos",
-                "renew": "$227,900 pesos"
-            },
-            "5": {
-                "register": "$282,700 pesos",
-                "renew": "$284,900 pesos"
-            },
-            "6": {
-                "register": "$339,700 pesos",
-                "renew": "$341,900 pesos"
-            },
-            "7": {
-                "register": "$396,700 pesos",
-                "renew": "$398,800 pesos"
-            },
-            "8": {
-                "register": "$453,700 pesos",
-                "renew": "$455,800 pesos"
-            },
-            "9": {
-                "register": "$510,600 pesos",
-                "renew": "$512,800 pesos"
-            },
-            "10": {
-                "register": "$567,600 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$54,900 pesos",
-            "transfer": "$57,000 pesos",
-            "renew": "$57,000 pesos"
-        },
-        "group": "",
-        "minLength": 0,
-        "maxLength": 0,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.co",
-        "idnDomainName": "oldrobotto.co",
-        "tld": "co",
-        "tldNoDots": "co",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$132,200 pesos",
-                "transfer": "$141,000 pesos",
-                "renew": "$141,000 pesos"
-            },
-            "2": {
-                "register": "$273,100 pesos",
-                "renew": "$281,900 pesos"
-            },
-            "3": {
-                "register": "$414,000 pesos",
-                "renew": "$422,800 pesos"
-            },
-            "4": {
-                "register": "$554,900 pesos",
-                "renew": "$563,700 pesos"
-            },
-            "5": {
-                "register": "$695,800 pesos",
-                "renew": "$704,600 pesos"
-            },
-            "6": {
-                "register": "$836,800 pesos",
-                "renew": "$845,500 pesos"
-            },
-            "7": {
-                "register": "$977,700 pesos",
-                "renew": "$986,400 pesos"
-            },
-            "8": {
-                "register": "$1,118,600 pesos",
-                "renew": "$1,127,400 pesos"
-            },
-            "9": {
-                "register": "$1,259,500 pesos",
-                "renew": "$1,268,300 pesos"
-            },
-            "10": {
-                "register": "$1,400,400 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$132,200 pesos",
-            "transfer": "$141,000 pesos",
-            "renew": "$141,000 pesos"
-        },
-        "group": "sale",
-        "minLength": 0,
-        "maxLength": 0,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobotto.in",
-        "idnDomainName": "oldrobotto.in",
-        "tld": "in",
-        "tldNoDots": "in",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$32,300 pesos",
-                "transfer": "$32,300 pesos",
-                "renew": "$32,300 pesos"
-            },
-            "2": {
-                "register": "$64,500 pesos",
-                "renew": "$64,500 pesos"
-            },
-            "3": {
-                "register": "$96,800 pesos",
-                "renew": "$96,800 pesos"
-            },
-            "4": {
-                "register": "$129,000 pesos",
-                "renew": "$129,000 pesos"
-            },
-            "5": {
-                "register": "$161,300 pesos",
-                "renew": "$161,300 pesos"
-            },
-            "6": {
-                "register": "$193,500 pesos",
-                "renew": "$193,500 pesos"
-            },
-            "7": {
-                "register": "$225,800 pesos",
-                "renew": "$225,800 pesos"
-            },
-            "8": {
-                "register": "$258,000 pesos",
-                "renew": "$258,000 pesos"
-            },
-            "9": {
-                "register": "$290,300 pesos",
-                "renew": "$290,300 pesos"
-            },
-            "10": {
-                "register": "$322,500 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$32,300 pesos",
-            "transfer": "$32,300 pesos",
-            "renew": "$32,300 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    }
-]
-}
-
- function getSuggestions(product){
-  product.domainSuggestions = [
-     {
-        "domainName": "old-robot-to.com",
-        "idnDomainName": "old-robot-to.com",
-        "tld": "com",
-        "tldNoDots": "com",
-        "sld": "old-robot-to",
-        "idnSld": "old-robot-to",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$57,000 pesos",
-                "transfer": "$59,100 pesos",
-                "renew": "$59,100 pesos"
-            },
-            "2": {
-                "register": "$116,100 pesos",
-                "renew": "$118,200 pesos"
-            },
-            "3": {
-                "register": "$175,200 pesos",
-                "renew": "$177,300 pesos"
-            },
-            "4": {
-                "register": "$234,200 pesos",
-                "renew": "$236,400 pesos"
-            },
-            "5": {
-                "register": "$293,300 pesos",
-                "renew": "$295,500 pesos"
-            },
-            "6": {
-                "register": "$352,400 pesos",
-                "renew": "$354,600 pesos"
-            },
-            "7": {
-                "register": "$411,500 pesos",
-                "renew": "$413,700 pesos"
-            },
-            "8": {
-                "register": "$470,600 pesos",
-                "renew": "$472,800 pesos"
-            },
-            "9": {
-                "register": "$529,700 pesos",
-                "renew": "$531,900 pesos"
-            },
-            "10": {
-                "register": "$588,800 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$57,000 pesos",
-            "transfer": "$59,100 pesos",
-            "renew": "$59,100 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-     {
-        "domainName": "oldrobotto.navy",
-        "idnDomainName": "oldrobotto.navy",
-        "tld": "navy",
-        "tldNoDots": "navy",
-        "sld": "oldrobotto",
-        "idnSld": "oldrobotto",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$152,800 pesos",
-                "transfer": "$152,800 pesos",
-                "renew": "$152,800 pesos"
-            },
-            "2": {
-                "register": "$305,600 pesos",
-                "renew": "$305,600 pesos"
-            },
-            "3": {
-                "register": "$458,300 pesos",
-                "renew": "$458,300 pesos"
-            },
-            "4": {
-                "register": "$611,100 pesos",
-                "renew": "$611,100 pesos"
-            },
-            "5": {
-                "register": "$763,800 pesos",
-                "renew": "$763,800 pesos"
-            },
-            "6": {
-                "register": "$916,600 pesos",
-                "renew": "$916,600 pesos"
-            },
-            "7": {
-                "register": "$1,069,400 pesos",
-                "renew": "$1,069,400 pesos"
-            },
-            "8": {
-                "register": "$1,222,100 pesos",
-                "renew": "$1,222,100 pesos"
-            },
-            "9": {
-                "register": "$1,374,900 pesos",
-                "renew": "$1,374,900 pesos"
-            },
-            "10": {
-                "register": "$1,527,600 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$152,800 pesos",
-            "transfer": "$152,800 pesos",
-            "renew": "$152,800 pesos"
-        },
-        "group": "",
-        "minLength": 0,
-        "maxLength": 0,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobot2.com",
-        "idnDomainName": "oldrobot2.com",
-        "tld": "com",
-        "tldNoDots": "com",
-        "sld": "oldrobot2",
-        "idnSld": "oldrobot2",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$57,000 pesos",
-                "transfer": "$59,100 pesos",
-                "renew": "$59,100 pesos"
-            },
-            "2": {
-                "register": "$116,100 pesos",
-                "renew": "$118,200 pesos"
-            },
-            "3": {
-                "register": "$175,200 pesos",
-                "renew": "$177,300 pesos"
-            },
-            "4": {
-                "register": "$234,200 pesos",
-                "renew": "$236,400 pesos"
-            },
-            "5": {
-                "register": "$293,300 pesos",
-                "renew": "$295,500 pesos"
-            },
-            "6": {
-                "register": "$352,400 pesos",
-                "renew": "$354,600 pesos"
-            },
-            "7": {
-                "register": "$411,500 pesos",
-                "renew": "$413,700 pesos"
-            },
-            "8": {
-                "register": "$470,600 pesos",
-                "renew": "$472,800 pesos"
-            },
-            "9": {
-                "register": "$529,700 pesos",
-                "renew": "$531,900 pesos"
-            },
-            "10": {
-                "register": "$588,800 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$57,000 pesos",
-            "transfer": "$59,100 pesos",
-            "renew": "$59,100 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    },
-    {
-        "domainName": "oldrobot2.net",
-        "idnDomainName": "oldrobot2.net",
-        "tld": "net",
-        "tldNoDots": "net",
-        "sld": "oldrobot2",
-        "idnSld": "oldrobot2",
-        "status": "available for registration",
-        "legacyStatus": "available",
-        "score": 1,
-        "isRegistered": false,
-        "isAvailable": true,
-        "isValidDomain": true,
-        "domainErrorMessage": "",
-        "pricing": {
-            "1": {
-                "register": "$63,800 pesos",
-                "transfer": "$65,900 pesos",
-                "renew": "$65,900 pesos"
-            },
-            "2": {
-                "register": "$129,600 pesos",
-                "renew": "$131,800 pesos"
-            },
-            "3": {
-                "register": "$195,500 pesos",
-                "renew": "$197,700 pesos"
-            },
-            "4": {
-                "register": "$261,400 pesos",
-                "renew": "$263,500 pesos"
-            },
-            "5": {
-                "register": "$327,300 pesos",
-                "renew": "$329,400 pesos"
-            },
-            "6": {
-                "register": "$393,100 pesos",
-                "renew": "$395,300 pesos"
-            },
-            "7": {
-                "register": "$459,000 pesos",
-                "renew": "$461,200 pesos"
-            },
-            "8": {
-                "register": "$524,900 pesos",
-                "renew": "$527,000 pesos"
-            },
-            "9": {
-                "register": "$590,800 pesos",
-                "renew": "$592,900 pesos"
-            },
-            "10": {
-                "register": "$656,600 pesos"
-            }
-        },
-        "shortestPeriod": {
-            "period": 1,
-            "register": "$63,800 pesos",
-            "transfer": "$65,900 pesos",
-            "renew": "$65,900 pesos"
-        },
-        "group": "",
-        "minLength": 3,
-        "maxLength": 63,
-        "isPremium": false,
-        "premiumCostPricing": []
-    }
-  ]
-}
- 
-
-
-
 
 </script>
 

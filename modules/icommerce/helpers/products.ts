@@ -60,6 +60,12 @@ const helper = {
 		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}`
 	},
 
+	priceWithSymbol(value, currency = 'COP'){
+		
+		return `${helper.currencyFormat(helper.COPtoCurrency(value, currency), currency)} ${helper.getCurrency(currency).value}`
+	},
+
+
 	valueWithSymbol(value, currency = 'COP'){
 		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}`
 	},
@@ -85,7 +91,6 @@ const helper = {
 
 	getCurrencies(){
 		const { t } = useI18n()
-		console.log(t("icommerce.currencies.usd"))
 		return [
 			{ value: 'COP', label: `COP - ${t("icommerce.currencies.cop")}`, symbol: '$'},
 			{ value: 'USD', label: `USD - ${t("icommerce.currencies.usd")}`, symbol: '$'},
