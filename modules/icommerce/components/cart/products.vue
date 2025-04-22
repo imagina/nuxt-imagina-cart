@@ -10,8 +10,8 @@
         "
     >
 
-    
-    <div class="tw-flex tw-justify-between tw-items-center">
+    <!-- PRODUCT TITLE -->
+    <div class="tw-flex tw-justify-between tw-items-center tw-p-4">
       <h2 class="
             tw-font-semibold 
             tw-text-[22px] 
@@ -21,18 +21,39 @@
           ">
         {{ product.name }}         
       </h2>      
-      <q-btn icon="fa-solid fa-trash" round flat text-color="primary" size="sm"
-        @click="removeProduct(product)" />        
-      
+      <q-btn 
+					icon="fa-solid fa-trash" 
+					text-color="primary" 
+					size="sm"
+					round 
+					flat
+					@click="removeProduct(product)" 
+			/>      
     </div>
     <!-- domain check-->
-    <div v-if="isDomainProduct(product) && product?.domain" class="tw-px-2 tw-py-6">
+    <div v-if="isDomainProduct(product) && product?.domain" class="tw-px-2 tw-py-6 ">
       
-      <div class="tw-flex">
+      <div class="tw-flex tw-justify-center">
+
+        <div class="tw-px-2">
+						<q-select 
+							label="configura tu dominio"
+							v-model="domainCheck.actionfrecuency"
+          		:options="domainActions"
+          		option-value="value" 
+							option-label="label" 
+							outlined 
+							class="tw-w-52 tw-mb-1 tw-rounded-lg"							
+          		input-class="tw-w-52 tw-mb-1 tw-rounded-lg" 							
+						/>
+        </div>
+
+
+
         <q-input 
             v-model="domainCheck.domainName"
             placeholder="Find a domain"
-            class="tw-w-1/2"
+            class="tw-w-full"
             outlined 
             no-error-icon 
             :rules="[
@@ -170,7 +191,13 @@
               
         </div>
       </div>
-    </div>    
+    </div> 
+    
+    <!-- domain check-->    
+
+
+
+
     <div class="tw-flex tw-justify-between tw-items-center">
         <h2 
         v-if="product?.domain?.domainName"
@@ -185,7 +212,7 @@
         </h2>
     </div>
     
-    <hr class="tw-bg-[#E1E3E7] tw-mt-5 tw-mb-10" />
+    
     <div class="
         md:tw-flex
         md:tw-justify-between
@@ -278,9 +305,29 @@ const disableContinue = useState('icommerce.cart.continue', () => false)
 const domainPricing = ref(null)
 const loading = ref(false)
 
+const domainActions =  [
+	{
+		label: 'Registrar un nuevo dominio',
+		buttonLabel: 'Verificar',
+		value: 'self-register'
+	}, 
 
+	{
+		label: 'Transferir mi dominio ', 
+		buttonLabel: 'Transferir',
+		value: 'self-transfer'
+	}, 
+
+	{
+		label: 'Solo modificar los DNS de mi dominio actual', 
+		buttonLabel: 'Usar',
+		value: 'self-owndomain'
+	}, 
+]
+	
 
 const domainCheck = ref({
+		action: domainActions[0], // register, trasfer
     domainName: null,
     exactMatch: null,    
     results: [], 
@@ -375,6 +422,7 @@ function isDomainProduct(product) {
   return domainCategories.includes(product?.category?.id) || false
 
 }
+
 
 async function checkDomain() {  
     

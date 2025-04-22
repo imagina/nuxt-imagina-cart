@@ -145,7 +145,7 @@ const props = defineProps({
 });
 
 const settings = {
-	justOneProdcut: true //one product and redirects to checkout
+	justOneProdcut: false //one product and redirects to checkout
 }
 const router = useRouter()
 const { t } = useI18n()
