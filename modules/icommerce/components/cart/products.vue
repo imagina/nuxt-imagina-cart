@@ -19,7 +19,7 @@
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }}         
+        {{ product.name }}
       </h2>      
       <q-btn 
 					icon="fa-solid fa-trash" 
@@ -38,7 +38,7 @@
         <div class="tw-px-2">
 						<q-select 
 							label="configura tu dominio"
-							v-model="domainCheck.actionfrecuency"
+							v-model="product.domainCheck.action"
           		:options="domainActions"
           		option-value="value" 
 							option-label="label" 
@@ -51,7 +51,7 @@
 
 
         <q-input 
-            v-model="domainCheck.domainName"
+            v-model="product.domainCheck.domainName"
             placeholder="Find a domain"
             class="tw-w-full"
             outlined 
@@ -66,7 +66,7 @@
           </template>
           <template v-slot:append>
             <q-btn 
-                @click="checkDomain()" 
+                @click="checkDomain(product)" 
                 label="Search" 
                 color="amber"
                 class="
@@ -85,20 +85,17 @@
       <!-- results -->
 
 
-      <div
-		v-if="loading" 
-		class="tw-w-full tw-h-[400px]" 
-		style="position: relative;"
-	>
-		<q-inner-loading
-		:showing="loading"
-		color="primary"      
-		/>
-	</div>	
+    <div
+      v-if="product.domainCheck.loading" 
+      class="tw-w-full tw-h-[400px]" 
+      style="position: relative;"
+	  >
+      <q-inner-loading :showing="product.domainCheck.loading" color="primary"  />
+	  </div>	
        
       <div class="tw-flex-col" >
         <div
-            v-if="domainCheck?.exactMatch?.isAvaliable" 
+            v-if="product.domainCheck?.exactMatch?.isAvaliable" 
             class="
                 tw-flex 
                 tw-justify-center 
@@ -113,7 +110,7 @@
             "
         >     
             <div>
-                <span class="tw-text-lg tw-font-[800] tw-text-[#5cb85c]"> {{ domainCheck.exactMatch.name }} <br> ¡está disponible!&nbsp;</span>
+                <span class="tw-text-lg tw-font-[800] tw-text-[#5cb85c]"> {{ product.domainCheck.exactMatch.name }} <br> ¡está disponible!&nbsp;</span>
             </div>              
             
             <div>
@@ -121,19 +118,19 @@
                     v-if="!product?.domain?.domainName"
                     label="make it yours"
                     no-caps
-                    @click="selectDomain(product, domainCheck.exactMatch.name)"
+                    @click="selectDomain(product, product.domainCheck.exactMatch.name)"
                 />
             </div>
         </div>
 
-        <div class="tw-my-5" v-if="domainCheck.results.length">
+        <div class="tw-my-5" v-if="product?.domainCheck.results.length">
           <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
           <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
         </div>
 
         <div class="tw-grid tw-grid-cols-4  tw-gap-4">
           <!--extension cards -->
-          <template v-for="result in domainCheck.results">
+          <template v-for="result in product?.domainCheck.results">
             <div 
               v-if="result.isAvaliable"
               class="
@@ -169,18 +166,18 @@
                 
                 </span>
             </div>
-            <div class="tw-flex tw-justify-center tw-my-2">
+            <div class="tw-flex tw-justify-center tw-my-2">              
                 <q-btn
-                    label="Add"
+                    :label="selectDomainLabel(product)"
                     text-color="black"
                     color="amber"
                     no-caps                    
                     unelevated
                     class="
                         tw-w-full
-                            tw-justify-center
-                            tw-font-bold
-                            tw-rounded-lg
+                        tw-justify-center
+                        tw-font-bold
+                        tw-rounded-lg
                     "
                     @click="addDomainExtension(product, result)"
                 />
@@ -286,7 +283,7 @@
 
 import productsHelper from '../../helpers/products.ts';
 import apiRoutes from '../../config/apiRoutes.js';
-import { useStorage } from '@vueuse/core'
+import { useStorage, useCloned  } from '@vueuse/core'
 
 
 const { locale, locales, setLocale } = useI18n()
@@ -299,11 +296,11 @@ const cartState = useStorage('shoppingCart', {
 const emits = defineEmits(['subtotal'])
 
 
-const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ?   (product?.domain?.domainName != '') : true) === true)   )
+const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ?   (product?.domain?.domainName != null) : true) === true)   )
 const disableContinue = useState('icommerce.cart.continue', () => false)
 
-const domainPricing = ref(null)
-const loading = ref(false)
+const domainPricing = ref([])
+
 
 const domainActions =  [
 	{
@@ -324,16 +321,6 @@ const domainActions =  [
 		value: 'self-owndomain'
 	}, 
 ]
-	
-
-const domainCheck = ref({
-		action: domainActions[0], // register, trasfer
-    domainName: null,
-    exactMatch: null,    
-    results: [], 
-    suggestions: [], 
-
-})
 
 
 onMounted(() => {
@@ -376,8 +363,8 @@ async function getDomainPricing(){
 }
 
 /*keys: ext , domainregister , domaintransfer, domainrenew */
-function getExtPrice(ext){
-    return domainPricing.value.find(x => x.ext ==  `.${ext}`)
+function getExtPrice(ext){    
+    return domainPricing?.value.find(x => x.ext ==  `.${ext}`) || 0
 }
 
 
@@ -393,8 +380,22 @@ function configProducts() {
     }
     if (isDomainProduct(product)) {
 
-      product.domain = {
-        domainName: '',        
+      if(!product?.domain?.domainName) {
+        product.domain = {
+          domainName: null,        
+        }
+      }
+
+
+      
+
+      product.domainCheck = {
+        action: domainActions[0], // register, trasfer
+        domainName: product.domain.domainName,
+        exactMatch: null,    
+        results: [], 
+        suggestions: [],
+        loading: false
       }
 
     }
@@ -424,30 +425,30 @@ function isDomainProduct(product) {
 }
 
 
-async function checkDomain() {  
+async function checkDomain(product) {  
     
-    loading.value = true
+    product.domainCheck.loading = true
     
     const lang = locale.value == 'es' ? 'esp' : 'eng'
 
     const body = {
-        domain: domainCheck.value.domainName,
+        domain: product.domainCheck.domainName,
         lang,
         ext: ''
     }
-
-    domainCheck.value.exactMatch = false
-    domainCheck.value.results =  []
-    domainCheck.value.suggestions = null
+    product.domain.domainName = null
+    product.domainCheck.exactMatch = false
+    product.domainCheck.results =  []
+    product.domainCheck.suggestions = null
     
     const res = await $fetch(apiRoutes.domainCheck, {
 		method: 'POST',
 		body: JSON.stringify(body)
 	}).then((response) => {
-        loading.value = false
-        domainCheck.value.exactMatch = response.exactMatch || false
-        domainCheck.value.results = response?.results?.filter(x => x.isAvaliable == true) || []
-        domainCheck.value.suggestions = response.suggestions 
+        product.domainCheck.loading = false
+        product.domainCheck.exactMatch = response.exactMatch || false
+        product.domainCheck.results = response?.results?.filter(x => x.isAvaliable == true) || []
+        product.domainCheck.suggestions = response.suggestions 
     } )
 }
 
@@ -460,15 +461,31 @@ function getFrecuencyOptions(product){
 function selectDomain(product, domainName){
     //product.id = domainName
     product.domain.domainName = domainName
+    calcSubtotal()
 }
 
-function addDomainExtension(product, extension){    
+function selectDomainLabel(product){
+  return product?.domain?.domainName ? 'Add' : 'Make it yours'
+}
 
-    const newProduct =  {...product}
+function addDomainExtension(product, extension){ 
+  if(!product?.domain?.domainName){
+    selectDomain(product, extension.name)  
+    return 
+  }
 
-    newProduct.id  = extension.name    
-    newProduct.category = null
-    newProduct.domain.domainName = extension.name
+
+    //const newProduct = { ...product }
+    const { cloned } = useCloned(product)
+
+    cloned.value.isCloned = {
+      originalId: product.id,
+      originalDomainName: product.domain.domainName
+    }
+
+    cloned.value.id = extension.name
+    cloned.value.category = null
+    cloned.value.domain.domainName = extension.name 
 	
 
     
@@ -488,7 +505,8 @@ function addDomainExtension(product, extension){
 	//newProduct.frecuency = frecuencyOptions[0]
 	
     
-    cartState.value.products.push(newProduct)
+    cartState.value.products.push(cloned.value)
+    calcSubtotal()
     
 }
 
