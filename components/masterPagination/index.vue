@@ -1,6 +1,6 @@
 <template>
   <!--pagination-->
-  <div :class="`bottonCrud full-width flex items-center ${isMobile ? 'justify-center' : 'justify-between'}`">         
+  <div :class="`full-width flex items-center ${isMobile ? 'justify-center' : 'justify-between'}`">         
     <div class="sm:tw-text-sm":class="`text-blue-grey ${isMobile ? 'q-mb-sm' : ''} `">
       {{ $t('isite.cms.label.showing') }} <b>{{ countPage() }}</b> {{ $t('isite.cms.label.entry') }}
     </div>

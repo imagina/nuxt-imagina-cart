@@ -63,6 +63,11 @@ export default {
       "addToCart": "Añadir",
       "buyNow": "Comprar"
     },
+    "currencies": {
+      "cop": "peso colombiano",
+      "usd": "dólar estadounidense", 
+      "eur": "euro"
+    },
     "checkout": {
       "back": "Volver", 
       "billingAddress": "Dirección de facturación", 

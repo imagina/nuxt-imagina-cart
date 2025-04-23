@@ -1,10 +1,10 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'My Amazing Site',
-  ogTitle: 'My Amazing Site',
-  description: 'This is my amazing site, let me tell you all about it.',
-  ogDescription: 'This is my amazing site, let me tell you all about it.',
-  ogImage: 'https://example.com/image.png',
+  title: 'Páginas Web - Hosting y Registro de Dominios',
+  description: 'Lideres en Hosting y registro de Dominios en Colombia. Mayor rendimiento al mejor precio. 15 años de experiencia más de 10.000 clientes confían en nosotros. Asesores en Bogotá, Ibagué  y Medellín.',  
+  ogTitle: 'Páginas Web - Hosting y Registro de Dominios | Imagina Colombia',  
+  ogDescription: 'Lideres en Hosting y registro de Dominios en Colombia. Mayor rendimiento al mejor precio. 15 años de experiencia más de 10.000 clientes confían en nosotros. Asesores en Bogotá, Ibagué  y Medellín.',
+  ogImage: 'https://www.imaginacolombia.com',
   twitterCard: 'summary_large_image',
 })
 </script>

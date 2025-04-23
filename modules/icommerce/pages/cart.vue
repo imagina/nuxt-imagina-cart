@@ -26,30 +26,12 @@
 						<div>
 							<CurrencySelector />
 						</div>
-						<div v-if="false">
-							<div class="tw-flex tw-items-center">
-								<span class="tw-text-xl tw-font-bold">Divisa:&nbsp;</span>
-								<template v-for="currencyItem in currencies">
-									<q-radio v-model="cartState.currency" :val="currencyItem.value"
-										:label="currencyItem.label" />
-								</template>
-							</div>
-						</div>						
 					</div>
 					<!-- products -->
 					<ProductsComponent
-						:products="cartState.products"
-						:currency="cartState.currency"
-						@removeProduct="(product) => removeProduct(product)"
 						@subtotal="(val) => subtotal = val"
 					/>
-
-					<!--aditional cards -->
-
-					<div>
-						<span class="tw-text-xl tw-font-bold">Protege tu marca:&nbsp;</span>
-						<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-					</div>
+					
 				</div>
 				<!-- empty cart -->
 				<div v-else >
@@ -82,7 +64,7 @@
 			<div
 				v-if="showCart"
 				class="
-				tw-w-full
+				tw-w-full				
 				md:tw-my-[20px]
 				lg:tw-w-[800px]
 				lg:tw-mt-0
@@ -96,6 +78,8 @@
 					tw-bg-white
 					tw-rounded-[20px]
 					tw-w-full
+					tw-sticky
+					tw-top-[220px]
 					tw-p-6
 					"
 				>
@@ -116,7 +100,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -125,7 +109,7 @@
 							{{ $t('icommerce.cart.subtotalNoTaxes') }}
 						</span>
 						<span class="tw-text-[18px] tw-font-[600]">
-							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
@@ -135,7 +119,7 @@
 							{{ $t('icommerce.cart.discount') }} 00%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
@@ -168,8 +152,10 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							@click="redirectCheckout()"
+							@click="redirectCheckout()"	
+							:disable="!disableContinue"						
 						/>
+						{{ disableContinue }}
 					</div>
 				</div>
 			</div>
@@ -186,6 +172,8 @@ const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
 })
+
+const disableContinue = useState('icommerce.cart.continue')
 
 const form = useStorage('shoppingCheckoutForm', {
 	coupon: null,
@@ -210,14 +198,7 @@ const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
 const checkoutPath = getPath('icommerce.checkout')
 
-function removeProduct(product) {
-	const products = cartState.value.products.filter(obj => obj.id != product.id);
-	cartState.value = { products: products, currency: cartState.value.currency }
 
-	if (cartState.value.products.length == 0) {
-		// router.push({ path: getPath('icommerce.products') })
-	}
-}
 
 function redirectCheckout() {
 	router.push({

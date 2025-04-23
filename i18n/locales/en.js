@@ -64,11 +64,16 @@ export default {
       "addToCart": "Add to Cart",
       "buyNow": "Buy Now"
     },
+    "currencies": {
+      "cop": "Colombian peso",
+      "usd": " United States dollar", 
+      "eur": "euro"
+    },
     "checkout": {
-    "back": "Back",
-    "billingAddress": "Billing Address",
-    "orderSummary": "Order Summary",
-    "articles": "Articles"
+      "back": "Back",
+      "billingAddress": "Billing Address",
+      "orderSummary": "Order Summary",
+      "articles": "Articles"
     },
     "goToStore": "Go to Store"
   }

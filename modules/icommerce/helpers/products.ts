@@ -1,9 +1,10 @@
+
 const helper = {
-	
+
 	/**/
 	hasFrencuency: (product) => {
-		return product?.optionsPivot.length || false
-	}, 
+		return product?.optionsPivot?.length || false
+	},
 
 	/* */
 	getFrecuencyOptions: (product, frecuencyId = 1) => {
@@ -21,14 +22,18 @@ const helper = {
 	getPrice: (product, currencyValue = 'COP') => {
 		const frecuencies = helper.getFrecuencyOptions(product)
 		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
-		
+
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 		if(price > 0 && currencyValue != 'COP'){
-			//Dolar 
-			if(currencyValue == 'USD') price = helper.COPtoUSD(price)
-			if(currencyValue == 'EUR') price = helper.COPtoEUR(price)
+			price = helper.COPtoCurrency(price, currencyValue)			
 		}
-		return price 
+		return price
+	},
+
+	COPtoCurrency(value, currency){
+			if(currency == 'USD') return helper.COPtoUSD(value)
+			if(currency == 'EUR') return helper.COPtoEUR(value)
+			return value	
 	},
 
 	/* currency helper */
@@ -52,29 +57,44 @@ const helper = {
 
 	getPriceWithSymbol(product, currency = 'COP'){
 		const price = helper.getPrice(product, currency)
-		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}` 
-		//return `${helper.getCurrencySymbol(currency)}${helper.getPrice(product, currency)} ${currency}`
+		return `${helper.currencyFormat(price, currency)} ${helper.getCurrency(currency).value}`
 	},
 
-	priceWithSymbol(value, currency = 'COP'){		
-		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}` 
-		//return `${helper.getCurrencySymbol(currency)}${value} ${currency}`
+	priceWithSymbol(value, currency = 'COP'){
+		
+		return `${helper.currencyFormat(helper.COPtoCurrency(value, currency), currency)} ${helper.getCurrency(currency).value}`
 	},
 
-	getSubtotal(products, currencyValue){		
+
+	valueWithSymbol(value, currency = 'COP'){
+		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}`
+	},
+
+	/* extr*/
+	extractPrice(str) {
+		  // Match digits and commas, then remove commas
+		  const match = str.match(/[\d,]+/);
+		  if (match) {
+			return parseInt(match[0].replace(/,/g, ''), 10);
+		  }
+		  return null; // Return null if no price found
+	},
+
+	getSubtotal(products, currencyValue){
 		let subtotal = Number(0);
-		products.forEach(product => {    
-			const price = helper.getPrice(product, currencyValue)    			
-			subtotal  = Number(subtotal) + Number(price)			
+		products.forEach(product => {
+			const price = helper.getPrice(product, currencyValue)
+			subtotal  = Number(subtotal) + Number(price)
 		});
 		return Number.isInteger(subtotal) ? subtotal : subtotal.toFixed(2)
 	},
 
 	getCurrencies(){
+		const { t } = useI18n()
 		return [
-			{ value: 'COP', label: 'COP - peso colombiano', symbol: '$'}, 
-			{ value: 'USD', label: 'USD - dólar estaunidense', symbol: '$'},
-			{ value: 'EUR', label: 'EUR - euro' , symbol: '€'}
+			{ value: 'COP', label: `COP - ${t("icommerce.currencies.cop")}`, symbol: '$'},
+			{ value: 'USD', label: `USD - ${t("icommerce.currencies.usd")}`, symbol: '$'},
+			{ value: 'EUR', label: `EUR - ${t("icommerce.currencies.eur")}` , symbol: '€'}
 		];
 	},
 
@@ -95,21 +115,23 @@ const helper = {
 		let usdRates = authStore.usdRates
 		const trm = Number(usdRates['USDRates'][currency])
 		return trm.toFixed(2)
-	},	
+	},
 
 	currencyFormat(value, currency){
+
 		const currencies = {
 			'USD' : new Intl.NumberFormat('en-US', {
 						style: 'currency',
 						currency: 'USD',
-					}), 
+					}),
 			'COP': new Intl.NumberFormat('es-CO', {
 				style: 'currency',
 				currency: 'COP',
-				maximumSignificantDigits: 2,
+				minimumFractionDigits: 0, //removes decimal places.
+				maximumFractionDigits: 0 //ensures no cents are shown.
 
-			}), 
-			
+			}),
+
 			'EUR': Intl.NumberFormat('en-DE', {
 				style: 'currency',
 				currency: 'EUR',
@@ -117,7 +139,7 @@ const helper = {
 		}
 		return currencies[currency].format(value)
 	}
-	
+
 }
 
 

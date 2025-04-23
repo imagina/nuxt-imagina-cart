@@ -128,6 +128,7 @@
 			:isFirstPage="paginationModel.page == 1"
 			:isLastPage="paginationModel.page == pagination.lastPage"
 			@update:modelValue="getProducts()"
+			class="tw-py-8"
         />
 	
 		
@@ -257,8 +258,8 @@ const cartState = useStorage('shoppingCart', {
 
 		if(settings.justOneProdcut){
 			//reset cart
-			cartState.value = { products: [product] }
-			router.push({ path: getPath('icommerce.checkout')})
+			cartState.value = { products: [product], currency: cartState.value.currency }
+			router.push({ path: getPath('icommerce.cart')})
 			return
 		} else {
 			if(product.quantity != 0){

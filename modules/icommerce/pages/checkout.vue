@@ -235,7 +235,7 @@
 									<q-card-section>
 										<span
 											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-											{{ product.name }}
+											{{ product.name }} {{ product.domain }}
 										</span>
 										<div class="tw-flex tw-justify-between">
 											<div>
@@ -276,7 +276,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -287,7 +287,7 @@
 							{{ $t('icommerce.cart.discount')}} 00%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
@@ -318,7 +318,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -343,6 +343,7 @@ import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
+
 
 
 const quasar = useQuasar()
@@ -507,23 +508,26 @@ async function goToPayment() {
 				discount: product.discount,
 				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
 				price: productsHelper.getPrice(product, cartState.currency),
-				currency: cartState.value.currency
+				currency: cartState.value.currency, 
+				domain: product?.domain || null
 			}
 		})
 	}
 
-	//console.log(JSON.stringify(order))
+	console.log(JSON.stringify(order))
 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
 		body: JSON.stringify(order)
 	}).then((response) => {
 		//WIP
+		/*
 		window.location.replace('https://clientes.imaginacolombia.com');
 		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency
 		}
+			*/
 	})
 
 
