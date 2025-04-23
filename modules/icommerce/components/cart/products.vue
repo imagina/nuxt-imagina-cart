@@ -1,5 +1,4 @@
 <template>
-	{{ validateProducts }}
   <div v-for="product in cartState.products"
     class="
         card
@@ -114,173 +113,163 @@
 
       </div>
       <!-- results -->
-      <q-dialog
+      
+			<q-dialog
 				v-model="product.domainCheck.modal"
-
 			>
-      <div
-				v-if="product.domainCheck.action.value == domainActions[0].value"
-				class="
-				tw-bg-white
-				tw-p-4
-				"
-
-				style="overflow: hidden;"
-			>
-
+				<!--loading --->	
 				<div
-					v-if="product.domainCheck.loading"
-					class="tw-w-full tw-h-[100px]"
-					style="position: relative;"
+						v-if="product.domainCheck.loading"
+						class="tw-w-[100px] tw-h-[100px] tw-bg-white"
+						style="position: relative;"
 				>
 					<q-inner-loading :showing="product.domainCheck.loading" color="primary"  />
 				</div>
 
-        <div
-            v-if="product.domainCheck?.exactMatch?.isAvaliable"
-            class="
-                tw-flex
-                tw-justify-center
-                tw-p-2
-                tw-bg-[#fafbff]
-                tw-rounded-[10px]
-                tw-border-[1px]
-                tw-w-full
-                tw-h-full
-                tw-border-[#d5dfff]
-                tw-p-4
-            "
-        >
-            <div>
-                <span class="tw-text-lg tw-font-[800] tw-text-[#5cb85c]"> {{ product.domainCheck.exactMatch.name }} <br> ¡está disponible!&nbsp;</span>
-            </div>
-
-            <div>
-                <q-btn
-                    v-if="!product?.domain?.domainName"
-                    label="make it yours"
-                    no-caps
-                    @click="selectDomain(product, product.domainCheck.exactMatch.name)"
-                />
-            </div>
-        </div>
-
-        <div class="tw-my-5" v-if="product?.domainCheck.results.length">
-          <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
-          <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-        </div>
-
-        <div class="tw-grid tw-grid-cols-3  tw-gap-4">
-          <!--extension cards -->
-          <template v-for="result in product?.domainCheck.results">
-            <div
-              v-if="result.isAvaliable"
-              class="
-              tw-bg-[#fafbff]
-              tw-rounded-[10px]
-              tw-border-[1px]
-              tw-w-full
-              tw-h-full
-              tw-border-[#d5dfff]
-              tw-p-4"
-
-            >
-            <div>
-                <span class="tw-text-[20px] tw-font-[600]">
-                    .{{ result.ext }}
-                </span>
-                <br>
-                <span class="tw-text-[14px] tw-font-[500]">
-                    {{ result.name }}
-                </span>
-                <br>
-                <span class="tw-text-[16px] tw-font-[600]">
-                    {{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
-                </span>
-
-            </div>
-            <div class
-            >
-                <span
-                    class="tw-text-[18px] tw-font-[700]"
-                >
-                <!-- {{ productsHelper.valueWithSymbol(productsHelper.COPtoCurrency(productsHelper.extractPrice(result.shortestPeriod.register), cartState.currency), cartState.currency) }} /Year-->
-
-                </span>
-            </div>
-            <div class="tw-flex tw-justify-center tw-my-2">
-                <q-btn
-                    :label="selectDomainLabel(product)"
-                    text-color="black"
-                    color="amber"
-                    no-caps
-                    unelevated
-                    class="
-                        tw-w-full
-                        tw-justify-center
-                        tw-font-bold
-                        tw-rounded-lg
-                    "
-                    @click="addDomainExtension(product, result)"
-                />
-            </div>
-          </div>
-
-          </template>
-
-        </div>
 
 
-				<!-- suggestions -->
-				<div class="tw-grid tw-grid-cols  tw-gap-4 tw-p-4 tw-h-full">
-					<div>
-						<span>More options</span>
-					</div>
+				<q-card
+					v-if="product.domainCheck.action.value == domainActions[0].value && !product.domainCheck.loading"
+				>
+					<q-card-section class="row items-center q-pb-none">						
+							<span class="tw-text-[20px] tw-font-[600]">
+							{{ product.name }}
+							</span>
+						<q-space />
+						<q-btn icon="close" flat round dense v-close-popup />
+					</q-card-section>
 
-					<div>
-						<q-scroll-area style="height: 400px; max-width: 2000px;">
-							<template v-for="suggestion in product?.domainCheck.suggestions">
-								<div class="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-m-4">
-										<span class="tw-text-[14px] tw-font-[600]">
-												{{ suggestion.name }}
-										</span>
-										<div class="tw-flex tw-items-center tw-gap-4">
-											<div>
-												<span>
-												{{  productsHelper.priceWithSymbol(getExtPrice(suggestion.ext).domainregister, cartState.currency) }}
+					<q-card-section>						
+							<div 
+								v-if="product.domainCheck?.exactMatch?.isAvaliable"
+								class="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-m-4 tw-sticky tw-top-0">
+											<span class="tw-text-[14px] tw-font-[600]">
+												<span class="tw-text-lg tw-font-[800] tw-text-[#5cb85c]"> {{ product.domainCheck.exactMatch.name }} <br> ¡está disponible!&nbsp;</span>
 											</span>
-											</div>
-											<div>
-												<q-btn
-												label="Buy now"
+											<div class="tw-flex tw-items-center tw-gap-4">
+												<div>
+													<span>
+													{{  productsHelper.priceWithSymbol(getExtPrice(product.domainCheck.exactMatch.ext).domainregister, cartState.currency) }}
+												</span>
+												</div>
+												<div>
+													<q-btn
+														label="Buy now"
+														color="amber"
+														no-caps
+														unelevated
+														class="tw-font-bold tw-rounded-lg"
+														@click="selectDomain(product, product.domainCheck.exactMatch.name)"
+													/>
+												</div>
+								</div>							
+								<hr>
+							</div>				
+					</q-card-section>
+
+					<!--results -->
+					<q-card-section>
+						
+						<div class="tw-my-5" v-if="product?.domainCheck.results.length">
+          		<span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
+          		<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
+        		</div>
+
+						<div class="tw-grid md:tw-grid-cols-3  tw-gap-4">
+							<!--extension cards -->
+							<template v-for="result in product?.domainCheck.results">
+								<div
+									v-if="result.isAvaliable"
+									class="
+									tw-bg-[#fafbff]
+									tw-rounded-[10px]
+									tw-border-[1px]
+									tw-w-full
+									tw-h-full
+									tw-border-[#d5dfff]
+									tw-p-4"
+
+								>
+								<div>
+										<span class="tw-text-[20px] tw-font-[600]">
+												.{{ result.ext }}
+										</span>
+										<br>
+										<span class="tw-text-[14px] tw-font-[500]">
+												{{ result.name }}
+										</span>
+										<br>
+										<span class="tw-text-[16px] tw-font-[600]">
+												{{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
+										</span>
+
+								</div>            
+								<div class="tw-flex tw-justify-center tw-my-2">
+										<q-btn
+												:label="selectDomainLabel(product)"
+												text-color="black"
 												color="amber"
 												no-caps
 												unelevated
-												outline
 												class="
+														tw-w-full
+														tw-justify-center
 														tw-font-bold
 														tw-rounded-lg
 												"
-												@click="addDomainExtension(product, suggestion)"
+												@click="addDomainExtension(product, result)"
 										/>
-
-											</div>
-
-
-										</div>
-
 								</div>
-								<hr>
-
-
-
+							</div>
 
 							</template>
-						</q-scroll-area>
-					</div>
 
-        </div>
-      </div>
+						</div>
+
+					</q-card-section>
+
+					<!-- suggestions -->
+					<q-card-section>
+						<div class="tw-grid tw-grid-cols  tw-gap-4 tw-p-4 tw-h-full">
+							<div>
+								<span class="tw-text-[16px] tw-font-[600]">More options</span>
+							</div>
+
+							<div>
+								<!--<q-scroll-area style="height: 400px; max-width: 2000px;">-->
+									<template v-for="suggestion in product?.domainCheck.suggestions">
+										<div class="tw-grid  md:tw-flex md:tw-justify-between tw-items-center tw-gap-4 tw-m-4">
+												<span class="tw-text-[14px] tw-font-[600]">
+														{{ suggestion.name }}
+												</span>
+												<div class="tw-flex tw-items-center tw-gap-4">
+													<div>
+														<span>
+														{{  productsHelper.priceWithSymbol(getExtPrice(suggestion.ext).domainregister, cartState.currency) }}
+													</span>
+													</div>
+													<div>
+														<q-btn
+															label="Buy now"
+															color="amber"
+															no-caps
+															unelevated
+															outline
+															class="tw-font-bold tw-rounded-lg"
+															@click="addDomainExtension(product, suggestion)"
+														/>
+													</div>
+												</div>
+											</div>
+										<hr>
+									</template>
+								<!--</q-scroll-area>-->
+							</div>
+
+        		</div>
+					</q-card-section>
+				</q-card>
+				
 		</q-dialog>
 
 
@@ -557,6 +546,7 @@ function addDomainExtension(product, extension){
 	console.log(extension)
   if(!product?.domain?.domainName){
     selectDomain(product, extension.name)
+		calcSubtotal()
     return
   }
 
