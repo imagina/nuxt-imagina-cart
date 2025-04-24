@@ -75,6 +75,7 @@
 			>
 				<div class="
 					card
+					tw-shadow-xl
 					tw-bg-white
 					tw-rounded-[20px]
 					tw-w-full
@@ -167,6 +168,7 @@ import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
 import productsHelper from '../helpers/products'
 import CurrencySelector from '../components/currencySelector'
+import apiRoutes from '../config/apiRoutes'
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
@@ -189,8 +191,9 @@ const form = useStorage('shoppingCheckoutForm', {
 	zipCode: null
 })
 
-
+const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()    
 
 const subtotal = ref(0)
 
@@ -198,6 +201,66 @@ const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
 const checkoutPath = getPath('icommerce.checkout')
 
+
+onMounted(async () => {
+	init();
+})
+
+async function init(){
+	await checkUrlParams()
+}
+
+async function  checkUrlParams(){	
+	const query = route?.query || {}	 
+
+	const options = {
+		action: query?.a || null,
+		pid: query?.pid || null,
+		billingcycle: query?.billingcycle || null, 
+		promocode: query?.promocode || null
+	}
+	
+	if(options.action && options.pid){		
+		getProduct(options.pid, options)
+	}
+}
+
+async function getProduct(id, urlOptions){
+	const params = {			
+		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
+	}
+	
+	await baseService.show(apiRoutes.products, id,  params).then(response => {		
+		if(response?.data) {
+			const product = response.data
+			
+			/* translate the  product options and set one if there is in url params  */
+			if(productsHelper.hasFrencuency(product)){
+				let billingcycle = 0
+				const options = productsHelper.getFrecuencyOptions(product).map((element, index) => {
+					console.log(element.label)
+					if(urlOptions?.billingcycle){
+						if(urlOptions?.billingcycle.toLowerCase() == element.label.toLowerCase()){
+							billingcycle = index
+						}
+					}
+					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))					
+					return element
+       			});
+				if(options.length) product.frecuency = options[billingcycle]
+    		}
+
+			const index = cartState.value.products.findIndex((obj) => obj.id == id);
+			if (index === -1) {
+				cartState.value.products.push(product);
+			} else {
+				cartState.value.products[index] = product;
+			}
+		}
+
+	})
+	//loading.value = false
+}
 
 
 function redirectCheckout() {

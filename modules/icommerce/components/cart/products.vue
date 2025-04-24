@@ -131,7 +131,7 @@
 				<q-card
 					v-if="product.domainCheck.action.value == domainActions[0].value && !product.domainCheck.loading"
 				>
-					<q-card-section class="row items-center q-pb-none">						
+					<q-card-section class="row items-center q-pb-none tw-sticky tw-top-0 tw-bg-white tw-z-40">	
 							<span class="tw-text-[20px] tw-font-[600]">
 							{{ product.name }}
 							</span>
@@ -353,7 +353,7 @@ import apiRoutes from '../../config/apiRoutes.js';
 import { useStorage, useCloned  } from '@vueuse/core'
 
 
-const { locale, locales, setLocale } = useI18n()
+const { locale, locales, setLocale, t } = useI18n()
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
@@ -441,6 +441,7 @@ function configProducts() {
     cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
       const options = productsHelper.getFrecuencyOptions(product)
+      
       if (options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }
@@ -529,7 +530,14 @@ async function checkDomain(product) {
 
 function getFrecuencyOptions(product){
     if(product?.frecuencyOptions?.length) return product?.frecuencyOptions
-    return productsHelper.getFrecuencyOptions(product)
+
+    return productsHelper.getFrecuencyOptions(product).map(element => {
+        element.label = t(productsHelper.translateFrecuencyOptionLabel(element.label))
+        return element      
+       });
+
+
+    
 }
 
 function selectDomain(product, domainName){
@@ -543,7 +551,6 @@ function selectDomainLabel(product){
 }
 
 function addDomainExtension(product, extension){
-	console.log(extension)
   if(!product?.domain?.domainName){
     selectDomain(product, extension.name)
 		calcSubtotal()

@@ -17,10 +17,10 @@ const pages = [
 
   {
     name: 'icommerce.cart',
-    path: '/commerce/cart',
+    path: '/cart',
     paths:{
-      es: '/tienda/carrito',
-      en: '/store/cart',
+      es: '/carrito',
+      en: '/cart',
     },
     page: 'pages/cart.vue',
     meta: {

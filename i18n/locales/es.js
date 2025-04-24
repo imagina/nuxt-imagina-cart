@@ -68,6 +68,15 @@ export default {
       "usd": "dólar estadounidense", 
       "eur": "euro"
     },
+
+    "frecuencies": {
+      "monthly": "1 mes",
+      "annually": "12 meses",
+			"biannually": "24 meses",
+			"triannually": "36 meses",
+			"quarterly": "3 meses"
+    },
+    
     "checkout": {
       "back": "Volver", 
       "billingAddress": "Dirección de facturación", 

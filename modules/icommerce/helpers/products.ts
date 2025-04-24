@@ -6,17 +6,37 @@ const helper = {
 		return product?.optionsPivot?.length || false
 	},
 
-	/* */
-	getFrecuencyOptions: (product, frecuencyId = 1) => {
+	/* 
+		frecuency id: 1
+	*/
+	getFrecuencyOptions: (product) => {
 		if(!helper.hasFrencuency(product)) return []
+
+
+		const frecuencyId = (product?.productOptions?.length  ? product.productOptions[0].optionId : 1) || 1
+
 		const option = product.optionsPivot.find((item) => item.optionId == frecuencyId)
 
 		const options = option?.productOptionValues.filter((item) => item.optionId == frecuencyId && item.price > 1).map((item) =>  {
-			return { label: item.optionValue, value: item.price, id: item.id }
+			return { label:   item.optionValue, value: item.price, id: item.id }
 		}) || []
 
 		return options
 	},
+
+	translateFrecuencyOptionLabel(label){
+		//const { t } = useI18n()
+		const labels = {
+			'Monthly': "icommerce.frecuencies.monthly",
+			'Annually': "icommerce.frecuencies.annually",
+			'Biannually': "icommerce.frecuencies.biannually",
+			'Triannually': "icommerce.frecuencies.triannually",
+			'Quarterly': "icommerce.frecuencies.quarterly",
+		}
+
+		return labels[label] || label	
+
+	}, 
 
 	/**/
 	getPrice: (product, currencyValue = 'COP') => {

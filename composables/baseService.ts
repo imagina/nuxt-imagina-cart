@@ -2,8 +2,10 @@ const baseService = {
 
 	config(){
 		const config = useRuntimeConfig()
+		//const { locale, locales, setLocale } = useI18n()
 		return {
 			apiRoute: `${config.public.apiRoute}/api`, 
+			locale: 'es'
 		}
 	},
 
@@ -38,7 +40,7 @@ const baseService = {
 			}
 
 			params.setting = {
-				locale: 'en'
+				locale: baseService.config().locale
 			}
 			
 			const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
@@ -53,6 +55,36 @@ const baseService = {
 			})
 		})
 	},
+
+
+
+		/**
+   * Get item by criteria
+   * @param configName
+   * @param params {params : {}, remember: boolean}
+   * @returns {Promise<any>}
+   */
+		show(configName, criteria, params = {}) {
+			console.log('show')
+			return new Promise((resolve, reject) => {	
+				if (!configName) return reject('Config name is required') //Validate config name	
+				if (!criteria) return reject('Criteria is required')//Validate criteria
+				
+				
+				const api = `${baseService.config().apiRoute}${configName}/${criteria}`
+				$fetch('/api/base', {
+					method: 'GET',
+					params: {
+						api:  api,
+						...params
+					}
+				}).then(response => resolve(response)).catch(error => {
+						reject(error)
+				})
+			})
+	},
+
+
 
 
 	/**
