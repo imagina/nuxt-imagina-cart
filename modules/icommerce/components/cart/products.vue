@@ -12,7 +12,7 @@
     >
 
     <!-- PRODUCT TITLE -->
-    <div class="tw-flex tw-justify-between tw-items-center tw-p-4">
+    <div class="tw-flex tw-justify-between tw-items-center tw-py-6">
       <h2 class="
             tw-font-semibold
             tw-text-[22px]
@@ -85,6 +85,7 @@
                 rounded
                 no-caps
                 unelevated
+                :disable="disableCheckButton(product)"
             />
           </template>
         </q-input>
@@ -388,7 +389,6 @@ const domainActions =  [
 	},
 ]
 
-
 onMounted(() => {
   init()
 })
@@ -412,6 +412,9 @@ function init() {
     configProducts()
 }
 
+function disableCheckButton(product){
+  return product.domainCheck.domainName == '' || product.domainCheck.domainName == null  
+}
 
 async function getDomainPricing(){
     await baseService.get(apiRoutes.domainPricing).then((response) => {
@@ -424,7 +427,6 @@ async function getDomainPricing(){
 function getExtPrice(ext){
     return domainPricing?.value.find(x => x.ext ==  `.${ext}`) || 0
 }
-
 
 
 function configProducts() {
@@ -446,32 +448,50 @@ function configProducts() {
         }
       }
 
-
-
-
       product.domainCheck = {
         action: domainActions[0], // register, trasfer
         domainName: product.domain.domainName,
-
         exactMatch: null,
         results: [],
         suggestions: [],
         loading: false,
 				modal: false,
       }
-
     }
   })
   calcSubtotal()
 }
 
 function removeProduct(product) {
-	const products = cartState.value.products.filter(obj => obj.id != product.id);
-	cartState.value = { products: products, currency: cartState.value.currency }
+  Notify.create({
+			message: `¿Eliminar ${product.domain?.domainName}?`,
+			type: 'negative',
+      position: 'center',
+      actions: [
+        {
+          label: "cancelar", 
+          color: 'white', 
+        },
+        {
+          label: "Eliminar", 
+          color: 'white', 
+          handler: () => {
+            const products = cartState.value.products.filter(obj => obj.id != product.id);
+            cartState.value = { products: products, currency: cartState.value.currency }
 
-	if (cartState.value.products.length == 0) {
-		// router.push({ path: getPath('icommerce.products') })
-	}
+            if (cartState.value.products.length == 0) {
+              // router.push({ path: getPath('icommerce.products') })
+            }
+
+          }
+
+        }
+      ]
+		})
+
+
+
+	
 }
 
 function calcSubtotal() {
@@ -489,21 +509,21 @@ function isDomainProduct(product) {
 
 async function checkDomain(product) {
 
-  product.domainCheck.modal = true
-	product.domainCheck.loading = true
-
     const lang = locale.value == 'es' ? 'esp' : 'eng'
 		const domain = product.domainCheck.domainName.trim()
 
     const body = {
-        domain,
-        lang,
-        ext: ''
+      domain,
+      lang,
+      ext: ''
     }
+    
     product.domain.domainName = null
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
     product.domainCheck.suggestions = null
+    product.domainCheck.modal = true
+	  product.domainCheck.loading = true
 
     const res = await $fetch(apiRoutes.domainCheck, {
 		method: 'POST',
@@ -525,9 +545,7 @@ function getFrecuencyOptions(product){
     return productsHelper.getFrecuencyOptions(product).map(element => {
         element.label = t(productsHelper.translateFrecuencyOptionLabel(element.label))
         return element      
-       });
-
-
+    });
     
 }
 
@@ -550,9 +568,6 @@ function selectDomainLabel(product){
 function addDomainExtension(product, extension){
   if(!product?.domain?.domainName){
     selectDomain(product, extension.name)
-    
-
-
 		calcSubtotal()
     return
   }
@@ -570,33 +585,13 @@ function addDomainExtension(product, extension){
     cloned.value.category = null
     cloned.value.domain.domainName = extension.name
 
-
-
-    /*
-	const frecuencyOptions = Object.keys(extension.pricing).map(x =>   {
-
-		//const label = productsHelper.valueWithSymbol(productsHelper.extractPrice(extension.pricing[x].register), cartState.value.currency)
-		const label = `Register ${x}`
-		const value = productsHelper.extractPrice(extension.pricing[x].register)
-
-		return { label, value, id: x }
-	}) || []
-     */
-
-
-	//newProduct.frecuencyOptions = frecuencyOptions
-	//newProduct.frecuency = frecuencyOptions[0]
-
-
     cartState.value.products.push(cloned.value)
     Notify.create({
 			message: `Agregaste ${extension.name} al carrito!`,
 			type: 'positive',
     //  position: 'center'
 		})
-
     calcSubtotal()
-
 }
 
 </script>

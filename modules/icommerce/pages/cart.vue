@@ -154,7 +154,7 @@
 								tw-rounded-lg
 							"
 							@click="redirectCheckout()"	
-							:disable="!disableContinue"						
+							:disable="disableContinue"
 						/>
 						{{ disableContinue }}
 					</div>
@@ -174,12 +174,6 @@ const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
 })
-
-const disableContinue = computed(() => cartState.value.products.every((product) => {  
-  if(!product?.domain) return true   
-  return (product?.domain?.domainName != null && product?.domain?.domainName != '' )
-}))
-
 const form = useStorage('shoppingCheckoutForm', {
 	coupon: null,
 	email: null,
@@ -202,6 +196,21 @@ const subtotal = ref(0)
 
 const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
+
+const disableContinue = computed(() => cartState.value.products.every((product) => {
+	if(!product?.domain) return false   //not a domain product 
+
+	
+	if(product.domainCheck.action.value == 'self-register'){	
+		return product?.domain?.domainName == null || product?.domain?.domainName == '' ?  true : false 
+	}
+	return product?.domainCheck?.domainName == null ||  product?.domainCheck.domainName == '' ? true : false
+	
+	
+	
+	}))
+
+
 const checkoutPath = getPath('icommerce.checkout')
 
 

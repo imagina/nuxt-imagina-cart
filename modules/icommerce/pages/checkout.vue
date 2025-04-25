@@ -235,7 +235,7 @@
 									<q-card-section>
 										<span
 											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-											{{ product.name }} {{ product.domain }}
+											{{ product.name }} {{ product.domain.domainName }}
 										</span>
 										<div class="tw-flex tw-justify-between">
 											<div>
