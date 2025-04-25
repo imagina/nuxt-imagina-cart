@@ -175,7 +175,10 @@ const cartState = useStorage('shoppingCart', {
 	currency: 'COP'
 })
 
-const disableContinue = useState('icommerce.cart.continue')
+const disableContinue = computed(() => cartState.value.products.every((product) => {  
+  if(!product?.domain) return true   
+  return (product?.domain?.domainName != null && product?.domain?.domainName != '' )
+}))
 
 const form = useStorage('shoppingCheckoutForm', {
 	coupon: null,
@@ -227,7 +230,10 @@ async function  checkUrlParams(){
 
 async function getProduct(id, urlOptions){
 	const params = {			
-		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
+		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues', 
+		filter: {
+			field: 'external_id'
+		}
 	}
 	
 	await baseService.show(apiRoutes.products, id,  params).then(response => {		
@@ -238,7 +244,6 @@ async function getProduct(id, urlOptions){
 			if(productsHelper.hasFrencuency(product)){
 				let billingcycle = 0
 				const options = productsHelper.getFrecuencyOptions(product).map((element, index) => {
-					console.log(element.label)
 					if(urlOptions?.billingcycle){
 						if(urlOptions?.billingcycle.toLowerCase() == element.label.toLowerCase()){
 							billingcycle = index
@@ -250,7 +255,7 @@ async function getProduct(id, urlOptions){
 				if(options.length) product.frecuency = options[billingcycle]
     		}
 
-			const index = cartState.value.products.findIndex((obj) => obj.id == id);
+			const index = cartState.value.products.findIndex((obj) => obj.externalId == id);
 			if (index === -1) {
 				cartState.value.products.push(product);
 			} else {

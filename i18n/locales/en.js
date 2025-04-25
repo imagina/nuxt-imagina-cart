@@ -75,7 +75,8 @@ export default {
       "annually": "12 meses",
 			"biannually": "24 meses",
 			"triannually": "36 meses",
-			"quarterly": "3 meses"
+			"quarterly": "3 meses",
+      "semiannually": "6 meses"
     },
 
     "checkout": {

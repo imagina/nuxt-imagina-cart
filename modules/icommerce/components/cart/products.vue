@@ -20,7 +20,7 @@
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }} {{  product?.domain?.domainName }}
+        {{ product.name }} {{  product?.domain?.domainName }} {{ isDomainProduct(product) }}
       </h2>
       <q-btn
 					icon="fa-solid fa-trash"
@@ -40,6 +40,10 @@
 						<q-select
 							label="configura tu dominio"
 							v-model="product.domainCheck.action"
+              @update:model-value="() => {
+                product.domain.domainName = null
+                product.domainCheck.domainName = null
+              }"
           		:options="domainActions"
           		option-value="value"
 							option-label="label"
@@ -88,7 +92,7 @@
 				<!-- transfer domain -->
 				<q-input
 						v-if="product.domainCheck.action.value != domainActions[0].value"
-            v-model="product.domain.domainName"
+            v-model="product.domainCheck.domainName"
             :placeholder="product.domainCheck.action.placeholder"
             class="tw-w-full"
             outlined
@@ -362,11 +366,6 @@ const cartState = useStorage('shoppingCart', {
 
 const emits = defineEmits(['subtotal'])
 
-
-const validateProducts = computed(() => cartState.value.products.every(product => (isDomainProduct(product) ?   (product?.domain?.domainName != null && product?.domain?.domainName != '') : true) === true)  )
-
-const disableContinue = useState('icommerce.cart.continue', () => false)
-
 const domainPricing = ref([])
 
 
@@ -400,14 +399,6 @@ watch(
     //configProducts()
   },
 )
-
-watch(
-  () => validateProducts.value,
-  (newQuery, oldQuery) => {
-    disableContinue.value = validateProducts.value
-  },
-)
-
 
 watch(
   () => cartState.value.currency,
@@ -543,6 +534,12 @@ function getFrecuencyOptions(product){
 function selectDomain(product, domainName){
     //product.id = domainName
     product.domain.domainName = domainName
+    Notify.create({
+			message: `Seleccionaste ${domainName} `,
+			type: 'positive',
+      position: 'center', 
+      timeout: 2000
+		})
     calcSubtotal()
 }
 
@@ -553,6 +550,9 @@ function selectDomainLabel(product){
 function addDomainExtension(product, extension){
   if(!product?.domain?.domainName){
     selectDomain(product, extension.name)
+    
+
+
 		calcSubtotal()
     return
   }
@@ -589,6 +589,12 @@ function addDomainExtension(product, extension){
 
 
     cartState.value.products.push(cloned.value)
+    Notify.create({
+			message: `Agregaste ${extension.name} al carrito!`,
+			type: 'positive',
+    //  position: 'center'
+		})
+
     calcSubtotal()
 
 }
