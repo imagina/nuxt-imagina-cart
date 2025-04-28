@@ -27,7 +27,7 @@ const showModal = ref( false );
 
     <!--Modal -->
     <q-dialog v-model="showModal"
-              position="fixed"
+              position="left"
               transition-show="slide-right"
               transition-hide="slide-left"
               :transition-duration="500"

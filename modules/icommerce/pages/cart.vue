@@ -156,7 +156,6 @@
 							@click="redirectCheckout()"	
 							:disable="disableContinue"
 						/>
-						{{ disableContinue }}
 					</div>
 				</div>
 			</div>
