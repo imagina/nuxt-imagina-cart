@@ -198,16 +198,8 @@ const showCart = computed(() => cartState.value?.products?.length || false)
 
 const disableContinue = computed(() => cartState.value.products.every((product) => {
 	if(!product?.domain) return false   //not a domain product 
-
-	
-	if(product.domainCheck.action.value == 'self-register'){	
-		return product?.domain?.domainName == null || product?.domain?.domainName == '' ?  true : false 
-	}
-	return product?.domainCheck?.domainName == null ||  product?.domainCheck.domainName == '' ? true : false
-	
-	
-	
-	}))
+	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false	
+}))
 
 
 const checkoutPath = getPath('icommerce.checkout')

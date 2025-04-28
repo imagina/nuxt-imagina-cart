@@ -42,6 +42,7 @@
 							v-model="product.domainCheck.action"
               @update:model-value="() => {
                 product.domain.domainName = null
+                product.domain.action = product.domainCheck.action
                 product.domainCheck.domainName = null
               }"
           		:options="domainActions"
@@ -93,7 +94,7 @@
 				<!-- transfer domain -->
 				<q-input
 						v-if="product.domainCheck.action.value != domainActions[0].value"
-            v-model="product.domainCheck.domainName"
+            v-model="product.domain.domainName"
             :placeholder="product.domainCheck.action.placeholder"
             class="tw-w-full"
             outlined
@@ -444,12 +445,13 @@ function configProducts() {
       if(!product?.domain?.domainName) {
         product.domain = {
           domainName: null,
+          action: null,
 					transferCode: null,
         }
       }
 
       product.domainCheck = {
-        action: domainActions[0], // register, trasfer
+        action:  product.domain.action ||  domainActions[0], // register, trasfer
         domainName: product.domain.domainName,
         exactMatch: null,
         results: [],

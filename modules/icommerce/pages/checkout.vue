@@ -234,8 +234,15 @@
 								<q-card>
 									<q-card-section>
 										<span
+											class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg">
+											{{ product.name }}
+										</span>
+										<br/>
+										<span
 											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-											{{ product.name }} {{ product?.domain?.domainName }}
+											{{ product?.domain?.action?.label }}: 
+											<br>
+											{{ product?.domain?.domainName }}  
 										</span>
 										<div class="tw-flex tw-justify-between">
 											<div>
@@ -395,7 +402,7 @@ watch(
 watch(
 	() => user.value, 
 	(newValue, oldValue) => {
-		setFormData()
+		setFormData(true)
 	}
 )
 
@@ -413,17 +420,15 @@ function init() {
 	addRedirect()
 }
 
-function setFormData() {
-	if (authStore.isLogged()) {
-		form.value = {
-			email: user.value.email,
-			firstName: user.value.firstName,
-			lastName: user.value.lastName,
-			identification: getField('identification'),
-			mobilePhone: getField('cellularPhone')
-		}
+function setFormData(reset = false) {
+	if (authStore.isLogged()){		
+		form.value.email = form.value.email ||  user.value.email
+		form.value.firstName = form.value.firstName ||  user.value.firstName
+		form.value.lastName = form.value.lastName || user.value.lastName
+		form.value.identification = form.value.identification ||  getField('identification')  
+		form.value.mobilePhone = form.value.mobilePhone || getField('cellularPhone')		
 	} else {		
-		resetFormData()
+		if(reset) resetFormData()
 	}
 
 }
@@ -497,19 +502,19 @@ async function goToPayment() {
 
 	const order = {
 		user: { ...form.value },
+		currency: cartState.value.currency, 
 		total: subtotal.value,
 
 		products: products.value.map((product) => {
 			return {
 				id: product.id,
-				//description: product.description,
+				description: product.description,
 				name: product.name,
 				url: product.url,
 				discount: product.discount,
 				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
-				price: productsHelper.getPrice(product, cartState.currency),
-				currency: cartState.value.currency, 
-				domain: product?.domain || null
+				price: productsHelper.getPrice(product, cartState.currency),				
+				domain: product?.domain || null				
 			}
 		})
 	}

@@ -1,6 +1,6 @@
 export default {
   "iauth": {
-    "captcha": 'Este sitio está protegido por reCaptcha y se aplican las <a href="https://policies.google.com/privacy" target="_blank">Politicas de Privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank">Terminos de servicios</a> de Google.',    
+    "captcha": 'Este sitio está protegido por reCaptcha y se aplican las <a href="https://policies.google.com/privacy" target="_blank">Politicas de Privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank">Terminos de servicios</a> de Google.',
     "login": {
       "title": "Iniciar sesión",
       "subtitle": "Bienvenido nuevamente",
@@ -14,11 +14,11 @@ export default {
       "withoutAccount": {
         "content": "¿No tienes una cuenta?",
         "link": "Regístrate"
-      }      
+      }
     },
     "loading": {
-        "login": "Iniciando sesión, por favor espera un momento...",
-        "logout": "Cerrando sesión, por favor espera un momento..."
+      "login": "Iniciando sesión, por favor espera un momento...",
+      "logout": "Cerrando sesión, por favor espera un momento..."
     },
     "register": {
       "title": "Registro",
@@ -54,33 +54,33 @@ export default {
       "discount": "Descuento",
       "emptyCart": "¡Hey! Tu carrito está vacío. ¿Por qué no te das una vuelta por nuestros productos y añades algo que te guste?",
       "yourCart": "Tu Carrito",
-      "subtotal": "Subtotal", 
+      "subtotal": "Subtotal",
       "subtotalNoTaxes": "el subtotal aun no incluye impuestos"
     },
     "products": {
       "articles": "Artículos",
-      "order": "Ordenar", 
+      "order": "Ordenar",
       "addToCart": "Añadir",
       "buyNow": "Comprar"
     },
     "currencies": {
       "cop": "peso colombiano",
-      "usd": "dólar estadounidense", 
+      "usd": "dólar estadounidense",
       "eur": "euro"
     },
 
     "frecuencies": {
       "monthly": "1 mes",
       "annually": "12 meses",
-			"biannually": "24 meses",
-			"triannually": "36 meses",
-			"quarterly": "3 meses",
+      "biannually": "24 meses",
+      "triannually": "36 meses",
+      "quarterly": "3 meses",
       "semiannually": "6 meses"
     },
-    
+
     "checkout": {
-      "back": "Volver", 
-      "billingAddress": "Dirección de facturación", 
+      "back": "Volver",
+      "billingAddress": "Dirección de facturación",
       "orderSummary": "Resumen del pedido",
       "articles": "articulos",
     },
@@ -89,10 +89,10 @@ export default {
   "isite": {
     "cms": {
       "label": {
-        "of" : 'of',
-        "entry" : 'entry',
-        "show" : 'show',
-        "showing" : 'showing',
+        "of": 'of',
+        "entry": 'entry',
+        "show": 'show',
+        "showing": 'showing',
       }
     }
   }
