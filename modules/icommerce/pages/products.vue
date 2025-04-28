@@ -1,4 +1,5 @@
-    <template>
+<template>
+    <ClientOnly>
     <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8 tw-w-full">
         <div 
             class="
@@ -51,6 +52,7 @@
             </div>
         </div>
     </div>
+    </ClientOnly>
 
 </template>
 <script setup lang="ts">

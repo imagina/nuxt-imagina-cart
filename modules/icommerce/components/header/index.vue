@@ -1,4 +1,5 @@
 <template>
+  <ClientOnly>
   <header
       :class="[
       'tw-sticky tw-top-0 tw-z-50 tw-border-b tw-border-gray-200',
@@ -55,6 +56,7 @@
 
     </div>
   </header>
+</ClientOnly>
 </template>
 
 <script setup>

@@ -53,6 +53,7 @@ watch(isMobile, (newValue) => {
 
 <template>
     <!--MENU DESKTOP -->
+    <ClientOnly>
     <div v-if="!isMobile" class="tw-flex tw-items-center tw-gap-5 xl:tw-gap-[26px]">
       <template
           v-for="(navItem, index) in navItems"
@@ -127,6 +128,7 @@ watch(isMobile, (newValue) => {
         </Modal>
       </q-list>
     </div>
+  </ClientOnly>
 </template>
 
 <style scoped>
