@@ -86,5 +86,15 @@ export default {
       "articles": "Articles"
     },
     "goToStore": "Go to Store"
+  }, 
+  "isite": {
+    "cms": {
+      "label": {
+        "of" : 'of',
+        "entry" : 'entry',
+        "show" : 'show',
+        "showing" : 'showing',
+      }
+    }
   }
 }

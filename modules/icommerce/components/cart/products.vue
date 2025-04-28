@@ -234,7 +234,7 @@
 					</q-card-section>
 
 					<!-- suggestions -->
-					<q-card-section>
+					<q-card-section v-if="product?.domainCheck?.suggestions.length">
 						<div class="tw-grid tw-grid-cols  tw-gap-4 tw-p-4 tw-h-full">
 							<div>
 								<span class="tw-text-[16px] tw-font-[600]">More options</span>
