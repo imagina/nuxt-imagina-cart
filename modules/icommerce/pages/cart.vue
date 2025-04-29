@@ -254,13 +254,17 @@ async function getProduct(id, urlOptions){
        			});
 				if(options.length) product.frecuency = options[billingcycle]
     		}
-
+			/*
 			const index = cartState.value.products.findIndex((obj) => obj.externalId == id);
 			if (index === -1) {
 				cartState.value.products.push(product);
 			} else {
 				cartState.value.products[index] = product;
 			}
+			*/
+
+			cartState.value.products = []
+			cartState.value.products.push(product);
 		}
 
 	})
