@@ -180,6 +180,11 @@
           		<span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
           		<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
         		</div>
+            <div class="tw-my-5" v-else">
+
+          		<span class="tw-text-lg tw-font-bold">Sin resultados disponibles para: <br>{{ product.domainCheck.domainName }}</span>
+        		</div>
+
 
 						<div class="tw-grid md:tw-grid-cols-3  tw-gap-4">
 							<!--extension cards -->

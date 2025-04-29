@@ -237,7 +237,6 @@
 											class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg">
 											{{ product.name }}
 										</span>
-										<br/>
 										<span
 											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
 											{{ product?.domain?.action?.label }}: 
@@ -526,13 +525,13 @@ async function goToPayment() {
 		body: JSON.stringify(order)
 	}).then((response) => {
 		//WIP
-		/*
+		
 		window.location.replace('https://clientes.imaginacolombia.com');
 		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency
 		}
-			*/
+		
 	})
 
 
