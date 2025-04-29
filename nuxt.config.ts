@@ -14,7 +14,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vesp/nuxt-fontawesome',
     'nuxt-quasar-ui',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n', 
+    '@nuxt/image'
   ],
   shadcn: {
     /**

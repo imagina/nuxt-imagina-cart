@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/image": "^1.10.0",
     "@nuxtjs/i18n": "^9.4.0",
     "@pinia/nuxt": "^0.5.4",
     "@quasar/extras": "^1.16.12",
