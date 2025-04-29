@@ -20,7 +20,7 @@
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }} {{  product?.domain?.domainName }} {{ isDomainProduct(product) }}
+        {{ product.name }} {{  product?.domain?.domainName }}
       </h2>
       <q-btn
 					icon="fa-solid fa-trash"
@@ -466,7 +466,7 @@ function configProducts() {
 
 function removeProduct(product) {
   Notify.create({
-			message: `¿Eliminar ${product.domain?.domainName}?`,
+			message: `¿Eliminar ${product.name} ${product.domain?.domainName || '' }?`,
 			type: 'negative',
       position: 'center',
       actions: [
