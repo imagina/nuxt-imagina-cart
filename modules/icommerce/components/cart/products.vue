@@ -119,11 +119,11 @@
 
       </div>
       <!-- results -->
-      
+
 			<q-dialog
 				v-model="product.domainCheck.modal"
 			>
-				<!--loading --->	
+				<!--loading --->
 				<div
 						v-if="product.domainCheck.loading"
 						class="tw-w-[100px] tw-h-[100px] tw-bg-white"
@@ -136,8 +136,9 @@
 
 				<q-card
 					v-if="product.domainCheck.action.value == domainActions[0].value && !product.domainCheck.loading"
+          class="tw-w-[600px]"
 				>
-					<q-card-section class="row items-center q-pb-none tw-sticky tw-top-0 tw-bg-white tw-z-40">	
+					<q-card-section class="row items-center q-pb-none tw-sticky tw-top-0 tw-bg-white tw-z-40">
 							<span class="tw-text-[20px] tw-font-[600]">
 							{{ product.name }}
 							</span>
@@ -145,45 +146,100 @@
 						<q-btn icon="close" flat round dense v-close-popup />
 					</q-card-section>
 
-					<q-card-section>						
-							<div 
+					<q-card-section>
+							<div
 								v-if="product.domainCheck?.exactMatch?.isAvaliable"
-								class="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-m-4 tw-sticky tw-top-0">
-											<span class="tw-text-[14px] tw-font-[600]">
-												<span class="tw-text-lg tw-font-[800] tw-text-[#5cb85c]"> {{ product.domainCheck.exactMatch.name }} <br> ¡está disponible!&nbsp;</span>
-											</span>
-											<div class="tw-flex tw-items-center tw-gap-4">
-												<div>
-													<span>
+								class="
+                tw-flex-col
+                tw-bg-[#fafbff]
+									tw-rounded-[10px]
+									tw-border-[1px]
+									tw-w-full
+									tw-h-full
+									tw-border-[#d5dfff]
+									tw-py-4
+                  tw-px-6
+                ">
+
+                <div class="tw-flex-col tw-items-around">
+                        <div class="tw-my-2">
+                          <span class="
+                            tw-rounded-[10px]
+									          tw-border-[2px]
+                            tw-border-[#5cb85c]
+                            tw-bg-[#5cb85c]
+                            tw-text-white
+                            tw-font-[600]
+                            tw-p-1
+                            ">
+                            <span>COINCIDENCIA EXACTA</span><br>
+                          </span>
+
+                          </div>
+                          <div class="tw-my-4">
+                            <span class="tw-text-[28px] tw-font-[700]"> {{ product.domainCheck.exactMatch.name }}
+                            </span>
+                          </div>
+												<div class="tw-my-2">
+													 <span class="tw-text-[20px] tw-font-[600]">
 													{{  productsHelper.priceWithSymbol(getExtPrice(product.domainCheck.exactMatch.ext).domainregister, cartState.currency) }}
 												</span>
 												</div>
 												<div>
 													<q-btn
-														label="Buy now"
+														label="Compralo ya"
 														color="amber"
 														no-caps
 														unelevated
-														class="tw-font-bold tw-rounded-lg"
+														class="tw-font-bold tw-rounded-lg tw-w-2/4"
 														@click="selectDomain(product, product.domainCheck.exactMatch.name)"
 													/>
 												</div>
-								</div>							
-								<hr>
-							</div>				
+								</div>
+
+							</div>
 					</q-card-section>
 
 					<!--results -->
 					<q-card-section>
-						
-						<div class="tw-my-5" v-if="product?.domainCheck.results.length">
+
+            <!-- zero results -->
+            <div 
+              v-if="product?.domainCheck.results.length == 0"
+              class="
+                tw-flex-col
+                tw-justify-center
+                tw-align-middle
+                tw-place-items-center
+              tw-bg-[#fafbff]
+                tw-rounded-[10px]
+                tw-border-[1px]
+                tw-w-full
+                tw-h-full
+              tw-border-[#d5dfff]
+                tw-py-4
+                tw-px-6
+              "
+            >
+              <div>
+                <span class="tw-text-[18px] tw-font-[600] ">Sin resultados disponibles para:</span><br>
+              </div>
+              <div>
+                <span class="tw-text-[20px] tw-font-[700] ">{{ product.domainCheck.domainName }}</span>
+              </div>
+
+
+
+
+        		</div>
+
+
+						<!-- result found -->
+						<div class="tw-my-5" v-if="product?.domainCheck.results.length != 0">
           		<span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
           		<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
         		</div>
-            <div class="tw-my-5" v-else">
 
-          		<span class="tw-text-lg tw-font-bold">Sin resultados disponibles para: <br>{{ product.domainCheck.domainName }}</span>
-        		</div>
 
 
 						<div class="tw-grid md:tw-grid-cols-3  tw-gap-4">
@@ -192,12 +248,12 @@
 								<div
 									v-if="result.isAvaliable"
 									class="
-									tw-bg-[#fafbff]
 									tw-rounded-[10px]
 									tw-border-[1px]
 									tw-w-full
 									tw-h-full
 									tw-border-[#d5dfff]
+                  tw-bg-[#fafbff]
 									tw-p-4"
 
 								>
@@ -206,19 +262,19 @@
 												.{{ result.ext }}
 										</span>
 										<br>
-										<span class="tw-text-[14px] tw-font-[500]">
+										<span class="tw-text-[16px] tw-font-[600]">
 												{{ result.name }}
 										</span>
 										<br>
-										<span class="tw-text-[16px] tw-font-[600]">
+										<span class="tw-text-[16px] tw-font-[500]">
 												{{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
 										</span>
 
-								</div>            
+								</div>
 								<div class="tw-flex tw-justify-center tw-my-2">
 										<q-btn
 												:label="selectDomainLabel(product)"
-												text-color="black"
+												text-color="white"
 												color="amber"
 												no-caps
 												unelevated
@@ -255,7 +311,7 @@
 												</span>
 												<div class="tw-flex tw-items-center tw-gap-4">
 													<div>
-														<span>
+														<span class="tw-text-[16px] tw-font-[500]">
 														{{  productsHelper.priceWithSymbol(getExtPrice(suggestion.ext).domainregister, cartState.currency) }}
 													</span>
 													</div>
@@ -280,7 +336,7 @@
         		</div>
 					</q-card-section>
 				</q-card>
-				
+
 		</q-dialog>
 
 
@@ -419,7 +475,7 @@ function init() {
 }
 
 function disableCheckButton(product){
-  return product.domainCheck.domainName == '' || product.domainCheck.domainName == null  
+  return product.domainCheck.domainName == '' || product.domainCheck.domainName == null
 }
 
 async function getDomainPricing(){
@@ -440,7 +496,7 @@ function configProducts() {
     cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
       const options = productsHelper.getFrecuencyOptions(product)
-      
+
       if (options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }
@@ -476,12 +532,12 @@ function removeProduct(product) {
       position: 'center',
       actions: [
         {
-          label: "cancelar", 
-          color: 'white', 
+          label: "cancelar",
+          color: 'white',
         },
         {
-          label: "Eliminar", 
-          color: 'white', 
+          label: "Eliminar",
+          color: 'white',
           handler: () => {
             const products = cartState.value.products.filter(obj => obj.id != product.id);
             cartState.value = { products: products, currency: cartState.value.currency }
@@ -499,7 +555,7 @@ function removeProduct(product) {
 
 
 
-	
+
 }
 
 function calcSubtotal() {
@@ -525,7 +581,7 @@ async function checkDomain(product) {
       lang,
       ext: ''
     }
-    
+
     product.domain.domainName = null
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
@@ -552,9 +608,9 @@ function getFrecuencyOptions(product){
 
     return productsHelper.getFrecuencyOptions(product).map(element => {
         element.label = t(productsHelper.translateFrecuencyOptionLabel(element.label))
-        return element      
+        return element
     });
-    
+
 }
 
 function selectDomain(product, domainName){
@@ -563,7 +619,7 @@ function selectDomain(product, domainName){
     Notify.create({
 			message: `Seleccionaste ${domainName} `,
 			type: 'positive',
-      position: 'center', 
+      position: 'center',
       timeout: 2000
 		})
     calcSubtotal()
