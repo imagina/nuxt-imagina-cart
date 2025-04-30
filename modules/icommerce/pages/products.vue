@@ -66,10 +66,10 @@ const { t } = useI18n({
 const category = useState('icommerce.products.selectedCategory', () => null)
 
 useSeoMeta({
-  title: () =>  category.value?.title ||  'Products Site',
-  ogTitle: () =>  category.value?.title ||  'Products Site',
-  description: () =>  category.value?.description ||  'Description',
-  ogDescription: () =>  category.value?.description ||  'Description',
+  title: () =>  category?.value?.title ||  'Products Site',
+  ogTitle: () =>  category?.value?.title ||  'Products Site',
+  description: () =>  category?.value?.description ||  'Description',
+  ogDescription: () =>  category?.value?.description ||  'Description',
   ogImage: 'https://example.com/image.png',
   twitterCard: 'summary_large_image',
 })

@@ -2,10 +2,10 @@ const layout = 'icommerce'
 const pages = [
   {
     name: 'icommerce.products',
-    path: '/commerce/products',
+    path: '/products',
     paths:{
-      es: '/tienda/productos',
-      en: '/store/products',
+      es: '/productos',
+      en: '/products',
     },    
     page: 'pages/products.vue',
     meta: {
@@ -32,7 +32,7 @@ const pages = [
 
   {
     name: 'icommerce.checkout',
-    path: '/commerce/checkout',
+    path: '/checkout',
     page: 'pages/checkout.vue',
     meta: {
       layout,
