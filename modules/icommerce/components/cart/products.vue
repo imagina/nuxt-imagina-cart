@@ -187,12 +187,16 @@
 												</div>
 												<div>
 													<q-btn
-														label="Compralo ya"
+														:label="product.domainCheck.exactMatch.disableButton ? 'Agregado al carrito' : 'Compralo ya'"
 														color="amber"
 														no-caps
 														unelevated
 														class="tw-font-bold tw-rounded-lg tw-w-2/4"
-														@click="selectDomain(product, product.domainCheck.exactMatch.name)"
+                            :disable="product.domainCheck.exactMatch.disableButton"
+														@click="() => {
+                              product.domainCheck.exactMatch.disableButton = true
+                              selectDomain(product, product.domainCheck.exactMatch.name)
+                              }"
 													/>
 												</div>
 								</div>
@@ -204,7 +208,7 @@
 					<q-card-section>
 
             <!-- zero results -->
-            <div 
+            <div
               v-if="product?.domainCheck.results.length == 0"
               class="
                 tw-flex-col
@@ -273,7 +277,7 @@
 								</div>
 								<div class="tw-flex tw-justify-center tw-my-2">
 										<q-btn
-												:label="selectDomainLabel(product)"
+												:label="result?.disableButton ? 'Agregado' :selectDomainLabel(product)"
 												text-color="white"
 												color="amber"
 												no-caps
@@ -284,7 +288,11 @@
 														tw-font-bold
 														tw-rounded-lg
 												"
-												@click="addDomainExtension(product, result)"
+                        :disabled="result.disableButton"
+												@click="() => {
+                          result.disableButton = true
+                          addDomainExtension(product, result)
+                        }"
 										/>
 								</div>
 							</div>
@@ -317,13 +325,17 @@
 													</div>
 													<div>
 														<q-btn
-															label="Buy now"
+															:label="suggestion.disableButton ? 'Agregado' :  'Buy now'"
 															color="amber"
 															no-caps
 															unelevated
-															outline
+															:outline="suggestion.disableButton"
 															class="tw-font-bold tw-rounded-lg"
-															@click="addDomainExtension(product, suggestion)"
+                              :disable="suggestion.disableButton"
+															@click="() => {
+                                suggestion.disableButton = true
+                                addDomainExtension(product, suggestion)
+                              }"
 														/>
 													</div>
 												</div>
@@ -585,7 +597,7 @@ async function checkDomain(product) {
     product.domain.domainName = null
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
-    product.domainCheck.suggestions = null
+    product.domainCheck.suggestions = []
     product.domainCheck.modal = true
 	  product.domainCheck.loading = true
 
@@ -595,8 +607,18 @@ async function checkDomain(product) {
 	}).then((response) => {
         product.domainCheck.loading = false
         product.domainCheck.exactMatch = response.exactMatch || false
+        product.domainCheck.exactMatch.disableButton = false
+
+
         product.domainCheck.results = response?.results?.filter(x => x.isAvaliable == true) || []
-        product.domainCheck.suggestions = response.suggests
+        product.domainCheck.results.map(element => {
+          return {...element, disableButton: false }
+        });
+
+        product.domainCheck.suggestions = response.suggests || []
+        product.domainCheck.suggestion.map(element => {
+          return {...element, disableButton: false }
+        });
     } ).catch(() => {
 			product.domainCheck.loading = false
 		})
@@ -655,6 +677,7 @@ function addDomainExtension(product, extension){
 			type: 'positive',
     //  position: 'center'
 		})
+    //extension.disableButton = true
     calcSubtotal()
 }
 
