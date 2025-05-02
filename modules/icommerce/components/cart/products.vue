@@ -481,6 +481,7 @@ watch(
   },
 )
 
+
 function init() {
     getDomainPricing()
     configProducts()
@@ -497,10 +498,16 @@ async function getDomainPricing(){
     })
 }
 
+function isSupportedDomain(domainName){
+  return Object.keys(domains).includes(domainName) || false
+}
+
 /*keys: ext , domainregister , domaintransfer, domainrenew */
 function getExtPrice(ext){
     return domainPricing?.value.find(x => x.ext ==  `.${ext}`) || 0
 }
+
+
 
 
 function configProducts() {
