@@ -20,7 +20,25 @@
             tw-p-0
             tw-leading-5
           ">
-        {{ product.name }} {{  product?.domain?.domainName }}
+        {{ product.name }}
+
+        <span
+          v-if="product?.domain?.domainName"
+          class="
+              tw-rounded-[10px]
+              tw-border-[2px]
+            tw-border-[#5cb85c]
+            tw-bg-[#5cb85c]
+            tw-text-white
+              tw-font-[600]
+              tw-py-1
+              tw-px-2
+              tw-ml-2
+          ">
+          <span>
+            {{  product?.domain?.domainName }}
+          </span>
+        </span>
       </h2>
       <q-btn
 					icon="fa-solid fa-trash"
@@ -659,7 +677,7 @@ function selectDomain(product, selectedDomain){
     Notify.create({
 			message: `Seleccionaste ${selectedDomain.name} `,
 			type: 'positive',
-      position: 'center',
+      //position: 'center',
       timeout: 2000
 		})
     calcSubtotal()
