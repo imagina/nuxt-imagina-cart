@@ -195,7 +195,7 @@
                             :disable="product.domainCheck.exactMatch.disableButton"
 														@click="() => {
                               product.domainCheck.exactMatch.disableButton = true
-                              selectDomain(product, product.domainCheck.exactMatch.name)
+                              selectDomain(product, product.domainCheck.exactMatch)
                               }"
 													/>
 												</div>
@@ -417,7 +417,7 @@
               tw-border-[#00000033]
               ">
             <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}</span>
-          </div>
+          </div>          
         </div>
       </div>
     </div>
@@ -514,11 +514,12 @@ function configProducts() {
 
     cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
-      const options = productsHelper.getFrecuencyOptions(product)
+      const options = productsHelper.getFrecuencyOptions(product)      
 
       if (options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }
+      product.price = product?.price || 0 
     }
     if (isDomainProduct(product)) {
 
@@ -642,11 +643,16 @@ function getFrecuencyOptions(product){
 
 }
 
-function selectDomain(product, domainName){
+function selectDomain(product, selectedDomain){
     //product.id = domainName
-    product.domain.domainName = domainName
+    product.domain.domainName = selectedDomain.name
+    //if isn't free domain
+    const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0    
+    
+    if(domainPrice) product.price = domainPrice
+
     Notify.create({
-			message: `Seleccionaste ${domainName} `,
+			message: `Seleccionaste ${selectedDomain.name} `,
 			type: 'positive',
       position: 'center',
       timeout: 2000
@@ -660,7 +666,7 @@ function selectDomainLabel(product){
 
 function addDomainExtension(product, extension){
   if(!product?.domain?.domainName){
-    selectDomain(product, extension.name)
+    selectDomain(product, extension)
 		calcSubtotal()
     return
   }
