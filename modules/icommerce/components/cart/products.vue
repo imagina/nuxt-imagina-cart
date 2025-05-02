@@ -56,9 +56,8 @@
 
         <!-- input for register domain-->
 				<q-input
-						v-if="product.domainCheck.action.value == domainActions[0].value"
             v-model="product.domainCheck.domainName"
-            placeholder="example.com"
+            :placeholder="product.domainCheck.action.placeholder"
             class="tw-w-full"
             outlined
             no-error-icon
@@ -66,16 +65,21 @@
                 (val) => !!val || 'Este campo es requerido.',
                 (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
 								(val) => !/\s/.test(val) || 'El dominio no debe contener espacios',
-								//(val) => /^[A-Za-z0-9-]+$/.test(val) || 'Solo letras, números y guion medio (-)'
+                (val) => isSupportedDomain(product, val)
               ]"
+              @update:model-value="val => product.domainCheck.domainName = val.trim()"
             >
           <template v-slot:prepend>
-            <q-icon name="search" />
+            <q-icon
+              v-if="product.domainCheck.action.value == domainActions[0].value"
+              name="search"
+            />
           </template>
           <template v-slot:append>
             <q-btn
+                v-if="product.domainCheck.action.value == domainActions[0].value"
                 @click="checkDomain(product)"
-                label="Search"
+                label="Buscar"
                 color="amber"
                 class="
                     cursor-pointer
@@ -91,20 +95,7 @@
           </template>
         </q-input>
 
-				<!-- transfer domain -->
-				<q-input
-						v-if="product.domainCheck.action.value != domainActions[0].value"
-            v-model="product.domain.domainName"
-            :placeholder="product.domainCheck.action.placeholder"
-            class="tw-w-full"
-            outlined
-            no-error-icon
-            :rules="[
-                (val) => !!val || 'Este campo es requerido.',
-                (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
-							]"
-				/>
-
+				<!-- transfer code -->
 				<q-input
 						v-if="product.domainCheck.action.value == domainActions[1].value"
             v-model="product.domain.transferCode"
@@ -417,7 +408,7 @@
               tw-border-[#00000033]
               ">
             <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}</span>
-          </div>          
+          </div>
         </div>
       </div>
     </div>
@@ -430,6 +421,7 @@
 import productsHelper from '../../helpers/products.ts';
 import apiRoutes from '../../config/apiRoutes.js';
 import { useStorage, useCloned  } from '@vueuse/core'
+import { validate } from 'vee-validate';
 
 
 const { locale, locales, setLocale, t } = useI18n()
@@ -447,6 +439,7 @@ const domainPricing = ref([])
 const domainActions =  [
 	{
 		label: 'Registrar un nuevo dominio',
+    placeholder: 'tumarca.com',
 		value: 'self-register'
 	},
 
@@ -498,9 +491,21 @@ async function getDomainPricing(){
     })
 }
 
-function isSupportedDomain(domainName){
-  return Object.keys(domains).includes(domainName) || false
+
+
+function isSupportedDomain(product, value){
+  const domains = domainPricing.value.map((domain) => domain.ext )
+  const result = domains.some(ext => value.includes(ext));
+
+  if(product.domainCheck.action.value != domainActions[0].value){
+    product.domain.domainName = result ? value : null
+  }
+
+  return result || 'dominio no soportado'
 }
+
+
+
 
 /*keys: ext , domainregister , domaintransfer, domainrenew */
 function getExtPrice(ext){
@@ -514,12 +519,12 @@ function configProducts() {
 
     cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
-      const options = productsHelper.getFrecuencyOptions(product)      
+      const options = productsHelper.getFrecuencyOptions(product)
 
       if (options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }
-      product.price = product?.price || 0 
+      product.price = product?.price || 0
     }
     if (isDomainProduct(product)) {
 
@@ -647,8 +652,8 @@ function selectDomain(product, selectedDomain){
     //product.id = domainName
     product.domain.domainName = selectedDomain.name
     //if isn't free domain
-    const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0    
-    
+    const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0
+
     if(domainPrice) product.price = domainPrice
 
     Notify.create({
