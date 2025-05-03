@@ -108,7 +108,14 @@
 
 							<q-select
 								v-model="form.identificationType"
-								:options="[{ value: 'cedula', label: 'Cedula de ciudadania' }]"
+								:options="[
+									{ value: 'Cédula de Ciudadanía', label: 'Cedula de ciudadania' },
+									{ value: 'NIT', label: 'NIT' },
+									{ value: 'Cédula de Extranjería', label: 'Cédula de Extranjería' },
+									{ value: 'Pasaporte', label: 'Pasaporte' },
+									{ value: 'Documento de Identificación extranjero', label: 'Documento de Identificación extranjero' },
+									{ value: 'NIT Externo', label: 'NIT Externo' },
+									]"
 								option-value="value"
 								option-label="label"
 								outlined
@@ -181,6 +188,10 @@
 								]"
 								dense
 								outlined
+							/>
+
+							<CurrencySelector 
+								class="tw-w-full"
 							/>
 						</div>
 						<div class="tw-my-4 ">
@@ -349,6 +360,7 @@ import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
+import CurrencySelector from '../components/currencySelector'
 
 
 
@@ -499,14 +511,21 @@ async function goToPayment() {
 		//backgroundColor: 'primary',
 	})
 
+
 	const order = {
 		user: { ...form.value },
+		//user.identificationType = form.value.identificationType.toLowerCase().replaceAll(' ', '-')
 		currency: cartState.value.currency, 
 		total: subtotal.value,
+		
 
 		products: products.value.map((product) => {
+
+			console.log(product?.externalId || product.id)
+
+
 			return {
-				id: product.id,
+				id: product?.externalId || product.id,
 				description: product.description,
 				name: product.name,
 				url: product.url,
@@ -519,6 +538,7 @@ async function goToPayment() {
 	}
 
 	console.log(JSON.stringify(order))
+	return
 
 	const res = await $fetch(postUrl, {
 		method: 'POST',

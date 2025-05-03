@@ -85,7 +85,7 @@
 								(val) => !/\s/.test(val) || 'El dominio no debe contener espacios',
                 (val) => isSupportedDomain(product, val)
               ]"
-              @update:model-value="val => product.domainCheck.domainName = val.trim()"
+              @update:model-value="val =>  product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '')"
             >
           <template v-slot:prepend>
             <q-icon
@@ -109,6 +109,7 @@
                 no-caps
                 unelevated
                 :disable="disableCheckButton(product)"
+                
             />
           </template>
         </q-input>
@@ -439,8 +440,9 @@
 import productsHelper from '../../helpers/products.ts';
 import apiRoutes from '../../config/apiRoutes.js';
 import { useStorage, useCloned  } from '@vueuse/core'
-import { validate } from 'vee-validate';
 
+
+const regex = /^[a-zA-Z0-9.-]+$/;
 
 const { locale, locales, setLocale, t } = useI18n()
 
@@ -499,7 +501,11 @@ function init() {
 }
 
 function disableCheckButton(product){
-  return product.domainCheck.domainName == '' || product.domainCheck.domainName == null
+  const regex = /^[a-zA-Z0-9.-]+$/;
+  const domainName = product.domainCheck.domainName
+  
+  if(domainName == '' || domainName == null) return true
+  return !regex.test(domainName)
 }
 
 async function getDomainPricing(){
