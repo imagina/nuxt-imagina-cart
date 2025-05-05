@@ -54,15 +54,18 @@
 				<div>
 					<span class="tw-text-lg tw-font-bold tw-line-clamp-1 tw-capitalize " style="color: #888888">{{ product.name.toLowerCase() }}</span>
 				</div>
-
-				<div class="tw-flex tw-justify-between tw-align-middle">
+				<!-- description -->
+				<div
+					v-if="product?.description && getStorageDescription(product?.description)" 
+					class="tw-flex tw-justify-between tw-align-middle"
+				>
 					<div>
-						<span class="tw-text-[40px] tw-font-semibold">16GB</span>
+						<span class="tw-text-[40px] tw-font-semibold">{{ getStorageDescription(product.description) }}</span>
 					</div>
 					<div>
 						<img src="../../assets/img/cP_white.png" />
 					</div>
-				</div>
+				</div>				
 				<div class="tw-h-[140px]">
 					<div
 						class="
@@ -283,6 +286,39 @@ const cartState = useStorage('shoppingCart', {
 			type: 'positive',
 		})
 	}	
+
+
+	function getStorageDescription(description){
+		const result = extractValueByLabel(description, 'Espacio en Disco')
+		if (result) return result.match(/[a-zA-Z0-9]+/g)?.join('') || '';
+		return false
+	}
+	
+	function extractValueByLabel(html, label) {
+		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
+		const match = html.match(regex);
+		if (match) {
+			// Replace &nbsp; with normal space and trim the result
+			return match[1].replace(/&nbsp;/g, ' ').trim();
+		}
+		return null;
+	}
+	
+
+	/*
+	function extractValueByLabel(html, label) {
+		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
+		const match = html.match(regex);
+		if (match) {
+			// Remove HTML tags and replace &nbsp; with a single space
+			let cleanValue = match[1].replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+			// Remove any extra spaces between words
+			cleanValue = cleanValue.replace(/\s+/g, ' ');
+			return cleanValue;
+		}
+		return null;
+	}
+		*/
 
 	onMounted(async () => {
 		init();

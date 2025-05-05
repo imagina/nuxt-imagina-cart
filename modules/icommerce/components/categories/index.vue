@@ -86,19 +86,23 @@ async function getCategories(){
 		take: 60,
 		page: 1,
 		filter : {
-			parentId: constants.cagtegories.mainCategoryId
+			parentId: constants.cagtegories.mainCategoryId,
+			order: {
+				field: "created_at",
+				way: "desc"
+			}			
 		}
-		//order: sort.value,
+		
 	}
 
 	baseService.index(apiRoutes.categories, params).then(response => {
 		let  data =  response?.data || []				
 		const parents = data		
-		/*
+		
 		parents.forEach((category) => {			
-			const children = data.filter(item => item.parentId == category.id)
+			const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
 			if(children.length) category.children = children
-		})*/
+		})
 
 		categories.value = parents		
 		emits('selectedCategory', categories.value[0])

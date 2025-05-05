@@ -24,8 +24,8 @@ const helper = {
 	translateFrecuencyOptionLabel(label){
 		//const { t } = useI18n()
 		const labels = {
-			'Triannually': "icommerce.frecuencies.triannually",
-			'Biannually': "icommerce.frecuencies.biannually",
+			'Triennially': "icommerce.frecuencies.triennially",
+			'Biennially': "icommerce.frecuencies.biennially",
 			'Annually': "icommerce.frecuencies.annually",
 			'Quarterly': "icommerce.frecuencies.quarterly",
 			'Semiannually': "icommerce.frecuencies.semiannually",

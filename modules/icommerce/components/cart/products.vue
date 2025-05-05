@@ -50,7 +50,7 @@
 			/>
     </div>
     <!-- domain check-->
-    <div v-if="isDomainProduct(product) && product?.domain" class="tw-py-6">
+    <div v-if="domainNameRequired(product) && product?.domain" class="tw-py-6">
 
       <div class="md:tw-flex tw-justify-center tw-gap-4">
 
@@ -158,7 +158,7 @@
 
 					<q-card-section>
 							<div
-								v-if="product.domainCheck?.exactMatch?.isAvaliable"
+								v-if="product.domainCheck?.exactMatch?.isAvailable"
 								class="
                 tw-flex-col
                 tw-bg-[#fafbff]
@@ -218,6 +218,7 @@
 					<q-card-section>
 
             <!-- zero results -->
+             {{ product?.domainCheck }}
             <div
               v-if="product?.domainCheck.results.length == 0"
               class="
@@ -260,7 +261,7 @@
 							<!--extension cards -->
 							<template v-for="result in product?.domainCheck.results">
 								<div
-									v-if="result.isAvaliable"
+									v-if="result.isAvailable"
 									class="
 									tw-rounded-[10px]
 									tw-border-[1px]
@@ -371,10 +372,18 @@
         md:tw-justify-between
         md:tw-gap-5">
       <div>
-        <q-select v-if="productsHelper.hasFrencuency(product) || product?.frecuency" v-model="product.frecuency"
-          :options="getFrecuencyOptions(product)" @update:model-value="calcSubtotal()"
-          option-value="value" option-label="label" outlined class="tw-w-52 tw-mb-1 tw-rounded-lg"
-          input-class="tw-w-52 tw-mb-1 tw-rounded-lg" label="Periodo" />
+        <!-- frecuency -->
+        <q-select 
+          v-if="productsHelper.hasFrencuency(product) || product?.frecuency" v-model="product.frecuency"
+          :options="getFrecuencyOptions(product)" 
+          @update:model-value="calcSubtotal()"
+          option-value="value" 
+          option-label="label" 
+          outlined 
+          class="tw-w-52 tw-mb-1 tw-rounded-lg"
+          input-class="tw-w-52 tw-mb-1 tw-rounded-lg" 
+          label="Periodo" 
+        />
         <span class="tw-text-xs tw-text-[#818181]">
           Renuevas a $00.000/mes el 00/00/000. ¡Cancela cuando quieras!
         </span>
@@ -439,6 +448,7 @@
 
 import productsHelper from '../../helpers/products.ts';
 import apiRoutes from '../../config/apiRoutes.js';
+import constants from '../../config/constants.js';
 import { useStorage, useCloned  } from '@vueuse/core'
 
 
@@ -540,7 +550,7 @@ function getExtPrice(ext){
 
 
 function configProducts() {
-
+console.log('config')
     cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
       const options = productsHelper.getFrecuencyOptions(product)
@@ -550,7 +560,7 @@ function configProducts() {
       }
       product.price = product?.price || 0
     }
-    if (isDomainProduct(product)) {
+    if (domainNameRequired(product)) {
 
       if(!product?.domain?.domainName) {
         product.domain = {
@@ -612,9 +622,8 @@ function calcSubtotal() {
   emits('subtotal', subtotal)
 }
 
-function isDomainProduct(product) {
-  // domain categories
-  const domainCategories = [1, 32, 61, 58]
+function domainNameRequired(product) {  
+  const domainCategories = constants.cagtegories.domainNameRequired
   return domainCategories.includes(product?.category?.id) || false
 
 }
@@ -642,20 +651,26 @@ async function checkDomain(product) {
 		method: 'POST',
 		body: JSON.stringify(body)
 	}).then((response) => {
+    console.log('call')
         product.domainCheck.loading = false
         product.domainCheck.exactMatch = response.exactMatch || false
         product.domainCheck.exactMatch.disableButton = false
 
-
-        product.domainCheck.results = response?.results?.filter(x => x.isAvaliable == true) || []
+        product.domainCheck.results = response.results
+        //product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
+        /*
         product.domainCheck.results.map(element => {
           return {...element, disableButton: false }
         });
-
+        */
+        /*
         product.domainCheck.suggestions = response.suggests || []
         product.domainCheck.suggestion.map(element => {
           return {...element, disableButton: false }
         });
+        */
+
+        console.log('end')
     } ).catch(() => {
 			product.domainCheck.loading = false
 		})
