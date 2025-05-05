@@ -1,22 +1,28 @@
 <script setup>
     const networks = [
         {
-            icon: 'fa-brands fa-facebook-f'
+            icon: 'fa-brands fa-facebook-f', 
+            url: 'https://www.facebook.com/imaginacol'
         },
         {
-            icon: 'fa-brands fa-instagram'
+            icon: 'fa-brands fa-instagram',
+            url: 'https://www.instagram.com/imaginacolombia'
         },
         {
-            icon: 'fa-brands fa-linkedin-in'
+            icon: 'fa-brands fa-linkedin-in',
+            url: 'https://www.linkedin.com/company/imagina-colombia'
         },
         {
-            icon: 'fa-brands fa-skype'
+            icon: 'fa-brands fa-skype',
+            url: 'skype:imaginadw'
         },
         {
-            icon: 'fa-brands fa-youtube'
+            icon: 'fa-brands fa-youtube', 
+            url: 'https://www.youtube.com/channel/UCZA9gQP6lt2b5Qg3d8XQD1A'
         },
         {
-            icon: 'fa-brands fa-whatsapp'
+            icon: 'fa-brands fa-whatsapp', 
+            url: 'https://wa.me/13212522392?text='
         },
     ]
 </script>
@@ -47,6 +53,8 @@
                     no-caps
                     unelevated
                     :icon="network?.icon"
+                    :href="network.url"
+                    target="_blank"
                     class="
                         tw-w-[42px]
                         tw-h-[42px]
@@ -62,6 +70,7 @@
             </div>
         </div>
         <div 
+        v-if="false"
             class="
                 tw-flex
                 tw-text-base
