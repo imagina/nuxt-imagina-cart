@@ -136,12 +136,14 @@
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
+import constants from '../../config/constants'
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
 
+
 const props = defineProps({
-  categoryId: Object
+  category: Object
 });
 
 const settings = {
@@ -189,7 +191,7 @@ const cartState = useStorage('shoppingCart', {
 
 
 	watch(
-		() => props.categoryId,
+		() => props.category,
 		(newQuery, oldQuery) => {
 			paginationModel.value.page = 1
 			getProducts()
@@ -216,9 +218,9 @@ const cartState = useStorage('shoppingCart', {
 			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
 
-		if(props.categoryId){
+		if(props.category){
 			params.filter = {
-				categoryId: props.categoryId.id
+				categoryId: props.category?.id || constants.cagtegories.mainCategoryId 
 			}
 		}
 		loading.value = true

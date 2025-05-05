@@ -57,6 +57,7 @@
 <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
+import constants from '../../config/constants'
 
 const emits = defineEmits(['selectedCategory'])
 
@@ -84,30 +85,23 @@ async function getCategories(){
 	const params = {
 		take: 60,
 		page: 1,
+		filter : {
+			parentId: constants.cagtegories.mainCategoryId
+		}
 		//order: sort.value,
 	}
 
 	baseService.index(apiRoutes.categories, params).then(response => {
-		let  data =  response?.data || []
-
-		/*for testing */
+		let  data =  response?.data || []				
+		const parents = data		
 		/*
-		const ids = data.map(item => item.id)
-		data.forEach(element => {
-			const n  = Math.floor(Math.random() * ids.length)
-			element.parentId = n < 5 ? null : ids[n]
-		});
-		*/
-		
-		/*for testing */	
-
-		const parents = data.filter(item => item.parentId == null)
-		parents.forEach((category) => {
+		parents.forEach((category) => {			
 			const children = data.filter(item => item.parentId == category.id)
 			if(children.length) category.children = children
-		})
+		})*/
 
 		categories.value = parents		
+		emits('selectedCategory', categories.value[0])
 	})
 }
 

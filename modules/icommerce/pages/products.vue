@@ -45,7 +45,8 @@
                             tw-w-full" />
                 <div>
                     <ProductsComponent
-                        :categoryId="category"
+                        v-if="category"
+                        :category="category"
                     />
                 </div>
             </div>
