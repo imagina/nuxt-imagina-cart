@@ -488,7 +488,7 @@ const emits = defineEmits(['subtotal'])
 const domainPricing = ref([])
 
 
-const loadCaptcha = computed(() => cartState.value.products.every((product) => isDomainNameRequired(product)) || false )
+const loadCaptcha = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
 const domainActions =  [
@@ -677,32 +677,39 @@ async function checkDomain(product) {
     product.domainCheck.modal = true
 	  product.domainCheck.loading = true
 
-    const res = await $fetch(apiRoutes.domainCheck, {
-		method: 'POST',
-		body: JSON.stringify(body)
-	}).then((response) => {
-        token.value = null    
-        product.domainCheck.loading = false
-        product.domainCheck.exactMatch = response.exactMatch || false
-        if(product.domainCheck.exactMatch){
-          product.domainCheck.exactMatch.disableButton = false
-        }
+    const [checkResult, suggestionsResult] = await Promise.allSettled([
+      $fetch(apiRoutes.domainCheck, {
+        method: 'POST',
+        body,
+      }),
+      $fetch(apiRoutes.domainSuggestions, {
+        method: 'POST',
+        body,
+      })
+    ]);
 
+    // Manejo del domainCheck
+    if (checkResult.status === 'fulfilled') {
+      const response = checkResult.value;
+      product.domainCheck.exactMatch = response.exactMatch || false;
+      if (product.domainCheck.exactMatch) {
+        product.domainCheck.exactMatch.disableButton = false;
+      }
 
-        product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
-        product.domainCheck.results.map(element => {
-          return {...element, disableButton: false }
-        });
+      product.domainCheck.results = (response.results || [])
+        .filter(x => x.isAvailable)
+        .map(element => ({ ...element, disableButton: false }));
+    }
 
+    // Manejo del domainSuggestions
+    if (suggestionsResult.status === 'fulfilled') {
+      const response = suggestionsResult.value;
+      product.domainCheck.suggestions = (response.suggestions || [])
+        .map(x => ({ ...x, disableButton: false }));
+    }
 
-        product.domainCheck.suggestions = response.suggestions || []
-        product.domainCheck.suggestion.map(element => {
-          return {...element, disableButton: false }
-        });
-
-    } ).catch(() => {
-			 product.domainCheck.loading = false
-		})
+    token.value = null
+    product.domainCheck.loading = false
 }
 
 
