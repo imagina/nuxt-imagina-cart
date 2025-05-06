@@ -7,8 +7,7 @@ const apiRoutes = {
 	products: `${urlBase}/products`,
 	categories: `${urlBase}/categories`,
 	/* imagina customs */
-	domainCheck: `/api/icommerce/check-domain`,
-	domainSuggestions: '/api/icommerce/domain-suggestions',
+	domainCheck: `/api/icommerce/verify-domain`,
 	domainPricing: `https://clientes.imaginacolombia.com/getdata.php?type=domainpricing&imflushcache=1`,
 }
 
