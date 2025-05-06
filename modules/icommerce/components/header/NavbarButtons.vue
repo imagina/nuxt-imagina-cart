@@ -46,7 +46,6 @@
     <div class="tw-pr-4 lg:tw-pl-4 tw-relative tw-order-1 lg:tw-order-2">
       <NuxtLink
           :to="getPath('icommerce.products')"
-          @click="() => resetCategory()"
           class="tw-text-[15px] tw-cursor-pointer tw-border-r tw-border-[#10192333] tw-pr-3 tw-duration-300"
           :class="{
             'hover:tw-text-secondary tw-border-[#10192333]': !isScrolled,
@@ -67,11 +66,5 @@ const props = defineProps({
 
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
-const category = useState('icommerce.products.selectedCategory')
-
-function resetCategory(){
-  category.value = null
-}
-
 
 </script>
