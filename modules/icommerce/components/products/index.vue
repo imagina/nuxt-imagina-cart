@@ -54,7 +54,7 @@
 				<div>
 					<span class="tw-text-lg tw-font-bold tw-line-clamp-1 tw-capitalize " style="color: #888888">{{ product.name.toLowerCase() }}</span>
 					<q-tooltip>
-						{{ product.name.toLowerCase() }}
+						{{ product.name }}
 					</q-tooltip>
 
 				</div>
@@ -299,33 +299,41 @@ const cartState = useStorage('shoppingCart', {
 		if (result) return result.match(/[a-zA-Z0-9]+/g)?.join('') || '';
 		return false
 	}
+
+
+	function extractValueByLabel(html, label) {
+		const regex = new RegExp(
+			`${label}:\\s*(?:&nbsp;|\\s|<[^>]+>)*([^<\\s][^<]*)`,
+			'gi'
+		);
+		const matches = [...html.matchAll(regex)];
+
+		for (const match of matches) {
+			if (match[1]) {
+			return match[1]
+				.replace(/&nbsp;/gi, ' ')
+				.replace(/\s+/g, ' ')
+				.trim();
+			}
+		}
+
+		return null;
+	}
 	
+	/* backup
 	function extractValueByLabel(html, label) {
 		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
 		const match = html.match(regex);
+		console.log(match)
 		if (match) {
 			// Replace &nbsp; with normal space and trim the result
 			return match[1].replace(/&nbsp;/g, ' ').trim();
 		}
 		return null;
 	}
+	*/
+
 	
-
-	/*
-	function extractValueByLabel(html, label) {
-		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
-		const match = html.match(regex);
-		if (match) {
-			// Remove HTML tags and replace &nbsp; with a single space
-			let cleanValue = match[1].replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
-			// Remove any extra spaces between words
-			cleanValue = cleanValue.replace(/\s+/g, ' ');
-			return cleanValue;
-		}
-		return null;
-	}
-		*/
-
 	onMounted(async () => {
 		init();
 	})
