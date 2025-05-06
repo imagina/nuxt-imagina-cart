@@ -75,6 +75,7 @@
 						/>
         </div>
 
+
         <!-- input for register domain-->
 				<q-input
             v-model="product.domainCheck.domainName"
@@ -449,8 +450,15 @@
       </div>
     </div>
   </div>
-
+  <ClientOnly>
+    <div v-if="loadCaptcha">
+      <captchaComponent
+          ref="captchaRef"
+      />
+    </div>
+  </ClientOnly>
 </template>
+
 
 <script lang="ts" setup>
 
@@ -459,6 +467,7 @@ import apiRoutes from '../../config/apiRoutes.js';
 import constants from '../../config/constants.js';
 import { useStorage, useCloned  } from '@vueuse/core'
 import moment from 'moment';
+import captchaComponent from '../../../iauth/components/captcha.vue'
 
 
 const regex = /^[a-zA-Z0-9.-]+$/;
@@ -473,6 +482,9 @@ const cartState = useStorage('shoppingCart', {
 const emits = defineEmits(['subtotal'])
 
 const domainPricing = ref([])
+
+
+const loadCaptcha = computed(() => cartState.value.products.every((product) => isDomainNameRequired(product)) || false )
 
 
 const domainActions =  [
