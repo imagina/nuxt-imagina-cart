@@ -125,7 +125,7 @@
 					</div>
 
 					<!--coupon -->
-					<div>
+					<div v-if="false">
 						<div>
 							<q-btn 
 								:label="$t('icommerce.cart.coupon')"

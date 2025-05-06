@@ -53,6 +53,10 @@
 			>
 				<div>
 					<span class="tw-text-lg tw-font-bold tw-line-clamp-1 tw-capitalize " style="color: #888888">{{ product.name.toLowerCase() }}</span>
+					<q-tooltip>
+						{{ product.name.toLowerCase() }}
+					</q-tooltip>
+
 				</div>
 				<!-- description -->
 				<div

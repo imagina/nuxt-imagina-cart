@@ -340,7 +340,7 @@
 					</div>
 
 					<!--coupon -->
-					<div>
+					<div v-if="false">
 						<div>
 							<q-btn label="¿Tienes código de cupón?"
 								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]" flat no-caps dense
