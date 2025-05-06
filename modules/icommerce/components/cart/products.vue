@@ -689,6 +689,7 @@ function getFrecuencyOptions(product){
     if(product?.frecuencyOptions?.length) return product?.frecuencyOptions
 
     const options = productsHelper.getFrecuencyOptions(product).map(element => {
+        element.frecuency = element.label
         element.label = t(productsHelper.translateFrecuencyOptionLabel(element.label))
         return element
     });

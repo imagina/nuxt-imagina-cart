@@ -249,7 +249,8 @@ async function getProduct(id, urlOptions){
 							billingcycle = index
 						}
 					}
-					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))					
+					element.frecuency = element.label
+					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
 					return element
        			});
 				if(options.length) product.frecuency = options[billingcycle]

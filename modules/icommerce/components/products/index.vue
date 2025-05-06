@@ -263,6 +263,7 @@ const cartState = useStorage('shoppingCart', {
       		//const options = productsHelper.getFrecuencyOptions(product)
 
 			const options = productsHelper.getFrecuencyOptions(product).map(element => {
+				element.frecuency = element.label
 				element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
 				return element      
        		});
