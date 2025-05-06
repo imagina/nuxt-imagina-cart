@@ -10,25 +10,31 @@ export default defineEventHandler(async (event) => {
     const baseUrl = process.env.N8N_BASE_URL ?? '';
     const appToken = process.env.N8N_APP_TOKEN ?? '';
 
-    const suggestions = await $fetch(`${baseUrl}domain/suggestions`, {
+    const params: any = {
       method: 'POST',
       body,
       headers: {
         'app_token': appToken
       },
-    });
-    console.log('Pase suggestions');
-    // Envía el cuerpo al webhook de n8n
-    const check = await $fetch(`${baseUrl}domain/search`, {
-      method: 'POST',
-      body,
-      headers: {
-        'app_token': appToken
-      },
-    });
-    console.log('Pase check');
+    };
 
-    return {...suggestions, ...check};
+    const [suggestionsResult, checkResult] = await Promise.allSettled([
+      $fetch(`${baseUrl}domain/suggestions`, params),
+      $fetch(`${baseUrl}domain/search`, params)
+    ]);
+    
+    const suggestions: any = suggestionsResult.status === 'fulfilled' ? suggestionsResult.value : {};
+    const check: any = checkResult.status === 'fulfilled' ? checkResult.value : {};
+    
+    // Opcional: podrías registrar errores
+    if (suggestionsResult.status === 'rejected') {
+      console.error('Error en suggestions:', suggestionsResult.reason);
+    }
+    if (checkResult.status === 'rejected') {
+      console.error('Error en check:', checkResult.reason);
+    }
+    
+    return { ...suggestions, ...check };
   } catch (error: any) {
     // Captura errores y lanza un error con contexto
     throw createError({
