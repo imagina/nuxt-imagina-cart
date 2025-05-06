@@ -76,7 +76,7 @@
         </div>
 
 
-        <!-- input for register domain-->
+        <!-- input for register domain-->         
 				<q-input
             v-model="product.domainCheck.domainName"
             :placeholder="product.domainCheck.action.placeholder"
@@ -451,9 +451,10 @@
     </div>
   </div>
   <ClientOnly>
-    <div v-if="loadCaptcha">
+    <div v-if="loadCaptcha" class="">
       <captchaComponent
           ref="captchaRef"
+          @update:model-value="(val) => token = val"
       />
     </div>
   </ClientOnly>
@@ -469,6 +470,9 @@ import { useStorage, useCloned  } from '@vueuse/core'
 import moment from 'moment';
 import captchaComponent from '../../../iauth/components/captcha.vue'
 
+const token = ref(null)
+
+const captchaRef = ref('captchaRef')
 
 const regex = /^[a-zA-Z0-9.-]+$/;
 
@@ -651,10 +655,14 @@ function isDomainNameFree(product) {
 
 async function checkDomain(product) {
 
+    await getCaptcha()
+    
+
     const lang = locale.value == 'es' ? 'esp' : 'eng'
 		const domain = product.domainCheck.domainName.trim()
 
     const body = {
+      token: token.value.token,
       domain,
       lang,
       ext: ''
@@ -673,6 +681,7 @@ async function checkDomain(product) {
 		method: 'POST',
 		body: JSON.stringify(body)
 	}).then((response) => {
+        token.value = null    
         product.domainCheck.loading = false
         product.domainCheck.exactMatch = response.exactMatch || false
         if(product.domainCheck.exactMatch){
@@ -692,7 +701,7 @@ async function checkDomain(product) {
         });
 
     } ).catch(() => {
-			product.domainCheck.loading = false
+			 product.domainCheck.loading = false
 		})
 }
 
@@ -789,6 +798,16 @@ function addDomainExtension(product, extension){
 		})
     //extension.disableButton = true
     calcSubtotal()
+}
+
+async function getCaptcha() {
+  try {
+    await captchaRef.value.getToken().then((response) => {
+      token.value = response 
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 </script>
