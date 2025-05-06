@@ -37,7 +37,7 @@ const pages = [
     meta: {
       layout,
       title: 'icommerce.cms.sidebar.checkout',
-      breadcrumb: 'Checkout'
+      breadcrumb: 'Pago'
     }
   }
 ]
