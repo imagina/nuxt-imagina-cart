@@ -223,7 +223,7 @@
 
             <!-- zero results -->
             <div
-              v-if="product?.domainCheck.results.length == 0"
+              v-if="product?.domainCheck.results.length == 0 && !product.domainCheck?.exactMatch"
               class="
                 tw-flex-col
                 tw-justify-center
