@@ -59,9 +59,12 @@
 							label="configura tu dominio"
 							v-model="product.domainCheck.action"
               @update:model-value="() => {
-                product.domain.domainName = null
+
                 product.domain.action = product.domainCheck.action
-                product.domainCheck.domainName = null
+                if(product.domainCheck.action.value != domainActions[0].value){
+                  //product.domain.domainName = null
+                  product.domainCheck.domainName = null
+                }
               }"
           		:options="domainActions"
           		option-value="value"
@@ -85,7 +88,7 @@
 								(val) => !/\s/.test(val) || 'El dominio no debe contener espacios',
                 (val) => isSupportedDomain(product, val)
               ]"
-              @update:model-value="val =>  product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '')"
+              @update:model-value="val => product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '').toLowerCase()"
             >
           <template v-slot:prepend>
             <q-icon
@@ -276,9 +279,9 @@
 												.{{ result.ext }}
 										</span>
 										<br>
-										<span class="tw-text-[16px] tw-font-[600]">
+										<span class="tw-text-[16px] tw-font-[600] tw-line-clamp-4 tw-break-all">
 												{{ result.name }}
-										</span>
+                    </span>
 										<br>
 										<span class="tw-text-[16px] tw-font-[500]">
 												{{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
@@ -324,7 +327,7 @@
 								<!--<q-scroll-area style="height: 400px; max-width: 2000px;">-->
 									<template v-for="suggestion in product?.domainCheck.suggestions">
 										<div class="tw-grid  md:tw-flex md:tw-justify-between tw-items-center tw-gap-4 tw-m-4">
-												<span class="tw-text-[14px] tw-font-[600]">
+												<span class="tw-text-[14px] tw-font-[600] tw-line-clamp-3 tw-break-all">
 														{{ suggestion.name }}
 												</span>
 												<div class="tw-flex tw-items-center tw-gap-4">
@@ -335,7 +338,7 @@
 													</div>
 													<div>
 														<q-btn
-															:label="suggestion.disableButton ? 'Agregado' :  'Buy now'"
+															:label="suggestion.disableButton ? 'Agregado' : selectDomainLabel(product)"
 															color="amber"
 															no-caps
 															unelevated
@@ -373,7 +376,7 @@
       <div>
         <!-- frecuency -->
         <q-select
-          v-if="productsHelper.hasFrencuency(product) || product?.frecuency" 
+          v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
           v-model="product.frecuency"
           :options="getFrecuencyOptions(product)"
           @update:model-value="calcSubtotal()"
@@ -383,9 +386,12 @@
           class="tw-w-52 tw-mb-1 tw-rounded-lg"
           input-class="tw-w-52 tw-mb-1 tw-rounded-lg"
           label="Periodo"
-        />       
-        
-        <span class="tw-text-xs tw-text-[#818181]">
+        />
+
+        <span
+          v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
+          class="tw-text-xs tw-text-[#818181]"
+          >
           Renuevas a {{ productsHelper.getPriceWithSymbol(product, cartState.currency) }} el  {{ calcRenovationDate(product.frecuency.label) }} ¡Cancela cuando quieras!
         </span>
         <!-- free domain -->
@@ -428,7 +434,7 @@
             tw-justify-end
             tw-items-center
             tw-p-2
-            md:tw-p-4
+
            ">
           <div class="
               tw-px-4
@@ -553,7 +559,6 @@ function getExtPrice(ext){
 
 
 function configProducts() {
-console.log('config')
     cartState.value.products.forEach((product) => {
     if (productsHelper.hasFrencuency(product)) {
       const options = productsHelper.getFrecuencyOptions(product)
@@ -643,7 +648,9 @@ async function checkDomain(product) {
       ext: ''
     }
 
-    product.domain.domainName = null
+    if(product.domain.domainName != product.domainCheck.domainName) {
+      //product.domain.domainName = null
+    }
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
     product.domainCheck.suggestions = []
@@ -653,7 +660,7 @@ async function checkDomain(product) {
     const res = await $fetch(apiRoutes.domainCheck, {
 		method: 'POST',
 		body: JSON.stringify(body)
-	}).then((response) => {    
+	}).then((response) => {
         product.domainCheck.loading = false
         product.domainCheck.exactMatch = response.exactMatch || false
         if(product.domainCheck.exactMatch){
@@ -671,7 +678,7 @@ async function checkDomain(product) {
         product.domainCheck.suggestion.map(element => {
           return {...element, disableButton: false }
         });
-        
+
     } ).catch(() => {
 			product.domainCheck.loading = false
 		})
@@ -703,7 +710,7 @@ function getFrecuencyFromLabel(label){
 
 function calcRenovationDate(label){
   const months = getFrecuencyFromLabel(label)
-    
+
 
  return moment().add(months, 'months').format('DD/MM/YYYY')
 }
@@ -726,8 +733,9 @@ function selectDomain(product, selectedDomain){
 }
 
 function selectDomainLabel(product){
-  return product?.domain?.domainName ? 'Add' : 'Buy now'
+  return product?.domain?.domainName ? 'Agregar' : 'Seleccionar'
 }
+
 
 function addDomainExtension(product, extension){
   if(!product?.domain?.domainName){
@@ -736,7 +744,7 @@ function addDomainExtension(product, extension){
     return
   }
 
-   //const newProduct = { ...product }
+    /*
     const { cloned } = useCloned(product)
 
     cloned.value.isCloned = {
@@ -749,6 +757,16 @@ function addDomainExtension(product, extension){
     cloned.value.domain.domainName = extension.name
 
     cartState.value.products.push(cloned.value)
+    */
+    const newProduct = {
+      ...extension
+    }
+    newProduct.name = 'Dominio adicional'
+    newProduct.category = null
+    newProduct.id = extension.name
+    newProduct.domain = { domainName: extension.name }
+    newProduct.price = getExtPrice(extension.ext)?.domainregister || 0
+    cartState.value.products.push(newProduct)
 
 
     Notify.create({
