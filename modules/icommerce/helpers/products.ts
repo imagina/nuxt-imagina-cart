@@ -60,16 +60,20 @@ const helper = {
 
 	COPtoUSD(value){
 		const trm = helper.getTrm('COP')
-		value = (value / trm)
-		value = Number.isInteger(value) ? value : value.toFixed(2)
+		if(trm){
+			value = (value / trm)
+			value = Number.isInteger(value) ? value : value.toFixed(2)
+		}
 		return value
 	},
 
 	COPtoEUR(value){
 		const trm = helper.getTrm('EUR')
-		value = helper.COPtoUSD(value)
-		value = (value * trm)
-		value = Number.isInteger(value) ? value : value.toFixed(2)
+		if(trm){
+			value = helper.COPtoUSD(value)
+			value = (value * trm)
+			value = Number.isInteger(value) ? value : value.toFixed(2)
+		}
 		return value
 	},
 
@@ -134,6 +138,7 @@ const helper = {
 	getTrm(currency){
 		const authStore = useAuthStore()
 		let usdRates = authStore.usdRates
+		if(!usdRates) return false
 		const trm = Number(usdRates['USDRates'][currency])
 		return trm.toFixed(2)
 	},

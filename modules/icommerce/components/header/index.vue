@@ -86,19 +86,19 @@ const navItems = ref([
     items: [
       { 
         label: 'Conócenos', 
-        to: '/conocenos' 
+        to: 'https://www.imaginacolombia.com/empresa/sobre-nosotros' 
       },
       { 
         label: 'Historia', 
-        to: '/historia' 
+        to: 'https://www.imaginacolombia.com/empresa' 
       },
       { 
         label: 'Únete a nuestro equipo', 
-        to: '/trabaja-con-nosotros' 
+        to: 'https://www.imaginacolombia.com/empresa/trabaja-con-nosotros' 
       },
       { 
         label: 'Trabajos realizados', 
-        to: '/trabajos-realizados' 
+        to: 'https://www.imaginacolombia.com/trabajos-realizados' 
       }
     ]
   },
@@ -107,96 +107,199 @@ const navItems = ref([
     items: [
       { 
         label: 'Hosting Linux / PHP - iPanel', 
-        to: '/servicios/servicio-1' 
+        to: "https://www.imaginacolombia.com/hosting-linux-php",
       },
       { 
         label: 'Hosting cPanel', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/hosting-cpanel",
       },
       { 
         label: 'CDN premium', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/cdn-premium",
       },
       { 
         label: 'S3 Wasabi', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/s3-wasabi",
       },
       { 
         label: 'Hosting Windows / ASP', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/hosting-windows-asp",
       },
       { 
         label: 'Hosting Laravel', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/hosting-laravel",
       },
       { 
         label: 'Aplicaciones', 
         items: [
           {
             label: 'Hosting Wordpress', 
-            to: 'commerce/products' 
+            to: "https://www.imaginacolombia.com/hosting-wordpress",
           },
           {
             label: 'Hosting Moodle', 
-            to: 'commerce/products' 
+            to: "https://www.imaginacolombia.com/hosting-moodle",
           },
           {
             label: 'Hosting PHP 8', 
-            to: 'commerce/products' 
+            to: "https://www.imaginacolombia.com/hosting-php-8",
           },
           {
             label: 'Hosting Magento', 
-            to: 'commerce/products'
+            to: "https://www.imaginacolombia.com/hosting-magento",
           }
         ]
       },
       { 
         label: 'Hosting Revendedores', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/planes-revendedores",
       },
       { 
         label: 'Servidores Privados VPS', 
         items: [
           {
             label: 'Servidores VPS SSD', 
-            to: 'commerce/products' 
+            to: "https://www.imaginacolombia.com/servidores-virtuales-privados/vps-ssd",
           },
           {
             label: 'Servidores VPS Cloud', 
-            to: 'commerce/products'
+            to: "https://www.imaginacolombia.com/servidores-virtuales-privados/vps-cloud-ceph",
           }
         ]
       },
       { 
         label: 'Servidores Dedicados', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/servidores-dedicados",
       },
       { 
         label: 'Streaming de audio en vivo', 
-        to: 'commerce/products' 
+        to: "https://www.imaginacolombia.com/streaming-de-audio-en-vivo",
       },
       { 
         label: 'Email', 
         items: [
           {
             label: 'Google Workspace - GSuite', 
-            to: 'commerce/products' 
+            to: "https://www.imaginacolombia.com/gsuite",
           },
           {
-            label: 'Correos corporativos Office', 
-            to: 'commerce/products' 
+            label: 'Correos corporativos Office 365', 
+            to: "https://www.imaginacolombia.com/correos-corporativos-office-365",
           }
         ]
       },
     ]
   },
-  { label: 'Dominios', to: '/' },
-  { label: 'Seguridad', to: '/' },
-  { label: 'Soluciones Web', to: '/' },
-  { label: 'Diseño', to: '/' },
-  { label: '', to: '/' },
-  { label: 'Clientes', to: '/' },
-  { label: 'Blog', to: '/' },
+  { 
+    label: 'Dominios', 
+    to: 'https://www.imaginacolombia.com/dominios'
+  },
+  { 
+    label: 'Seguridad', 
+    items: [
+      {
+        label: 'Certificados SSL',
+        to: 'https://www.imaginacolombia.com/certificados-ssl'
+      },
+      {
+        label: 'SiteLock Escáner de seguridad',
+        to: 'https://www.imaginacolombia.com/seguridad-web/sitelock-detector-de-malware-certificado'
+      }
+      
+    ] 
+  },
+  { 
+    label: 'Soluciones Web', 
+    items: [
+      {
+        label: 'Marketing Digital',
+        items: [
+          {
+            label: 'Community Manager',
+            to: "https://www.imaginacolombia.com/marketing-digital/community-manager",
+          },
+          {
+            to: "https://www.imaginacolombia.com/marketing-digital/google-adwords",
+            label: "Google / YouTube Adwords"
+          },
+          {
+            to: "https://www.imaginacolombia.com/marketing-digital/facebook-ads",
+            label: "Facebook Instagram Ads"
+          },
+          {
+            to: "https://www.imaginacolombia.com/marketing-digital/posicionamiento-natural-seo",
+            label: "Posicionamiento Natural Seo"
+          },
+        ]
+      },
+      {
+        label: 'Páginas web', 
+        items: [
+          {
+            to: "https://www.imaginacolombia.com/paginas-web/empresas",
+              label: "Planes Para Empresas / Corporativo"
+            },
+          {
+            to: "https://www.imaginacolombia.com/paginas-web/negocios",
+            label: "Planes Para Negocios"
+          },
+        ]
+      },
+      {
+        to: "https://www.imaginacolombia.com/apps",
+        label: "Apps"
+      },
+      {
+        to: "https://www.imaginacolombia.com/paginas-web/tiendas-virtuales",
+        label: "Tiendas virtuales"
+      },
+      {
+        to: "https://www.imaginacolombia.com/soluciones-web/planes-de-administracion-de-contenidos",
+        label: "Administrador de Contenido"
+      },
+    ] 
+  },
+  { 
+    label: 'Diseño', 
+    items: [
+      {
+        to: "https://www.imaginacolombia.com/identidad-visual",
+        label: "Identidad visual"
+      },
+      {
+        to: "https://www.imaginacolombia.com/diseno-grafico",
+        label: "Diseño Gráfico"
+      },
+    ]
+   },
+  {
+    to: "https://www.imaginacolombia.com/contacto",
+    label: "Contacto"
+  },
+  { 
+    label: 'Clientes', 
+    items: [
+      {
+        to: "https://clientes.imaginacolombia.com/",
+        label: "Panel de control"
+      },
+      {
+        to: "https://www.imaginacolombia.com/guias-de-usuario",
+        label: "Guias de usuario"
+      },
+      {
+        to: "https://www.imaginacolombia.com/afiliados",
+        label: "Programa de Afiliados"
+      },
+      {
+        to: "https://www.imaginacolombia.com/formas-de-pago",
+        label: "Formas de Pago"
+      },
+    ]
+   },
+  { label: 'Blog', 
+    to: "https://www.imaginacolombia.com/blog"
+  },
 ])
 </script>
 <style>
