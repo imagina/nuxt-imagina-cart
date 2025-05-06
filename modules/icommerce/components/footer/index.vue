@@ -34,6 +34,7 @@
                 ¿Te imaginas un proyecto juntos?
             </h1>
             <q-btn
+                v-if="false"
                 label="¡Vamos a iniciar!"
                 text-color="white"
                 no-caps
