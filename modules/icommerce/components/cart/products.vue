@@ -677,36 +677,25 @@ async function checkDomain(product) {
     product.domainCheck.modal = true
 	  product.domainCheck.loading = true
 
-    const [checkResult, suggestionsResult] = await Promise.allSettled([
-      $fetch(apiRoutes.domainCheck, {
-        method: 'POST',
-        body,
-      }),
-      $fetch(apiRoutes.domainSuggestions, {
-        method: 'POST',
-        body,
-      })
-    ]);
+    await $fetch(apiRoutes.domainCheck, {
+      method: 'POST',
+      body
+    }).then(response => {
+        product.domainCheck.exactMatch = response.exactMatch || false
+        if(product.domainCheck.exactMatch){
+          product.domainCheck.exactMatch.disableButton = false
+        }
 
-    // Manejo del domainCheck
-    if (checkResult.status === 'fulfilled') {
-      const response = checkResult.value;
-      product.domainCheck.exactMatch = response.exactMatch || false;
-      if (product.domainCheck.exactMatch) {
-        product.domainCheck.exactMatch.disableButton = false;
-      }
+        product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
+        product.domainCheck.results.map(element => {
+          return {...element, disableButton: false }
+        });
 
-      product.domainCheck.results = (response.results || [])
-        .filter(x => x.isAvailable)
-        .map(element => ({ ...element, disableButton: false }));
-    }
-
-    // Manejo del domainSuggestions
-    if (suggestionsResult.status === 'fulfilled') {
-      const response = suggestionsResult.value;
-      product.domainCheck.suggestions = (response.suggestions || [])
-        .map(x => ({ ...x, disableButton: false }));
-    }
+        product.domainCheck.suggestions = response.suggestions || []
+        product.domainCheck.suggestion.map(element => {
+          return {...element, disableButton: false }
+        });
+    }).catch(e => {});
 
     token.value = null
     product.domainCheck.loading = false
