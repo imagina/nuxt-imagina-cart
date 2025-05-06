@@ -120,13 +120,13 @@
 								option-label="label"
 								outlined
 								dense
-								label="Tipo de identificacion"
+								label="Tipo de identificación"
 
 							/>
 
 							<q-input
 								v-model="form.identification"
-								label="Identificacion"
+								label="Identificación"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -135,7 +135,7 @@
 							/>
 							<q-input
 								v-model="form.mobilePhone"
-								label="Phone"
+								label="Teléfono"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -146,7 +146,7 @@
 
 							<q-input
 								v-model="form.country"
-								label="Pais de residencia"
+								label="País  de residencia"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -155,7 +155,7 @@
 							/>
 							<q-input
 								v-model="form.address"
-								label="Direccion"
+								label="Dirección"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -173,7 +173,7 @@
 							/>
 							<q-input
 								v-model="form.region"
-								label="Region"
+								label="Región"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -182,17 +182,13 @@
 							/>
 							<q-input
 								v-model="form.zipCode"
-								label="Codigo postal"
+								label="Código  postal"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
 								dense
 								outlined
-							/>
-
-							<CurrencySelector 
-								class="tw-w-full"
-							/>
+							/>							
 						</div>
 						<div class="tw-my-4 ">
 							<q-btn

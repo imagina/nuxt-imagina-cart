@@ -66,7 +66,9 @@
 					<div>
 						<span class="tw-text-[40px] tw-font-semibold">{{ getStorageDescription(product.description) }}</span>
 					</div>
-					<div>
+					<div
+						v-if="false"
+					>
 						<img src="../../assets/img/cP_white.png" />
 					</div>
 				</div>				
