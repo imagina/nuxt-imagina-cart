@@ -92,6 +92,7 @@
 				<!-- action buttons -->
 					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
 						<q-btn
+							v-if="false"
 							label="Ver Plan"
 							text-color="black"
 							no-caps
@@ -112,7 +113,7 @@
 							icon="o_shopping_cart"
 							unelevated
 							class="
-								tw-w-2/3
+								tw-w-full
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
@@ -331,6 +332,9 @@ const cartState = useStorage('shoppingCart', {
 			@apply tw-list-disc
 		}
 		box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.07), 0px 3.85185px 33.1259px rgba(0, 0, 0, 0.0425185), 0px 0.814815px 8.47407px rgba(0, 0, 0, 0.0274815);
+		.description a[data-toggle] {
+			cursor: pointer;
+		}
 	}
 
 .fade-enter-active, .fade-leave-active {

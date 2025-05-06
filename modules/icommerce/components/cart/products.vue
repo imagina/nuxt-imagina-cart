@@ -50,7 +50,7 @@
 			/>
     </div>
     <!-- domain check-->
-    <div v-if="domainNameRequired(product) && product?.domain" class="tw-py-6">
+    <div v-if="isDomainNameRequired(product) && product?.domain" class="tw-py-6">
 
       <div class="md:tw-flex tw-justify-center tw-gap-4">
 
@@ -109,7 +109,7 @@
                 no-caps
                 unelevated
                 :disable="disableCheckButton(product)"
-                
+
             />
           </template>
         </q-input>
@@ -218,7 +218,6 @@
 					<q-card-section>
 
             <!-- zero results -->
-             {{ product?.domainCheck }}
             <div
               v-if="product?.domainCheck.results.length == 0"
               class="
@@ -373,21 +372,24 @@
         md:tw-gap-5">
       <div>
         <!-- frecuency -->
-        <q-select 
-          v-if="productsHelper.hasFrencuency(product) || product?.frecuency" v-model="product.frecuency"
-          :options="getFrecuencyOptions(product)" 
+        <q-select
+          v-if="productsHelper.hasFrencuency(product) || product?.frecuency" 
+          v-model="product.frecuency"
+          :options="getFrecuencyOptions(product)"
           @update:model-value="calcSubtotal()"
-          option-value="value" 
-          option-label="label" 
-          outlined 
+          option-value="value"
+          option-label="label"
+          outlined
           class="tw-w-52 tw-mb-1 tw-rounded-lg"
-          input-class="tw-w-52 tw-mb-1 tw-rounded-lg" 
-          label="Periodo" 
-        />
+          input-class="tw-w-52 tw-mb-1 tw-rounded-lg"
+          label="Periodo"
+        />       
+        
         <span class="tw-text-xs tw-text-[#818181]">
-          Renuevas a $00.000/mes el 00/00/000. ¡Cancela cuando quieras!
+          Renuevas a {{ productsHelper.getPriceWithSymbol(product, cartState.currency) }} el  {{ calcRenovationDate(product.frecuency.label) }} ¡Cancela cuando quieras!
         </span>
-        <div class="tw-mt-5">
+        <!-- free domain -->
+        <div class="tw-mt-5" v-if="isDomainNameFree(product)">
           <i class="tw-text-[#444444] tw-text-[13px]" name="" />
           <div class="
                 tw-py-2.5
@@ -450,6 +452,7 @@ import productsHelper from '../../helpers/products.ts';
 import apiRoutes from '../../config/apiRoutes.js';
 import constants from '../../config/constants.js';
 import { useStorage, useCloned  } from '@vueuse/core'
+import moment from 'moment';
 
 
 const regex = /^[a-zA-Z0-9.-]+$/;
@@ -513,7 +516,7 @@ function init() {
 function disableCheckButton(product){
   const regex = /^[a-zA-Z0-9.-]+$/;
   const domainName = product.domainCheck.domainName
-  
+
   if(domainName == '' || domainName == null) return true
   return !regex.test(domainName)
 }
@@ -560,7 +563,7 @@ console.log('config')
       }
       product.price = product?.price || 0
     }
-    if (domainNameRequired(product)) {
+    if (isDomainNameRequired(product)) {
 
       if(!product?.domain?.domainName) {
         product.domain = {
@@ -611,10 +614,6 @@ function removeProduct(product) {
         }
       ]
 		})
-
-
-
-
 }
 
 function calcSubtotal() {
@@ -622,10 +621,14 @@ function calcSubtotal() {
   emits('subtotal', subtotal)
 }
 
-function domainNameRequired(product) {  
+function isDomainNameRequired(product) {
   const domainCategories = constants.cagtegories.domainNameRequired
   return domainCategories.includes(product?.category?.id) || false
+}
 
+function isDomainNameFree(product) {
+  const domainCategories = constants.cagtegories.dominNameFree
+  return domainCategories.includes(product?.category?.id) || false
 }
 
 
@@ -650,27 +653,25 @@ async function checkDomain(product) {
     const res = await $fetch(apiRoutes.domainCheck, {
 		method: 'POST',
 		body: JSON.stringify(body)
-	}).then((response) => {
-    console.log('call')
+	}).then((response) => {    
         product.domainCheck.loading = false
         product.domainCheck.exactMatch = response.exactMatch || false
-        product.domainCheck.exactMatch.disableButton = false
+        if(product.domainCheck.exactMatch){
+          product.domainCheck.exactMatch.disableButton = false
+        }
 
-        product.domainCheck.results = response.results
-        //product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
-        /*
+
+        product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
         product.domainCheck.results.map(element => {
           return {...element, disableButton: false }
         });
-        */
-        /*
-        product.domainCheck.suggestions = response.suggests || []
+
+
+        product.domainCheck.suggestions = response.suggestions || []
         product.domainCheck.suggestion.map(element => {
           return {...element, disableButton: false }
         });
-        */
-
-        console.log('end')
+        
     } ).catch(() => {
 			product.domainCheck.loading = false
 		})
@@ -680,11 +681,31 @@ async function checkDomain(product) {
 function getFrecuencyOptions(product){
     if(product?.frecuencyOptions?.length) return product?.frecuencyOptions
 
-    return productsHelper.getFrecuencyOptions(product).map(element => {
+    const options = productsHelper.getFrecuencyOptions(product).map(element => {
         element.label = t(productsHelper.translateFrecuencyOptionLabel(element.label))
         return element
     });
 
+    /*sort the options by number of months */
+    const sorted = options.sort((a, b) => {
+      const numA = parseInt(a.label.match(/\d+/)[0], 10);
+      const numB = parseInt(b.label.match(/\d+/)[0], 10);
+      return numA - numB;
+    });
+
+    return sorted
+
+}
+
+function getFrecuencyFromLabel(label){
+  return parseInt(label.match(/\d+/)[0], 10)
+}
+
+function calcRenovationDate(label){
+  const months = getFrecuencyFromLabel(label)
+    
+
+ return moment().add(months, 'months').format('DD/MM/YYYY')
 }
 
 function selectDomain(product, selectedDomain){
@@ -715,8 +736,7 @@ function addDomainExtension(product, extension){
     return
   }
 
-
-    //const newProduct = { ...product }
+   //const newProduct = { ...product }
     const { cloned } = useCloned(product)
 
     cloned.value.isCloned = {
@@ -729,6 +749,8 @@ function addDomainExtension(product, extension){
     cloned.value.domain.domainName = extension.name
 
     cartState.value.products.push(cloned.value)
+
+
     Notify.create({
 			message: `Agregaste ${extension.name} al carrito!`,
 			type: 'positive',
