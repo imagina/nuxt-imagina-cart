@@ -30,7 +30,7 @@ const showModal = ref( false );
               position="left"
               transition-show="slide-right"
               transition-hide="slide-left"
-              :transition-duration="500"
+              
               class="modal-dialog !tw-h-screen tw-max-w-lg tw-animate-fade-in"
     >
       <q-card class="q-pa-md !tw-overflow-x-hidden tw-w-full !tw-h-screen !tw-max-h-none tw-p-0" >
