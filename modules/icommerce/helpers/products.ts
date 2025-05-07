@@ -43,7 +43,7 @@ const helper = {
 
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 		
-		if(product.price) price = price + product.price
+		//if(product.price) price = price + product.price
 		if(price > 0 && currencyValue != 'COP'){
 			price = helper.COPtoCurrency(price, currencyValue)			
 		}
@@ -107,9 +107,9 @@ const helper = {
 	getSubtotal(products, currencyValue){
 		let subtotal = Number(0);
 		products.forEach(product => {
-			let price = helper.getPrice(product, currencyValue)
+			//let price = helper.getPrice(product, currencyValue)
 			//if(product?.price) price = price + product.price
-			subtotal  = Number(subtotal) + Number(price)
+			subtotal  = Number(subtotal) + Number(product.price)
 		});
 		return Number.isInteger(subtotal) ? subtotal : subtotal.toFixed(2)
 	},

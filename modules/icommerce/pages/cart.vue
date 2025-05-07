@@ -101,7 +101,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -110,7 +110,7 @@
 							{{ $t('icommerce.cart.subtotalNoTaxes') }}
 						</span>
 						<span class="tw-text-[18px] tw-font-[600]">
-							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
