@@ -59,12 +59,11 @@
 							label="configura tu dominio"
 							v-model="product.domainCheck.action"
               @update:model-value="() => {
-
                 product.domain.action = product.domainCheck.action
-                if(product.domainCheck.action.value != domainActions[0].value){
-                  //product.domain.domainName = null
-                  product.domainCheck.domainName = null
-                }
+                product.domain.ext = null
+                product.domain.price = null
+                product.domain.domainName = null
+                product.domainCheck.domainName = null
                 updateDomainPrice(product)
               }"
           		:options="domainActions"
@@ -77,7 +76,7 @@
         </div>
 
 
-        <!-- input for register domain-->         
+        <!-- input for register domain-->
 				<q-input
             v-model="product.domainCheck.domainName"
             :placeholder="product.domainCheck.action.placeholder"
@@ -429,13 +428,16 @@
           </div>
         </div>
         </DevOnly>
-      
-      <div class="
+
+      <div
+        class="
           md:tw-flex
           md:tw-items-start
           md:tw-gap-[30px]
-          tw-text-[#444444]">
-        <div class="
+          tw-text-[#444444]"
+      >
+        <div
+          class="
             md:tw-flex
             md:tw-flex-col
             md:tw-pr-0
@@ -446,7 +448,7 @@
             tw-justify-between
             ">
           <span class="tw-text-[13px]">Tarifa de configuración:&nbsp;</span>
-          <span class="tw-text-lg tw-font-semibold"> $0{{ cartState.currency }}</span>
+          <span class="tw-text-lg tw-font-semibold"> {{ productsHelper.priceWithSymbol(0, cartState.currency) }}</span>
         </div>
 
         <div class="
@@ -557,7 +559,7 @@ function init() {
 
 function disableCheckButton(product){
   const regex = /^[a-zA-Z0-9.-]+$/;
-  const domainName = product.domainCheck.domainName 
+  const domainName = product.domainCheck.domainName
   let result = false
 
   if(domainName == '' || domainName == null) return true
@@ -609,7 +611,7 @@ function configProducts() {
       if (options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }
-      
+
     }
     if (isDomainNameRequired(product)) {
 
@@ -667,7 +669,7 @@ function removeProduct(product) {
 }
 
 function updateDomainPrice(product){
-  
+
   product.price = product.frecuency.value //update with frecuency
 
   let domainPrice = {
@@ -675,48 +677,55 @@ function updateDomainPrice(product){
     domainregister: 0,
     domaintransfer: 0
   }
-  
 
-  //register 
+
+  //register
   if(product.domainCheck.action.value == domainActions[0].value){
     if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext)
-  } else {    
+  } else {
     if(product.domainCheck.domainName){
       if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName))
     }
   }
 
-  console.log(domainPrice) 
-
-  
-  //default register 
-  let actionPrice =  product.domainCheck.action.value == domainActions[0].value ?  domainPrice.domainregister : domainPrice.domaintransfer
   console.log(domainPrice)
-  
-  if(isDomainNameRequired(product) && product.domain.domainName ){ 
-    const frecuency = getFrecuencyFromLabel(product.frecuency.label)   
 
-    //free domain 
-      if(frecuency >= 12 && isDomainNameFree(product)){
+
+  //default configuracion price is $0
+  let actionPrice = 0
+  if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register
+  if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer
+
+  console.log(actionPrice)
+
+  if(isDomainNameRequired(product)){
+    const frecuency = getFrecuencyFromLabel(product.frecuency.label)
+
+    //free domain
+      if(frecuency > 12 && isDomainNameFree(product)){
+        console.log('free')
         product.price = product.frecuency.value
       } else {
+        console.log('not free')
         let renewPrice = 0
         //aplly renew
-        if(frecuency > 12){
-          const years = ( frecuency / 12) - 1 //renovation per year - first year  
+        if(frecuency > 12){ //renew cost every year
+          console.log('renew 1')
+          const years = ( frecuency / 12) - 1 //renovation per year - first year
           console.log(years)
-          renewPrice = domainPrice.domainrenew * years
-          console.log(renewPrice)
-        }       
-        
-        
+          if(domainPrice.domainrenew){
+            console.log('renew 2')
+            renewPrice = domainPrice.domainrenew * years
+          }
+        }
+
         //transfer
-        product.price = product.price + actionPrice + renewPrice        
+        product.price = product.price + actionPrice + renewPrice
       }
-    
+
   }
-  
-   
+
+
   calcSubtotal()
 }
 
@@ -744,7 +753,7 @@ function isDomainNameFree(product) {
 async function checkDomain(product) {
 
     await getCaptcha()
-    
+
 
     const lang = locale.value == 'es' ? 'esp' : 'eng'
 		const domain = product.domainCheck.domainName.trim()
@@ -806,8 +815,7 @@ function getFrecuencyOptions(product){
       return numA - numB;
     });
 
-    return sorted
-
+  return sorted
 }
 
 function getFrecuencyFromLabel(label){
@@ -816,16 +824,13 @@ function getFrecuencyFromLabel(label){
 
 function calcRenovationDate(label){
   const months = getFrecuencyFromLabel(label)
-
-
- return moment().add(months, 'months').format('DD/MM/YYYY')
+  return moment().add(months, 'months').format('DD/MM/YYYY')
 }
 
 function selectDomain(product, selectedDomain){
-    //product.id = domainName
     product.domain.domainName = selectedDomain.name
     product.domain.ext = selectedDomain.ext
-    //if isn't free domain
+    
     const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0
 
     if(domainPrice) product.domain.price = domainPrice
@@ -834,7 +839,6 @@ function selectDomain(product, selectedDomain){
     Notify.create({
 			message: `Seleccionaste ${selectedDomain.name} `,
 			type: 'positive',
-      //position: 'center',
       timeout: 2000
 		})
     calcSubtotal()
@@ -852,55 +856,76 @@ function addDomainExtension(product, extension){
     return
   }
 
-    const cloned =  _.clone(product)
+    const cloned = {}// _.clone(product)
+    cloned.optionsPivot = _.clone(product.optionsPivot)
+    cloned.frecuency = _.clone(product.frecuency)
 
     cloned.id = extension.name
     cloned.name = 'Dominio adicional'
-    cloned.type = 'aditionalDomain'    
     cloned.category = null
-    cloned.domain.domainName = extension.name
+
+
+    cloned.domain = {
+      domainName: null,
+      action: null,
+      transferCode: null,
+      price: 0,
+      ext: null
+    }
+
+    cloned.domainCheck = {
+        action:  domainActions[0], // register,
+        domainName: null,
+        exactMatch: null,
+        results: [],
+        suggestions: [],
+        loading: false,
+				modal: false,
+    }
+
+    cloned.domain.domainName = `${extension.name}`
     cloned.domain.price = getExtPrice(extension.ext)?.domainregister || 0
     cloned.domain.ext = extension.ext
-    
+
     cloned.frecuencyOptions = null
-    const frecuencyOptions = _.clone(getFrecuencyOptions(product)); 
+    const frecuencyOptions = _.clone(getFrecuencyOptions(product));
     //map new frecuency values for aditional domain
     cloned.frecuencyOptions = frecuencyOptions.map(element => {
-      const frecuency = getFrecuencyFromLabel(element.label)      
-
-      //(recruency / 12 ) - 1 
-
-      const valuee  = frecuency >= 12 
-      return {
-        id: 0,
-        label: element.label,
-        frecuency: element.frecuency,
-        value: frecuency * cloned.domain.price
+      const frecuency = getFrecuencyFromLabel(element.label)
+      let renewPrice = 0
+      if(frecuency > 12){
+          const years = ( frecuency / 12) - 1 //renovation per year - first year
+          renewPrice = getExtPrice(extension.ext)?.domainrenew * years
       }
+        return {
+          enable: (frecuency >= 12),
+          id: frecuency,
+          label: element.label,
+          frecuency: element.frecuency,
+          value: cloned.domain.price + renewPrice
+        }
     })
 
-    const selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency)
+    cloned.frecuencyOptions = cloned.frecuencyOptions.filter(x => x.enable) //remove options lower than 12 months
+
+    let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions.find(x => x.frecuency == 12)
     cloned.frecuency = selectedFrecuency
     cloned.price = selectedFrecuency.value
 
     cartState.value.products.push(cloned)
-    
-    
-
 
     Notify.create({
 			message: `Agregaste ${extension.name} al carrito!`,
 			type: 'positive',
-    //  position: 'center'
 		})
-    //extension.disableButton = true
+    
     calcSubtotal()
 }
 
 async function getCaptcha() {
   try {
     await captchaRef.value.getToken().then((response) => {
-      token.value = response 
+      token.value = response
     })
   } catch (error) {
     console.error(error)
