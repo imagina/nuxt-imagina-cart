@@ -103,6 +103,8 @@
                 @click="checkDomain(product)"
                 label="Buscar"
                 color="amber"
+                debounce="500"
+
                 class="
                     cursor-pointer
                     md:tw-w-[140px]
@@ -380,7 +382,7 @@
           v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
           v-model="product.frecuency"
           :options="getFrecuencyOptions(product)"
-          @update:model-value="calcSubtotal()"
+          @update:model-value="updateDomainPrice(product)"
           option-value="value"
           option-label="label"
           outlined
@@ -410,6 +412,20 @@
           </div>
         </div>
       </div>
+      <DevOnly>
+        <div v-if="false">
+          <div>
+            product.frecuency {{ product.frecuency }}
+          </div>
+          <div>
+            product.price {{ product.price }}
+          </div>
+          <div v-if="product?.domain">
+            domain price {{ product?.domain.price }}
+          </div>
+        </div>
+        </DevOnly>
+      
       <div class="
           md:tw-flex
           md:tw-items-start
@@ -444,17 +460,16 @@
               tw-border
               tw-border-[#00000033]
               ">
-            <span class="tw-text-lg tw-font-semibold">{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}</span>
+            <span class="tw-text-lg tw-font-semibold">{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
   <ClientOnly>
-    <div v-if="loadCaptcha" class="">
+    <div v-if="loadCaptcha">
       <captchaComponent
-          ref="captchaRef"
-          @update:model-value="(val) => token = val"
+        ref="captchaRef"
       />
     </div>
   </ClientOnly>
@@ -468,6 +483,7 @@ import apiRoutes from '../../config/apiRoutes.js';
 import constants from '../../config/constants.js';
 import { useStorage, useCloned  } from '@vueuse/core'
 import moment from 'moment';
+import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
 
 const token = ref(null)
@@ -514,13 +530,13 @@ const domainActions =  [
 onMounted(() => {
   init()
 })
-
+/*
 watch(
   () => cartState.value.products,
   (newQuery, oldQuery) => {
     //configProducts()
   },
-)
+)*/
 
 watch(
   () => cartState.value.currency,
@@ -537,10 +553,15 @@ function init() {
 
 function disableCheckButton(product){
   const regex = /^[a-zA-Z0-9.-]+$/;
-  const domainName = product.domainCheck.domainName
+  const domainName = product.domainCheck.domainName 
+  let result = false
 
   if(domainName == '' || domainName == null) return true
-  return !regex.test(domainName)
+  if(domainName.includes('.')){
+    const domains = domainPricing.value.map((domain) => domain.ext )
+    result = !domains.some(ext => domainName.endsWith(ext));
+  }
+  return !regex.test(domainName) || result
 }
 
 async function getDomainPricing(){
@@ -553,13 +574,13 @@ async function getDomainPricing(){
 
 
 function isSupportedDomain(product, value){
+  if(!value.includes('.')) return true
   const domains = domainPricing.value.map((domain) => domain.ext )
-  const result = domains.some(ext => value.includes(ext));
+  const result = domains.some(ext => value.endsWith(ext));
 
   if(product.domainCheck.action.value != domainActions[0].value){
     product.domain.domainName = result ? value : null
   }
-
   return result || 'dominio no soportado'
 }
 
@@ -576,13 +597,15 @@ function getExtPrice(ext){
 
 function configProducts() {
     cartState.value.products.forEach((product) => {
+
+    product.price = product?.price || productsHelper.getPrice(product, cartState.value.currency)
     if (productsHelper.hasFrencuency(product)) {
       const options = productsHelper.getFrecuencyOptions(product)
 
       if (options.length && !product?.frecuency) {
         product.frecuency = options[0]
       }
-      product.price = product?.price || 0
+      
     }
     if (isDomainNameRequired(product)) {
 
@@ -591,6 +614,7 @@ function configProducts() {
           domainName: null,
           action: null,
 					transferCode: null,
+          price: 0
         }
       }
 
@@ -637,6 +661,20 @@ function removeProduct(product) {
 		})
 }
 
+function updateDomainPrice(product){
+  product.price = product.frecuency.value //update with frecuency
+  
+  if(isDomainNameRequired(product) && product.domain.domainName ){ 
+    const frecuency = getFrecuencyFromLabel(product.frecuency.label)
+    product.price = product.price + (frecuency * product.domain.price)
+
+    //free domain 
+    if(frecuency > 12 && isDomainNameFree(product)){
+      product.price = product.frecuency.value
+    }
+  }
+  calcSubtotal()
+}
 function calcSubtotal() {
   const subtotal = productsHelper.getSubtotal(cartState.value.products, cartState.value.currency)
   emits('subtotal', subtotal)
@@ -739,7 +777,8 @@ function selectDomain(product, selectedDomain){
     //if isn't free domain
     const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0
 
-    if(domainPrice) product.price = domainPrice
+    if(domainPrice) product.domain.price = domainPrice
+    updateDomainPrice(product)
 
     Notify.create({
 			message: `Seleccionaste ${selectedDomain.name} `,
@@ -762,29 +801,44 @@ function addDomainExtension(product, extension){
     return
   }
 
+    
+    
     /*
-    const { cloned } = useCloned(product)
-
-    cloned.value.isCloned = {
+    cloned.isCloned = {
       originalId: product.id,
       originalDomainName: product.domain.domainName
     }
+      */
 
-    cloned.value.id = extension.name
-    cloned.value.category = null
-    cloned.value.domain.domainName = extension.name
+    const cloned =  _.clone(product)
 
-    cartState.value.products.push(cloned.value)
-    */
-    const newProduct = {
-      ...extension
-    }
-    newProduct.name = 'Dominio adicional'
-    newProduct.category = null
-    newProduct.id = extension.name
-    newProduct.domain = { domainName: extension.name }
-    newProduct.price = getExtPrice(extension.ext)?.domainregister || 0
-    cartState.value.products.push(newProduct)
+    cloned.id = extension.name
+    cloned.name = 'Dominio adicional'
+    cloned.type = 'aditionalDomain'    
+    cloned.category = null
+    cloned.domain.domainName = extension.name
+    cloned.domain.price = getExtPrice(extension.ext)?.domainregister || 0
+    
+    cloned.frecuencyOptions = null
+    const frecuencyOptions = _.clone(getFrecuencyOptions(product)); 
+    //map new frecuency values for aditional domain
+    cloned.frecuencyOptions = frecuencyOptions.map(element => {
+      const frecuency = getFrecuencyFromLabel(element.label)      
+      return {
+        id: 0,
+        label: element.label,
+        frecuency: element.frecuency,
+        value: frecuency * cloned.domain.price
+      }
+    })
+
+    const selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency)
+    cloned.frecuency = selectedFrecuency
+    cloned.price = selectedFrecuency.value
+
+    cartState.value.products.push(cloned)
+    
+    
 
 
     Notify.create({
