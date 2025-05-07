@@ -416,7 +416,7 @@
         </div>
       </div>
       <DevOnly>
-        <div v-if="true">
+        <div v-if="false">
           <div>
             product.frecuency {{ product.frecuency }}
           </div>
@@ -678,54 +678,44 @@ function updateDomainPrice(product){
     domaintransfer: 0
   }
 
-
   //register
   if(product.domainCheck.action.value == domainActions[0].value){
-    if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext)
+    if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext) //get price from selected domain
   } else {
     if(product.domainCheck.domainName){
-      if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName))
+      if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName)) //get ext price  from transfer input 
     }
   }
 
-  console.log(domainPrice)
-
-
   //default configuracion price is $0
   let actionPrice = 0
-  if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register
-  if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer
-
-  console.log(actionPrice)
+  if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price 
+  if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price 
+  
 
   if(isDomainNameRequired(product)){
     const frecuency = getFrecuencyFromLabel(product.frecuency.label)
-
-    //free domain
-      if(frecuency > 12 && isDomainNameFree(product)){
-        console.log('free')
-        product.price = product.frecuency.value
-      } else {
-        console.log('not free')
-        let renewPrice = 0
-        //aplly renew
-        if(frecuency > 12){ //renew cost every year
-          console.log('renew 1')
-          const years = ( frecuency / 12) - 1 //renovation per year - first year
-          console.log(years)
-          if(domainPrice.domainrenew){
-            console.log('renew 2')
-            renewPrice = domainPrice.domainrenew * years
-          }
+    
+    //free domain afther 12 months
+    if(frecuency > 12 && isDomainNameFree(product)){
+      product.price = product.frecuency.value
+    } else {      
+      let renewPrice = 0
+      //aplly renew
+      if(frecuency > 12){ //renew cost every year
+        console.log('renew 1')
+        const years = ( frecuency / 12) - 1 //renovation per year - first year
+        console.log(years)
+        if(domainPrice.domainrenew){
+          console.log('renew 2')
+          renewPrice = domainPrice.domainrenew * years
         }
-
-        //transfer
-        product.price = product.price + actionPrice + renewPrice
       }
+      
+      product.price = product.price + actionPrice + renewPrice
+    }
 
   }
-
-
   calcSubtotal()
 }
 
@@ -754,7 +744,6 @@ async function checkDomain(product) {
 
     await getCaptcha()
 
-
     const lang = locale.value == 'es' ? 'esp' : 'eng'
 		const domain = product.domainCheck.domainName.trim()
 
@@ -764,10 +753,7 @@ async function checkDomain(product) {
       lang,
       ext: ''
     }
-
-    if(product.domain.domainName != product.domainCheck.domainName) {
-      //product.domain.domainName = null
-    }
+    
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
     product.domainCheck.suggestions = []
