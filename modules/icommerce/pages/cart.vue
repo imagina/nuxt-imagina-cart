@@ -101,7 +101,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -110,7 +110,7 @@
 							{{ $t('icommerce.cart.subtotalNoTaxes') }}
 						</span>
 						<span class="tw-text-[18px] tw-font-[600]">
-							{{ productsHelper.priceWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
 						</span>
 					</div>
 
@@ -140,7 +140,7 @@
 							<q-input v-model="form.coupon" dense outlined />
 						</div>
 					</div>
-					<div class="tw-mt-4">
+					<div class="tw-mt-6">
 						<q-btn
 							:label="$t('icommerce.cart.continue')"
 							text-color="black"
@@ -156,6 +156,11 @@
 							@click="redirectCheckout()"	
 							:disable="disableContinue"
 						/>
+					</div>
+					<div 
+						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
+					>
+						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
 					</div>
 				</div>
 			</div>

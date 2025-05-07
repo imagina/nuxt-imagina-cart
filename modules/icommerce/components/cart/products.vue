@@ -467,18 +467,24 @@
               tw-border-[#00000033]
               ">
             <span class="tw-text-lg tw-font-semibold">{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}</span>
-          </div>
+          </div>          
         </div>
       </div>
-    </div>
+    </div>    
   </div>
+
+  <!-- captcha -->  
   <ClientOnly>
-    <div v-if="loadCaptcha">
+    <div 
+      v-if="loadCaptcha"
+      class="tw-mt-4"
+    >
       <captchaComponent
         ref="captchaRef"
       />
     </div>
   </ClientOnly>
+  
 </template>
 
 
@@ -509,8 +515,9 @@ const emits = defineEmits(['subtotal'])
 
 const domainPricing = ref([])
 
-
-const loadCaptcha = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
+//captcha could not be validated with computed due call overflow
+const loadCaptcha =  cartState.value.products.some((product) => isDomainNameRequired(product)) || false 
+const showTaxesWwarning = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
 const domainActions =  [
