@@ -1,7 +1,12 @@
 
 export default defineCachedEventHandler(async (event) => {
+
+    const config = useRuntimeConfig()
+    const apiRoute = `${config.public.apiRoute}/api`
     const params = getQuery(event)
-    let api = params.api
+
+    let api = `${apiRoute}${params.api}`
+
     delete params.api
     delete params.maxAge
 
@@ -12,8 +17,8 @@ export default defineCachedEventHandler(async (event) => {
     })
     return data;
   }, {
-      maxAge: 360 * 12,  //minimun time, 
-      staleMaxAge: -1, // sent to the client while the cache updates in the background.
+      maxAge: 360 * 12,  //minimun time,
+      //staleMaxAge: -1, // sent to the client while the cache updates in the background.
         //swr: false
       //getKey: () => cacheName
   });

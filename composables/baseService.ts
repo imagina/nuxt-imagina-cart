@@ -4,7 +4,7 @@ const baseService = {
 		const config = useRuntimeConfig()
 		//const { locale, locales, setLocale } = useI18n()
 		return {
-			apiRoute: `${config.public.apiRoute}/api`, 
+			apiRoute: `${config.public.apiRoute}/api`,
 			locale: 'es'
 		}
 	},
@@ -30,24 +30,24 @@ const baseService = {
 
 			if (!params.filter) params.filter = {};
 			params.filter.allTranslations = true
-			
+
 			if (!params.filter.order) {
 				params.filter.order = {
 				  field: sortBy,
 				  way: way
 				};
-				
+
 			}
 
 			params.setting = {
 				locale: baseService.config().locale
 			}
-			
-			const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
+
+			///const api = params?.api ? params.api : `${baseService.config().apiRoute}${configName}`
 			$fetch('/api/base', {
 				method: 'GET',
 				params: {
-					api:  api,
+					api:  configName,
 					...params
 				}
 			}).then(response => resolve(response)).catch(error => {
@@ -65,12 +65,11 @@ const baseService = {
    * @returns {Promise<any>}
    */
 		show(configName, criteria, params = {}) {
-			console.log('show')
-			return new Promise((resolve, reject) => {	
-				if (!configName) return reject('Config name is required') //Validate config name	
+			return new Promise((resolve, reject) => {
+				if (!configName) return reject('Config name is required') //Validate config name
 				if (!criteria) return reject('Criteria is required')//Validate criteria
-				
-				
+
+
 				const api = `${baseService.config().apiRoute}${configName}/${criteria}`
 				$fetch('/api/base', {
 					method: 'GET',

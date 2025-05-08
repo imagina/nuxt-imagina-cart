@@ -424,7 +424,7 @@
         </div>
       </div>
       <DevOnly>
-        <div v-if="true">
+        <div v-if="false">
           <div>
             product.frecuency {{ product.frecuency }}
           </div>
