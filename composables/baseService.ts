@@ -20,8 +20,8 @@ const baseService = {
 
 			if (!configName) return reject('Config name is required') //Validate config name
 
-			if(!params?.page) params.page = 1
-			if(!params?.take) params.take = 10
+			//if(!params?.page) params.page = 1
+			//if(!params?.take) params.take = 10
 
 			const sortBy = params?.sortBy || 'id'
 			//(params.descending ? 'desc' : 'asc') : 'desc'

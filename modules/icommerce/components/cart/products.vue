@@ -525,7 +525,7 @@ const domainPricing = ref([])
 
 //captcha could not be validated with computed due call overflow
 const loadCaptcha =  cartState.value.products.some((product) => isDomainNameRequired(product)) || false 
-const showTaxesWwarning = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
+const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
 const domainActions =  [
@@ -567,9 +567,13 @@ watch(
 )
 
 
-function init() {
-    getDomainPricing()
-    configProducts()
+async function init() {
+  if(cartState.value.products.length){
+    await getDomainPricing().then(() => {
+      configProducts()
+    })
+    
+  }
 }
 
 function disableCheckButton(product){
@@ -586,7 +590,7 @@ function disableCheckButton(product){
 }
 
 async function getDomainPricing(){
-    await baseService.get(apiRoutes.domainPricing).then((response) => {
+    await $fetch(apiRoutes.domainPricing).then((response) => {
         const pricingList =  JSON.parse(response)
         domainPricing.value = Object.keys(pricingList).map(x => { return { ext: x, ...pricingList[x] } })
     })
@@ -905,7 +909,7 @@ function addDomainExtension(product, extension){
       }
         return {
           enable: (frecuency >= 12),
-          id: frecuency,
+          //id: frecuency,
           label: element.label,
           frecuency: element.frecuency,
           value: cloned.domain.price + renewPrice

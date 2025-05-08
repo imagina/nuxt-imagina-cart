@@ -6,9 +6,12 @@ const urlBase = `/${moduleName}/${moduleVersion}`
 const apiRoutes = {
 	products: `${urlBase}/products`,
 	categories: `${urlBase}/categories`,
+	countries: '/v2/ilocations/countries',
+	provinces: '/v2/ilocations/provinces',
+	cities: '/v2/ilocations/cities',
 	/* imagina customs */
 	domainCheck: `/api/icommerce/verify-domain`,
-	domainPricing: `https://clientes.imaginacolombia.com/getdata.php?type=domainpricing&imflushcache=1`,
+	domainPricing: `/api/icommerce/domain-pricing`,
 }
 
 export default apiRoutes
