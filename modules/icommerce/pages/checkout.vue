@@ -240,16 +240,34 @@
 							<template v-for="product in products" class="tw-my-4">
 								<q-card>
 									<q-card-section>
-										<span
-											class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg">
+										<!-- title -->
+										<div>
+											<span
+												class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg"
+											>
 											{{ product.name }}
-										</span>
-										<span
-											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
+											</span>
+										</div>
+										<!-- details -->
+										<div>
+											<span
+												class="
+													tw-leading-normal
+													tw-font-semibold
+													tw-text-md
+													md:tw-text-base
+													xl:tw-text-lg
+													tw-line-clamp-4
+													tw-break-all
+												"
+											>
 											{{ product?.domain?.action?.label }}: 
-											<br>
 											{{ product?.domain?.domainName }}  
 										</span>
+
+										</div>
+										
+										
 										<div class="tw-flex tw-justify-between">
 											<div>
 												<span v-if="productsHelper.hasFrencuency(product)"
@@ -305,10 +323,12 @@
 					</div>
 
 					<div class="tw-my-4 tw-flex-nowrap">
-						<span>Impuestos</span><br/>
-						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
-							Calculado después de la información de facturación
-						</span>
+						<div 
+						v-if="showTaxesWarning"
+						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
+					>
+						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
+					</div>
 					</div>
 
 					<hr class="tw-my-4" />
@@ -345,7 +365,7 @@
 						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
 							<q-input v-model="form.coupon" dense outlined />
 						</div>
-					</div>
+					</div>					
 				</div>
 			</div>			
 		</div>
@@ -395,6 +415,7 @@ const subtotal = computed(() => {
 	return value
 })
 
+const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 //const disableButton = computed( () => refForm.value.validate() )
 
 //const disableButton = ref(true)

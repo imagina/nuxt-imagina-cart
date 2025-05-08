@@ -158,6 +158,7 @@
 						/>
 					</div>
 					<div 
+						v-if="showTaxesWarning"
 						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
 					>
 						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
@@ -206,6 +207,7 @@ const disableContinue = computed(() => cartState.value.products.every((product) 
 	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false	
 }))
 
+const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 
 const checkoutPath = getPath('icommerce.checkout')
 

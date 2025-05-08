@@ -13,33 +13,35 @@
 
     <!-- PRODUCT TITLE -->
     <div class="tw-flex tw-justify-between tw-items-center tw-py-6">
-      <h2 class="
-            tw-font-semibold
-            tw-text-[22px]
-            tw-m-0
-            tw-p-0
-            tw-leading-5
-          ">
-        {{ product.name }}
-
-        <span
-          v-if="product?.domain?.domainName"
-          class="
-              tw-rounded-[10px]
-              tw-border-[2px]
-            tw-border-[#5cb85c]
-            tw-bg-[#5cb85c]
-            tw-text-white
-              tw-font-[600]
-              tw-py-1
-              tw-px-2
-              tw-ml-2
-          ">
-          <span>
-            {{  product?.domain?.domainName }}
+      <div class="">
+          <span class="
+              tw-font-semibold
+              tw-text-[22px]
+              tw-m-0
+              tw-p-0
+              tw-leading-5
+            ">
+          {{ product.name }}
           </span>
-        </span>
-      </h2>
+          <span
+            v-if="product?.domain?.domainName"
+            class="
+                tw-rounded-[10px]
+                tw-border-[2px]
+              tw-border-[#5cb85c]
+              tw-bg-[#5cb85c]
+              tw-text-white
+                tw-font-semibold
+                tw-text-[22px]
+                tw-py-1
+                tw-px-2
+                md:tw-ml-2
+            ">
+            <span>
+              {{  product?.domain?.domainName }}
+            </span>
+          </span>
+      </div>
       <q-btn
 					icon="fa-solid fa-trash"
 					text-color="primary"
@@ -90,7 +92,7 @@
                 (val) => isSupportedDomain(product, val)
               ]"
               @update:model-value="(val) => {
-                product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '').toLowerCase()
+                product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '')                
                 updateDomainPrice(product)
               }"
             >
@@ -155,7 +157,7 @@
 
 				<q-card
 					v-if="product.domainCheck.action.value == domainActions[0].value && !product.domainCheck.loading"
-          class="tw-w-[600px]"
+          class="tw-w-[600px] md:tw-w-[900px]"
 				>
 					<q-card-section class="row items-center q-pb-none tw-sticky tw-top-0 tw-bg-white tw-z-40">
 							<span class="tw-text-[20px] tw-font-[600]">
@@ -178,7 +180,9 @@
 									tw-border-[#d5dfff]
 									tw-py-4
                   tw-px-6
-                ">
+                  my-hover-card
+                "
+              >
 
                 <div class="tw-flex-col tw-items-around">
                         <div class="tw-my-2">
@@ -196,7 +200,7 @@
 
                           </div>
                           <div class="tw-my-4">
-                            <span class="tw-text-[28px] tw-font-[700]"> {{ product.domainCheck.exactMatch.name }}
+                            <span class="tw-text-[28px] tw-font-[700] tw-line-clamp-4 tw-break-all"> {{ product.domainCheck.exactMatch.name }}
                             </span>
                           </div>
 												<div class="tw-my-2">
@@ -248,7 +252,7 @@
                 <span class="tw-text-[18px] tw-font-[600] ">Sin resultados disponibles para:</span><br>
               </div>
               <div>
-                <span class="tw-text-[20px] tw-font-[700] ">{{ product.domainCheck.domainName }}</span>
+                <span class="tw-text-[20px] tw-font-[700] tw-line-clamp-4 tw-break-all">{{ product.domainCheck.domainName }}</span>
               </div>
 
 
@@ -261,11 +265,12 @@
 						<div class="tw-mb-5" v-if="product?.domainCheck.results.length != 0">
           		<span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
           		<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-        		</div>
-
-
-
-						<div class="tw-grid md:tw-grid-cols-2  tw-gap-4">
+        		</div>            
+						<div 
+              v-if="product?.domainCheck.results.length"
+              class="tw-grid tw-grid-cols-2 tw-gap-4"
+              :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-3' : 'md:tw-grid-cols-4'"
+            >
 							<!--extension cards -->
 							<template v-for="result in product?.domainCheck.results">
 								<div
@@ -277,9 +282,11 @@
 									tw-h-full
 									tw-border-[#d5dfff]
                   tw-bg-[#fafbff]
-									tw-p-4"
-
+									tw-p-4
+                  my-hover-card"
 								>
+                
+        
 								<div>
 										<span class="tw-text-[20px] tw-font-[600]">
 												.{{ result.ext }}
@@ -324,19 +331,20 @@
 
 					<!-- suggestions -->
 					<q-card-section v-if="product?.domainCheck?.suggestions.length">
-						<div class="tw-grid tw-grid-cols  tw-gap-4 tw-p-4 tw-h-full">
+						<div class="tw-grid tw-grid-cols  tw-px-4 tw-h-full">
 							<div>
-								<span class="tw-text-[16px] tw-font-[600]">More options</span>
+								<span class="tw-text-[16px] tw-font-[600]">Más opciones:</span>
 							</div>
 
 							<div>
 								<!--<q-scroll-area style="height: 400px; max-width: 2000px;">-->
 									<template v-for="suggestion in product?.domainCheck.suggestions">
-										<div class="tw-grid  md:tw-flex md:tw-justify-between tw-items-center tw-gap-4 tw-m-4">
-												<span class="tw-text-[14px] tw-font-[600] tw-line-clamp-3 tw-break-all">
+                    <div class="my-hover-card tw-px-1 tw-my-4 tw-rounded-[10px]">
+										<div class="tw-grid  md:tw-flex md:tw-justify-between tw-items-center tw-gap-2 tw-p-2 tw-border-b-2" >
+												<span class="tw-text-[14px] tw-font-[600] tw-line-clamp-4 tw-break-all">
 														{{ suggestion.name }}
 												</span>
-												<div class="tw-flex tw-items-center tw-gap-4">
+												<div class="tw-flex tw-items-center tw-justify-between tw-gap-4">
 													<div>
 														<span class="tw-text-[16px] tw-font-[500]">
 														{{  productsHelper.priceWithSymbol(getExtPrice(suggestion.ext).domainregister, cartState.currency) }}
@@ -358,8 +366,8 @@
 														/>
 													</div>
 												</div>
-											</div>
-										<hr>
+											</div>										
+                      </div>
 									</template>
 								<!--</q-scroll-area>-->
 							</div>
@@ -398,7 +406,7 @@
           v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
           class="tw-text-xs tw-text-[#818181]"
           >
-          Renuevas a {{ productsHelper.getPriceWithSymbol(product, cartState.currency) }} el  {{ calcRenovationDate(product.frecuency.label) }} ¡Cancela cuando quieras!
+          Renuevas a {{ productsHelper.valueWithSymbol(product.price, cartState.currency) }} el  {{ calcRenovationDate(product.frecuency.label) }} ¡Cancela cuando quieras!
         </span>
         <!-- free domain -->
         <div class="tw-mt-5" v-if="isDomainNameFree(product)">
@@ -416,7 +424,7 @@
         </div>
       </div>
       <DevOnly>
-        <div v-if="false">
+        <div v-if="true">
           <div>
             product.frecuency {{ product.frecuency }}
           </div>
@@ -720,6 +728,11 @@ function updateDomainPrice(product){
       }
       
       product.price = product.price + actionPrice + renewPrice
+      console.log({
+        price: product.price,
+        actionPrice,
+        renewPrice
+      })
     }
 
   }
@@ -901,8 +914,9 @@ function addDomainExtension(product, extension){
 
     cloned.frecuencyOptions = cloned.frecuencyOptions.filter(x => x.enable) //remove options lower than 12 months
 
-    let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions.find(x => x.frecuency == 12)
+    let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions[0]
     cloned.frecuency = selectedFrecuency
+    console.log(selectedFrecuency)
     cloned.price = selectedFrecuency.value
 
     cartState.value.products.push(cloned)
@@ -928,7 +942,14 @@ async function getCaptcha() {
 </script>
 
 <style>
-.card {
-  /*box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.07), 0px 3.85185px 33.1259px rgba(0, 0, 0, 0.0425185), 0px 0.814815px 8.47407px rgba(0, 0, 0, 0.0274815);*/
+.my-hover-card:hover {
+  box-shadow: 0 4px 20px #d5dfff;
+  transition: box-shadow 0.3s ease;
 }
+
+.q-dialog__inner--minimized > div {
+  max-width: 100vw !important;    
+}
+
+
 </style>
