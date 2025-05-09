@@ -13,7 +13,7 @@ const showModal = ref( false );
 </script>
 
 <template>
-  <q-layout-header class="tw-h-auto tw-max-h-min">
+  
 
     <!--    Btn to open-->
     <q-btn
@@ -28,11 +28,8 @@ const showModal = ref( false );
     <!--Modal -->
     <q-dialog v-model="showModal"
               position="left"
-              transition-show="slide-right"
-              transition-hide="slide-left"
-              :transition-duration="500"
-              class="modal-dialog !tw-h-screen tw-max-w-lg tw-animate-fade-in"
-    >
+              transition-duration="100"
+              class="modal-dialog !tw-h-screen tw-max-w-lg"    >
       <q-card class="q-pa-md !tw-overflow-x-hidden tw-w-full !tw-h-screen !tw-max-h-none tw-p-0" >
 
         <q-card-section class="tw-mb-8 tw-border-b tw-border-b-gray-300 tw-pt-2 !px-0 tw-bg-secondary tw-flex tw-justify-between tw-items-center">
@@ -69,7 +66,7 @@ const showModal = ref( false );
 
       </q-card>
     </q-dialog>
-  </q-layout-header>
+  
 </template>
 
 <style>

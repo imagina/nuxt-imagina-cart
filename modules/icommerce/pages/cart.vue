@@ -125,7 +125,7 @@
 					</div>
 
 					<!--coupon -->
-					<div>
+					<div v-if="false">
 						<div>
 							<q-btn 
 								:label="$t('icommerce.cart.coupon')"
@@ -140,7 +140,7 @@
 							<q-input v-model="form.coupon" dense outlined />
 						</div>
 					</div>
-					<div class="tw-mt-4">
+					<div class="tw-mt-6">
 						<q-btn
 							:label="$t('icommerce.cart.continue')"
 							text-color="black"
@@ -156,6 +156,12 @@
 							@click="redirectCheckout()"	
 							:disable="disableContinue"
 						/>
+					</div>
+					<div 
+						v-if="showTaxesWarning"
+						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
+					>
+						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
 					</div>
 				</div>
 			</div>
@@ -201,6 +207,7 @@ const disableContinue = computed(() => cartState.value.products.every((product) 
 	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false	
 }))
 
+const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 
 const checkoutPath = getPath('icommerce.checkout')
 
@@ -249,18 +256,23 @@ async function getProduct(id, urlOptions){
 							billingcycle = index
 						}
 					}
-					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))					
+					element.frecuency = element.label
+					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
 					return element
        			});
 				if(options.length) product.frecuency = options[billingcycle]
     		}
-
+			/*
 			const index = cartState.value.products.findIndex((obj) => obj.externalId == id);
 			if (index === -1) {
 				cartState.value.products.push(product);
 			} else {
 				cartState.value.products[index] = product;
 			}
+			*/
+
+			cartState.value.products = []
+			cartState.value.products.push(product);
 		}
 
 	})

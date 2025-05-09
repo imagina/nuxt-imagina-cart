@@ -1,7 +1,22 @@
 <template>
 	<div>
-		<h1>index</h1>
 	</div>
 </template>
+<script setup>
 
-  
+const router = useRouter()
+
+const redirectPath = getPath('icommerce.products')
+
+onMounted( () => {
+	init()
+})
+
+function init(){
+	router.push({
+		path: redirectPath
+	})
+}
+
+</script>
+

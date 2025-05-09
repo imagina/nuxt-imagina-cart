@@ -2,7 +2,7 @@
     <q-layout view="hHh lpR fFf" @scroll="handleScroll">
 			<q-page-container>
 						<HeaderApp :scroll-position="scrollPosition" />
-						<BreadCrumbs />
+						<BreadCrumb />
 						<slot />
 						<FooterApp />
 			</q-page-container>
@@ -12,7 +12,7 @@
 import { ref } from 'vue';
 import HeaderApp from '../modules/icommerce/components/header';
 import FooterApp from '../modules/icommerce/components/footer';
-import BreadCrumbs from '../modules/icommerce/components/breadcrumbs';
+import BreadCrumb from '../modules/icommerce/components/breadcrumb';
 
 const scrollPosition = ref(null);
 

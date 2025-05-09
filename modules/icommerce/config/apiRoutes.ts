@@ -6,9 +6,12 @@ const urlBase = `/${moduleName}/${moduleVersion}`
 const apiRoutes = {
 	products: `${urlBase}/products`,
 	categories: `${urlBase}/categories`,
-	
-	domainCheck: `https://nflow3.imaginacolombia.com/webhook/domain/search`,
-	domainPricing: `https://clientes.imaginacolombia.com/getdata.php?type=domainpricing&imflushcache=1`,
+	countries: '/v2/ilocations/countries',
+	provinces: '/v2/ilocations/provinces',
+	cities: '/v2/ilocations/cities',
+	/* imagina customs */
+	domainCheck: `/api/icommerce/verify-domain`,
+	domainPricing: `/api/icommerce/domain-pricing`,
 }
 
 export default apiRoutes

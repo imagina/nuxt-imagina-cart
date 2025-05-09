@@ -53,16 +53,25 @@
 			>
 				<div>
 					<span class="tw-text-lg tw-font-bold tw-line-clamp-1 tw-capitalize " style="color: #888888">{{ product.name.toLowerCase() }}</span>
-				</div>
+					<q-tooltip>
+						{{ product.name }}
+					</q-tooltip>
 
-				<div class="tw-flex tw-justify-between tw-align-middle">
+				</div>
+				<!-- description -->
+				<div
+					v-if="product?.description && getStorageDescription(product?.description)" 
+					class="tw-flex tw-justify-between tw-align-middle"
+				>
 					<div>
-						<span class="tw-text-[40px] tw-font-semibold">16GB</span>
+						<span class="tw-text-[40px] tw-font-semibold">{{ getStorageDescription(product.description) }}</span>
 					</div>
-					<div>
+					<div
+						v-if="false"
+					>
 						<img src="../../assets/img/cP_white.png" />
 					</div>
-				</div>
+				</div>				
 				<div class="tw-h-[140px]">
 					<div
 						class="
@@ -89,6 +98,7 @@
 				<!-- action buttons -->
 					<div class="tw-flex tw-gap-4 tw-items-center tw-justify-center">
 						<q-btn
+							v-if="false"
 							label="Ver Plan"
 							text-color="black"
 							no-caps
@@ -109,7 +119,7 @@
 							icon="o_shopping_cart"
 							unelevated
 							class="
-								tw-w-2/3
+								tw-w-full
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
@@ -136,12 +146,14 @@
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
+import constants from '../../config/constants'
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
 
+
 const props = defineProps({
-  categoryId: Object
+  category: Object
 });
 
 const settings = {
@@ -173,15 +185,15 @@ const cartState = useStorage('shoppingCart', {
 	
 	const sortOptions = [
 		{
-			label: 'A-Z',
+			label: 'Z-A',
 			value: 'desc'
 		},
 		{
-			label: 'Z-A',
+			label: 'A-Z',
 			value: 'asc'
 		}]
 
-		const sort = ref([sortOptions[0].label])	
+		const sort = ref(sortOptions[1]	)	
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))
@@ -189,7 +201,7 @@ const cartState = useStorage('shoppingCart', {
 
 
 	watch(
-		() => props.categoryId,
+		() => props.category,
 		(newQuery, oldQuery) => {
 			paginationModel.value.page = 1
 			getProducts()
@@ -216,9 +228,9 @@ const cartState = useStorage('shoppingCart', {
 			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
 
-		if(props.categoryId){
+		if(props.category){
 			params.filter = {
-				categoryId: props.categoryId.id
+				categoryId: props.category?.id || constants.cagtegories.mainCategoryId 
 			}
 		}
 		loading.value = true
@@ -253,6 +265,7 @@ const cartState = useStorage('shoppingCart', {
       		//const options = productsHelper.getFrecuencyOptions(product)
 
 			const options = productsHelper.getFrecuencyOptions(product).map(element => {
+				element.frecuency = element.label
 				element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
 				return element      
        		});
@@ -282,6 +295,47 @@ const cartState = useStorage('shoppingCart', {
 		})
 	}	
 
+
+	function getStorageDescription(description){
+		const result = extractValueByLabel(description, 'Espacio en Disco')
+		if (result) return result.match(/[a-zA-Z0-9]+/g)?.join('') || '';
+		return false
+	}
+
+
+	function extractValueByLabel(html, label) {
+		const regex = new RegExp(
+			`${label}:\\s*(?:&nbsp;|\\s|<[^>]+>)*([^<\\s][^<]*)`,
+			'gi'
+		);
+		const matches = [...html.matchAll(regex)];
+
+		for (const match of matches) {
+			if (match[1]) {
+			return match[1]
+				.replace(/&nbsp;/gi, ' ')
+				.replace(/\s+/g, ' ')
+				.trim();
+			}
+		}
+
+		return null;
+	}
+	
+	/* backup
+	function extractValueByLabel(html, label) {
+		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
+		const match = html.match(regex);
+		console.log(match)
+		if (match) {
+			// Replace &nbsp; with normal space and trim the result
+			return match[1].replace(/&nbsp;/g, ' ').trim();
+		}
+		return null;
+	}
+	*/
+
+	
 	onMounted(async () => {
 		init();
 	})
@@ -293,6 +347,9 @@ const cartState = useStorage('shoppingCart', {
 			@apply tw-list-disc
 		}
 		box-shadow: 0px 10px 104px rgba(0, 0, 0, 0.07), 0px 3.85185px 33.1259px rgba(0, 0, 0, 0.0425185), 0px 0.814815px 8.47407px rgba(0, 0, 0, 0.0274815);
+		.description a[data-toggle] {
+			cursor: pointer;
+		}
 	}
 
 .fade-enter-active, .fade-leave-active {

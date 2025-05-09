@@ -34,6 +34,7 @@
 									@click="() => selectedCategory(children)"
 									clickable
 									v-ripple
+									:active="isActive(children)"
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
@@ -46,6 +47,7 @@
 						@click="() => selectedCategory(category)"
 						clickable
 						v-ripple
+						:active="isActive(category)"
 					>
 						<q-item-section>{{ category.title }}</q-item-section>
 					</q-item>	
@@ -57,6 +59,7 @@
 <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
+import constants from '../../config/constants'
 
 const emits = defineEmits(['selectedCategory'])
 
@@ -65,6 +68,8 @@ const drawer = ref(false)
 const isMobile = ref(false)
 const BREAKPOINT = 1024
 
+
+const selectedCategoryRef = ref({})
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
 	drawer.value = !isMobile.value
@@ -84,36 +89,38 @@ async function getCategories(){
 	const params = {
 		take: 60,
 		page: 1,
-		//order: sort.value,
+		filter : {
+			parentId: constants.cagtegories.mainCategoryId,
+			order: {
+				field: "created_at",
+				way: "desc"
+			}			
+		}
+		
 	}
 
 	baseService.index(apiRoutes.categories, params).then(response => {
-		let  data =  response?.data || []
-
-		/*for testing */
-		/*
-		const ids = data.map(item => item.id)
-		data.forEach(element => {
-			const n  = Math.floor(Math.random() * ids.length)
-			element.parentId = n < 5 ? null : ids[n]
-		});
-		*/
+		let  data =  response?.data || []				
+		const parents = data		
 		
-		/*for testing */	
-
-		const parents = data.filter(item => item.parentId == null)
-		parents.forEach((category) => {
-			const children = data.filter(item => item.parentId == category.id)
+		parents.forEach((category) => {			
+			const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
 			if(children.length) category.children = children
 		})
 
 		categories.value = parents		
+		emits('selectedCategory', categories.value[0])
 	})
 }
 
 function selectedCategory(category){	
 	//window.scrollTo(0, 0);
+	selectedCategoryRef.value = category
 	emits('selectedCategory', category)
+}
+
+function isActive(category){	
+	return (selectedCategoryRef.value?.id == category?.id) || false
 }
 
 onMounted(async () => {

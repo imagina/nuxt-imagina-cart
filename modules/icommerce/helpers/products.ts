@@ -24,8 +24,8 @@ const helper = {
 	translateFrecuencyOptionLabel(label){
 		//const { t } = useI18n()
 		const labels = {
-			'Triannually': "icommerce.frecuencies.triannually",
-			'Biannually': "icommerce.frecuencies.biannually",
+			'Triennially': "icommerce.frecuencies.triennially",
+			'Biennially': "icommerce.frecuencies.biennially",
 			'Annually': "icommerce.frecuencies.annually",
 			'Quarterly': "icommerce.frecuencies.quarterly",
 			'Semiannually': "icommerce.frecuencies.semiannually",
@@ -42,6 +42,8 @@ const helper = {
 		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
 
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
+		
+		//if(product.price) price = price + product.price
 		if(price > 0 && currencyValue != 'COP'){
 			price = helper.COPtoCurrency(price, currencyValue)			
 		}
@@ -58,16 +60,20 @@ const helper = {
 
 	COPtoUSD(value){
 		const trm = helper.getTrm('COP')
-		value = (value / trm)
-		value = Number.isInteger(value) ? value : value.toFixed(2)
+		if(trm){
+			value = (value / trm)
+			value = Number.isInteger(value) ? value : value.toFixed(2)
+		}
 		return value
 	},
 
 	COPtoEUR(value){
 		const trm = helper.getTrm('EUR')
-		value = helper.COPtoUSD(value)
-		value = (value * trm)
-		value = Number.isInteger(value) ? value : value.toFixed(2)
+		if(trm){
+			value = helper.COPtoUSD(value)
+			value = (value * trm)
+			value = Number.isInteger(value) ? value : value.toFixed(2)
+		}
 		return value
 	},
 
@@ -101,8 +107,9 @@ const helper = {
 	getSubtotal(products, currencyValue){
 		let subtotal = Number(0);
 		products.forEach(product => {
-			const price = helper.getPrice(product, currencyValue)
-			subtotal  = Number(subtotal) + Number(price)
+			//let price = helper.getPrice(product, currencyValue)
+			//if(product?.price) price = price + product.price
+			subtotal  = Number(subtotal) + Number(product.price)
 		});
 		return Number.isInteger(subtotal) ? subtotal : subtotal.toFixed(2)
 	},
@@ -131,6 +138,7 @@ const helper = {
 	getTrm(currency){
 		const authStore = useAuthStore()
 		let usdRates = authStore.usdRates
+		if(!usdRates) return false
 		const trm = Number(usdRates['USDRates'][currency])
 		return trm.toFixed(2)
 	},

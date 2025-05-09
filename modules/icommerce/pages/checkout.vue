@@ -41,18 +41,18 @@
 					<q-inner-loading
 						:showing="authStore.loading"
 						label="Please wait..."
-					> 
+					>
 					<q-spinner-mat size="50px" color="primary"></q-spinner-mat>
 					</q-inner-loading>
-					<div 
+					<div
 						v-if="!authStore.isLogged()"
 						class="
-						tw-flex 
+						tw-flex
 						tw-justify-center
 						tw-align-middle
 						tw-p-4
 						tw-gap-4
-						" 
+						"
 					>
 						<SocialAuthGoogle />
 						<q-btn
@@ -108,18 +108,25 @@
 
 							<q-select
 								v-model="form.identificationType"
-								:options="[{ value: 'cedula', label: 'Cedula de ciudadania' }]"
+								:options="[
+									{ value: 'Cédula de Ciudadanía', label: 'Cedula de ciudadania' },
+									{ value: 'NIT', label: 'NIT' },
+									{ value: 'Cédula de Extranjería', label: 'Cédula de Extranjería' },
+									{ value: 'Pasaporte', label: 'Pasaporte' },
+									{ value: 'Documento de Identificación extranjero', label: 'Documento de Identificación extranjero' },
+									{ value: 'NIT Externo', label: 'NIT Externo' },
+									]"
 								option-value="value"
 								option-label="label"
 								outlined
 								dense
-								label="Tipo de identificacion"
+								label="Tipo de identificación"
 
 							/>
 
 							<q-input
 								v-model="form.identification"
-								label="Identificacion"
+								label="Identificación"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -128,7 +135,7 @@
 							/>
 							<q-input
 								v-model="form.mobilePhone"
-								label="Phone"
+								label="Teléfono"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -136,37 +143,52 @@
 								dense
 								outlined
 							/>
-
-							<q-input
+							<q-select
 								v-model="form.country"
-								label="Pais de residencia"
+								label="País de residencia"
+								:options="countries"
+								option-value="id"
+								option-label="name"
+								@update:model-value="getProvinces()"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
 								dense
 								outlined
+								:disable="!countries.length"
+
+							/>
+							<q-select
+								v-model="form.province"
+								label="Estado"
+								:options="provinces"
+								option-value="id"
+								option-label="name"
+								@update:model-value="getCities()"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+								:disable="!provinces.length"
+
+							/>
+							<q-select
+								v-model="form.city"
+								label="Ciudad"
+								:options="cities"
+								option-value="id"
+								option-label="name"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+								:disable="!cities.length"
 							/>
 							<q-input
 								v-model="form.address"
-								label="Direccion"
-								:rules="[
-									(val) => !!val || 'Campo requerido.',
-								]"
-								dense
-								outlined
-							/>
-							<q-input
-								v-model="form.city"
-								label="Ciudad"
-								:rules="[
-									(val) => !!val || 'Campo requerido.',
-								]"
-								dense
-								outlined
-							/>
-							<q-input
-								v-model="form.region"
-								label="Region"
+								label="Dirección"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -175,7 +197,7 @@
 							/>
 							<q-input
 								v-model="form.zipCode"
-								label="Codigo postal"
+								label="Código  postal"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
 								]"
@@ -233,17 +255,38 @@
 							<template v-for="product in products" class="tw-my-4">
 								<q-card>
 									<q-card-section>
-										<span
-											class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg">
+										<!-- title -->
+										<div>
+											<span
+												class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg"
+											>
 											{{ product.name }}
-										</span>
-										<br/>
-										<span
-											class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-											{{ product?.domain?.action?.label }}: 
-											<br>
-											{{ product?.domain?.domainName }}  
-										</span>
+											</span>
+										</div>
+										<!-- details -->
+										<div v-if="product?.domain?.domainName">
+											<span
+												class="
+													tw-leading-normal
+													tw-font-semibold
+													tw-text-md
+													md:tw-text-base
+													xl:tw-text-lg
+													tw-line-clamp-4
+													tw-break-all
+												"
+											>
+												<span
+													v-if="product?.domain?.action?.label"
+												>
+													{{  product?.domain?.action?.label }} :
+												</span>
+												{{ product?.domain?.domainName }}
+											</span>
+
+										</div>
+
+
 										<div class="tw-flex tw-justify-between">
 											<div>
 												<span v-if="productsHelper.hasFrencuency(product)"
@@ -255,7 +298,7 @@
 											<div>
 												<span
 													class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-													{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}
+													{{ productsHelper.valueWithSymbol(product.price, cartState.currency) }}
 												</span>
 											</div>
 										</div>
@@ -299,10 +342,12 @@
 					</div>
 
 					<div class="tw-my-4 tw-flex-nowrap">
-						<span>Impuestos</span><br/>
-						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
-							Calculado después de la información de facturación
-						</span>
+						<div
+						v-if="showTaxesWarning"
+						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
+					>
+						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
+					</div>
 					</div>
 
 					<hr class="tw-my-4" />
@@ -330,7 +375,7 @@
 					</div>
 
 					<!--coupon -->
-					<div>
+					<div v-if="false">
 						<div>
 							<q-btn label="¿Tienes código de cupón?"
 								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]" flat no-caps dense
@@ -341,7 +386,7 @@
 						</div>
 					</div>
 				</div>
-			</div>			
+			</div>
 		</div>
 	</ClientOnly>
 </template>
@@ -350,6 +395,9 @@ import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
+//import CurrencySelector from '../components/currencySelector'
+import apiRoutes from '../config/apiRoutes'
+
 
 
 
@@ -370,13 +418,16 @@ const form = useStorage('shoppingCheckoutForm', {
 	country: null,
 	address: null,
 	city: null,
-	region: null,
+	province: null,
 	zipCode: null
 })
 const router = useRouter()
 
 const refForm = ref(null)
 const showCouponInput = ref(false)
+const countries = ref([])
+const provinces = ref([])
+const cities = ref([])
 
 const user = computed(() => authStore.user)
 const products = computed(() => cartState.value.products)
@@ -388,6 +439,7 @@ const subtotal = computed(() => {
 	return value
 })
 
+const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 //const disableButton = computed( () => refForm.value.validate() )
 
 //const disableButton = ref(true)
@@ -400,7 +452,7 @@ watch(
 )
 
 watch(
-	() => user.value, 
+	() => user.value,
 	(newValue, oldValue) => {
 		setFormData(true)
 	}
@@ -415,19 +467,66 @@ onMounted(() => {
 	init()
 })
 
-function init() {
-	setFormData()
-	addRedirect()
+async function init() {
+	await setFormData()
+	await getCountries().then( async () => {
+		
+		addRedirect()
+	})
+
 }
 
+async function getCountries(){
+	countries.value = []
+	provinces.value = []	
+	return await baseService.index(apiRoutes.countries).then(response => {
+			if(response?.data) countries.value = response.data.filter(x => x.status).sort((a, b) => a.name.localeCompare(b.name));
+			
+			if(!form.value.country) form.value.country = countries.value.find(x => x.id == 48) || countries.value[0] //Colombia
+
+			getProvinces()
+	})
+}
+
+async function getProvinces(){
+	provinces.value = []
+	cities.value = []	
+	return await baseService.index(apiRoutes.provinces, {
+		filter: {
+			country: form.value.country.id
+		}
+	}).then(response => {
+			if(response?.data) provinces.value = response.data.sort((a, b) => a.name.localeCompare(b.name));
+			if(!form.value.province)  form.value.province = provinces.value[0]
+			getCities()
+	})
+}
+
+async function getCities(){
+	cities.value = []
+	return await baseService.index(apiRoutes.cities, {
+		filter: {
+			country: form.value.country.id,
+			province: form.value.province.id
+		}
+
+	}).then(response => {
+			if(response?.data) cities.value = response.data.sort((a, b) => a.name.localeCompare(b.name));
+			if(!form.value.city) form.value.city = cities.value[0]
+	})
+}
+
+
+
+
 function setFormData(reset = false) {
-	if (authStore.isLogged()){		
+	if (authStore.isLogged()){
 		form.value.email = form.value.email ||  user.value.email
 		form.value.firstName = form.value.firstName ||  user.value.firstName
 		form.value.lastName = form.value.lastName || user.value.lastName
-		form.value.identification = form.value.identification ||  getField('identification')  
-		form.value.mobilePhone = form.value.mobilePhone || getField('cellularPhone')		
-	} else {		
+		form.value.identification = form.value.identification ||  getField('identification')
+		form.value.mobilePhone = form.value.mobilePhone || getField('cellularPhone')
+	} else {
 		if(reset) resetFormData()
 	}
 
@@ -445,14 +544,13 @@ function resetFormData(){
 		country: null,
 		address: null,
 		city: null,
-		region: null,
+		state: null,
 		zipCode: null
 	}
 }
 
 function getField(name) {
 	const field = user.value.fields.find((field) => field.name == name)
-	console.warn(name, field)
 	if (field && field?.value) return field.value
 	return null
 }
@@ -476,7 +574,7 @@ function redirectToLogin() {
 
 
 function addRedirect() {
-	if (authStore.isLogged()) return 
+	if (authStore.isLogged()) return
 	const path = getPath('icommerce.checkout')
 	router.push({
 		path,
@@ -495,44 +593,54 @@ async function goToPayment() {
 
 
 	quasar.loading.show({
-		message: 'We are procresing your order',
+		message: 'Estamos procesando su pedido',
 		//messageColor: 'black',
 		//backgroundColor: 'primary',
 	})
 
+
 	const order = {
 		user: { ...form.value },
-		currency: cartState.value.currency, 
+		//user.identificationType = form.value.identificationType.toLowerCase().replaceAll(' ', '-')
+		currency: cartState.value.currency,
 		total: subtotal.value,
 
+
 		products: products.value.map((product) => {
+
+			delete product?.domain?.action?.placeholder
+
+
 			return {
-				id: product.id,
-				description: product.description,
-				name: product.name,
-				url: product.url,
-				discount: product.discount,
-				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
-				price: productsHelper.getPrice(product, cartState.currency),				
-				domain: product?.domain || null				
+				id: product?.externalId || null,
+				//description: product.description,
+				name: product?.name || null,
+				productUrl: product?.url || null,
+				domain: product?.domain || null,
+				discount: product?.discount || null,
+				frecuency: productsHelper.hasFrencuency(product) ? product?.frecuency : null,
+				price: product?.price || null,
+				domain: product?.domain || null
 			}
 		})
 	}
 
-	console.log(JSON.stringify(order))
+	console.dir(order)
 
+		
+	return 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
 		body: JSON.stringify(order)
 	}).then((response) => {
 		//WIP
-		/*
+
 		window.location.replace('https://clientes.imaginacolombia.com');
 		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency
 		}
-			*/
+
 	})
 
 

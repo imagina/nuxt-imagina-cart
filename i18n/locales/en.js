@@ -73,8 +73,8 @@ export default {
     "frecuencies": {
       "monthly": "1 mes",
       "annually": "12 meses",
-      "biannually": "24 meses",
-      "triannually": "36 meses",
+      "biennially": "24 meses",
+      "triennially": "36 meses",
       "quarterly": "3 meses",
       "semiannually": "6 meses"
     },

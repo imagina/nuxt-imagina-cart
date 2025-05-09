@@ -24,18 +24,17 @@
                     tw-w-full
                 "
             >
-                
-                    
-                    <img
-                        v-if="true"
-                        class="
-                            tw-h-[400px]                             
-                            tw-rounded
-                            tw-w-full
-                        "
-                        alt="Category"
-                        src='https://picsum.photos/700/400?random'
-                    />
+            
+                <NuxtImg 
+                    v-if="category && bannerImage"
+                    :src="bannerImage" 
+                    class="
+                        tw-h-[400px]                             
+                        tw-rounded
+                        tw-w-full
+                    "
+                    :alt="category?.title"
+                />    
                 
                 <div class="tw-pt-5 tw-mt-2.5 " v-if="category">
                     <span class="tw-text-4xl tw-font-semibold">{{ category.title }}</span>
@@ -46,7 +45,8 @@
                             tw-w-full" />
                 <div>
                     <ProductsComponent
-                        :categoryId="category"
+                        v-if="category"
+                        :category="category"
                     />
                 </div>
             </div>
@@ -67,21 +67,17 @@ const { t } = useI18n({
 const category = useState('icommerce.products.selectedCategory', () => null)
 
 useSeoMeta({
-  title: () =>  category.value?.title ||  'Products Site',
-  ogTitle: () =>  category.value?.title ||  'Products Site',
-  description: () =>  category.value?.description ||  'Description',
-  ogDescription: () =>  category.value?.description ||  'Description',
+  title: () =>  category?.value?.title ||  'Products Site',
+  ogTitle: () =>  category?.value?.title ||  'Products Site',
+  description: () =>  category?.value?.description ||  'Description',
+  ogDescription: () =>  category?.value?.description ||  'Description',
   ogImage: 'https://example.com/image.png',
   twitterCard: 'summary_large_image',
 })
 
-
-
-
-
-const fallbackBanner = '.././assets/img/category.png'
-const bannerImage = computed( () =>  {
- return category.value?.mediaFiles?.bannerindeximage.id ? category.value?.mediaFiles?.bannerindeximage.url:  null 
+const bannerImage = computed( () =>  {    
+ if(!category.value) return false
+ return category.value?.mediaFiles?.bannerindeximage?.url || false
 })
 
 </script>

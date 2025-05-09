@@ -635,7 +635,7 @@ export const useAuthStore = defineStore('authStore', {
         })
     },
     async getUsdRates(){            
-      await baseService.get('https://nflow2.imaginacolombia.com/webhook/imagina/get/trm').then((response) => this.usdRates = response)
+      await $fetch('/api/icommerce/trm', { method: 'GET' }).then((response) => this.usdRates = response)
      }
   },  
 })
