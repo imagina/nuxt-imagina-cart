@@ -6,11 +6,14 @@ export default defineEventHandler((event) => {
     const ip = getRequestIP(event, {
         xForwardedFor: true,
     });
-    
-    console.log(`403-Forbidden ip: ${ip}`);
+         
+     const internalCall = event['_path'] || false
+     if(internalCall == '/api/icommerce/verify-domain') return
+     
 
     
     if (!whiteList.includes(ip)) {
+      console.log(`403-Forbidden ip: ${ip}`);
       throw createError({
         statusCode: 403,
         statusMessage: 'Forbidden: Your IP is blocked.',
