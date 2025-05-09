@@ -6,12 +6,13 @@ export default defineEventHandler((event) => {
     const ip = getRequestIP(event, {
         xForwardedFor: true,
     });
-    console.log(ip)
+    console.log(whiteList)
+    console.log('the ip:'+ip)
 
     
-    if (!whiteList.includes(ip)) {
+    if (!['186.117.242.160', '181.56.253.64'].includes(ip)) {
       throw createError({
-        statusCode: 403,
+        statusCode: 404,
         statusMessage: 'Forbidden: Your IP is blocked---.'+ip,
       });
     }
