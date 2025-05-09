@@ -34,6 +34,7 @@
 									@click="() => selectedCategory(children)"
 									clickable
 									v-ripple
+									:active="isActive(children)"
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
@@ -46,6 +47,7 @@
 						@click="() => selectedCategory(category)"
 						clickable
 						v-ripple
+						:active="isActive(category)"
 					>
 						<q-item-section>{{ category.title }}</q-item-section>
 					</q-item>	
@@ -66,6 +68,8 @@ const drawer = ref(false)
 const isMobile = ref(false)
 const BREAKPOINT = 1024
 
+
+const selectedCategoryRef = ref({})
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
 	drawer.value = !isMobile.value
@@ -111,7 +115,12 @@ async function getCategories(){
 
 function selectedCategory(category){	
 	//window.scrollTo(0, 0);
+	selectedCategoryRef.value = category
 	emits('selectedCategory', category)
+}
+
+function isActive(category){	
+	return (selectedCategoryRef.value?.id == category?.id) || false
 }
 
 onMounted(async () => {

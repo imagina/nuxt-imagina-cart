@@ -622,7 +622,7 @@ async function goToPayment() {
 	}
 
 	console.dir(order)
-	return
+	
 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
