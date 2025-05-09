@@ -101,7 +101,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 

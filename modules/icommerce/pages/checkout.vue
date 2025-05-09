@@ -298,7 +298,7 @@
 											<div>
 												<span
 													class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-													{{ productsHelper.valueWithSymbol(product.price, cartState.currency) }}
+													{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}
 												</span>
 											</div>
 										</div>
@@ -326,7 +326,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -370,7 +370,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
