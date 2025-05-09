@@ -185,15 +185,15 @@ const cartState = useStorage('shoppingCart', {
 	
 	const sortOptions = [
 		{
-			label: 'A-Z',
+			label: 'Z-A',
 			value: 'desc'
 		},
 		{
-			label: 'Z-A',
+			label: 'A-Z',
 			value: 'asc'
 		}]
 
-		const sort = ref([sortOptions[0].label])	
+		const sort = ref(sortOptions[1]	)	
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))

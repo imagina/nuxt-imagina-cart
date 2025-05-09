@@ -264,7 +264,7 @@
 											</span>
 										</div>
 										<!-- details -->
-										<div>
+										<div v-if="product?.domain?.domainName">
 											<span
 												class="
 													tw-leading-normal
@@ -276,9 +276,13 @@
 													tw-break-all
 												"
 											>
-											{{ product?.domain?.action?.label }}:
-											{{ product?.domain?.domainName }}
-										</span>
+												<span
+													v-if="product?.domain?.action?.label"
+												>
+													{{  product?.domain?.action?.label }} :
+												</span>
+												{{ product?.domain?.domainName }}
+											</span>
 
 										</div>
 
@@ -604,26 +608,27 @@ async function goToPayment() {
 
 		products: products.value.map((product) => {
 
-			console.log(product?.externalId || product.id)
+			delete product?.domain?.action?.placeholder
 
 
 			return {
-				id: product?.externalId || product.id,
+				id: product?.externalId || null,
 				//description: product.description,
-				name: product.name,				
-				url: product.url,
-				domain: product?.domain || 'no aply',
-				discount: product.discount,
-				frecuency: productsHelper.hasFrencuency(product) ? product.frecuency : null,
-				price: product.price,
+				name: product?.name || null,
+				productUrl: product?.url || null,
+				domain: product?.domain || null,
+				discount: product?.discount || null,
+				frecuency: productsHelper.hasFrencuency(product) ? product?.frecuency : null,
+				price: product?.price || null,
 				domain: product?.domain || null
 			}
 		})
 	}
 
 	console.dir(order)
-	
 
+		
+	return 
 	const res = await $fetch(postUrl, {
 		method: 'POST',
 		body: JSON.stringify(order)

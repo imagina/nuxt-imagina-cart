@@ -89,11 +89,11 @@ export default {
   "isite": {
     "cms": {
       "label": {
-        "of": 'of',
-        "entry": 'entry',
-        "show": 'show',
-        "showing": 'showing',
-        "pleaseAwait": "Please await..."
+        "of": 'De',
+        "entry": 'Entradas',
+        "show": 'Mostrar',
+        "showing": 'Mostrando',
+        "pleaseAwait": "Espera un momento..."
       }
     }, 
     "form": {
