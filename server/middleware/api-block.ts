@@ -8,11 +8,11 @@ export default defineEventHandler((event) => {
     });
     console.log(ip)
 
-  
+    
     if (!whiteList.includes(ip)) {
       throw createError({
         statusCode: 403,
-        statusMessage: 'Forbidden: Your IP is blocked---.',
+        statusMessage: 'Forbidden: Your IP is blocked---.'+ip,
       });
     }
 
