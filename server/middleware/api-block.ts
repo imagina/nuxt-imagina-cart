@@ -1,16 +1,20 @@
 export default defineEventHandler((event) => {
-    /*
-    const whiteList = ['123.123.123.123', '111.111.111.111'];
+    
+    const config = useRuntimeConfig()
+    const whiteList = config.public.ipWhiteList   
   
-    const ip = getRequestIP(event); // gets IP from request headers or socket
+    const ip = getRequestIP(event, {
+        xForwardedFor: true,
+    });
     console.log(ip)
+
   
     if (!whiteList.includes(ip)) {
       throw createError({
         statusCode: 403,
-        statusMessage: 'Forbidden: Your IP is blocked.',
+        statusMessage: 'Forbidden: Your IP is blocked---.',
       });
-    }*/
+    }
 
   });
   
