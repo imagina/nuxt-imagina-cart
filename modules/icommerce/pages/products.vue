@@ -59,6 +59,11 @@
 import ProductsComponent from '../components/products';
 import CategoriesComponent from '../components/categories';
 
+
+definePageMeta({
+  middleware: 'auth',
+})
+
 const { t } = useI18n({
   useScope: 'local'
 })

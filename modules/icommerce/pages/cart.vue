@@ -175,6 +175,11 @@ import productsHelper from '../helpers/products'
 import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
 
+
+definePageMeta({
+  middleware: 'auth',
+})
+
 const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'

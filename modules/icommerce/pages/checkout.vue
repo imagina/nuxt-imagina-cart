@@ -399,6 +399,10 @@ import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
 import apiRoutes from '../config/apiRoutes'
 
 
+definePageMeta({
+  middleware: 'auth',
+})
+
 
 
 const quasar = useQuasar()

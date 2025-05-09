@@ -18,5 +18,10 @@ function init(){
 	})
 }
 
+
+definePageMeta({
+  middleware: 'auth',
+})
+
 </script>
 
