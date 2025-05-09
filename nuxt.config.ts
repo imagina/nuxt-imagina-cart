@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     'nuxt-quasar-ui',
     '@nuxtjs/i18n',
     '@nuxt/image',
-    'nuxt-security'
+    //'nuxt-security'
   ],
   shadcn: {
     /**
@@ -60,12 +60,13 @@ export default defineNuxtConfig({
       ipWhiteList: process.env.IP_WHITELIST || null
     }
   },
-  
+  /*
   security: {
     rateLimiter: {
       whiteList: process.env.IP_WHITELIST
     }
   },
+  */
 
   
    
