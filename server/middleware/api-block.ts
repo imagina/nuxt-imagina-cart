@@ -7,13 +7,13 @@ export default defineEventHandler((event) => {
         xForwardedFor: true,
     });
     
-    console.log(`api-block${ip} , ${whiteList}`);
+    console.log(`403-Forbidden ip: ${ip}`);
 
     
     if (!whiteList.includes(ip)) {
       throw createError({
         statusCode: 404,
-        statusMessage: 'Forbidden: Your IP is blocked---.'+ip,
+        statusMessage: 'Forbidden: Your IP is blocked.',
       });
     }
    
