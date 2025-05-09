@@ -27,6 +27,7 @@
     "moment": "^2.30.1",
     "nuxt": "^3.13.0",
     "nuxt-quasar-ui": "^2.1.6",
+    "nuxt-security": "^2.2.0",
     "quasar": "^2.17.0",
     "radix-vue": "^1.9.5",
     "sass": "^1.79.1",

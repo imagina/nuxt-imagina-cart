@@ -14,8 +14,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vesp/nuxt-fontawesome',
     'nuxt-quasar-ui',
-    '@nuxtjs/i18n', 
-    '@nuxt/image'
+    '@nuxtjs/i18n',
+    '@nuxt/image',
+    'nuxt-security'
   ],
   shadcn: {
     /**
@@ -58,6 +59,17 @@ export default defineNuxtConfig({
       apiRoute: process.env.API_ROUTE || ''
     }
   },
+  
+  security: {
+    rateLimiter: {
+      whiteList: process.env.API_WHITELIST
+    }
+  },
+
+  
+   
+
+  /* qusasar */
   quasar: {
     plugins: [
       'AppFullscreen',
