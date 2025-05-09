@@ -530,7 +530,7 @@ const someIsDomainNameRequired = computed(() => cartState.value.products.some((p
 const domainActions =  [
 	{
 		label: 'Registrar un nuevo dominio',
-    placeholder: 'tumarca.com',
+    placeholder: '',
 		value: 'self-register'
 	},
 
@@ -724,22 +724,14 @@ function updateDomainPrice(product){
     } else {      
       let renewPrice = 0
       //aplly renew
-      if(frecuency > 12){ //renew cost every year
-        console.log('renew 1')
-        const years = ( frecuency / 12) - 1 //renovation per year - first year
-        console.log(years)
+      if(frecuency > 12){ //renew cost every year        
+        const years = ( frecuency / 12) - 1 //renovation per year - first year        
         if(domainPrice.domainrenew){
-          console.log('renew 2')
           renewPrice = domainPrice.domainrenew * years
         }
       }
       
       product.price = product.price + actionPrice + renewPrice
-      console.log({
-        price: product.price,
-        actionPrice,
-        renewPrice
-      })
     }
 
   }

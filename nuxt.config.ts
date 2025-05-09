@@ -56,13 +56,14 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiRoute: process.env.API_ROUTE || ''
+      apiRoute: process.env.API_ROUTE || '', 
+      ipWhiteList: process.env.IP_WHITELIST || null
     }
   },
   
   security: {
     rateLimiter: {
-      whiteList: process.env.API_WHITELIST
+      whiteList: process.env.IP_WHITELIST
     }
   },
 
