@@ -268,7 +268,7 @@
 						<div 
               v-if="product?.domainCheck.results.length"
               class="tw-grid tw-grid-cols-2 tw-gap-4"
-              :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-3' : 'md:tw-grid-cols-4'"
+              :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-2' : 'md:tw-grid-cols-3'"
             >
 							<!--extension cards -->
 							<template v-for="result in product?.domainCheck.results">

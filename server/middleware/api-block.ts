@@ -8,17 +8,21 @@ export default defineEventHandler((event) => {
     });
          
      const internalCall = event['_path'] || false
-     if(internalCall == '/api/icommerce/verify-domain') return
+     if(!internalCall == '/api/icommerce/verify-domain') {
+
+      if (!whiteList.includes(ip)) {
+        console.log(`403-Forbidden ip: ${ip}, route: ${internalCall}`);
+        throw createError({
+          statusCode: 403,
+          statusMessage: 'Forbidden: Your IP is blocked.',
+        });
+      }
+
+     }
      
 
     
-    if (!whiteList.includes(ip)) {
-      console.log(`403-Forbidden ip: ${ip}`);
-      throw createError({
-        statusCode: 403,
-        statusMessage: 'Forbidden: Your IP is blocked.',
-      });
-    }
+    
    
 
   });
