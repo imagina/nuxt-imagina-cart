@@ -12,7 +12,7 @@ export default defineEventHandler((event) => {
     
     if (!whiteList.includes(ip)) {
       throw createError({
-        statusCode: 404,
+        statusCode: 403,
         statusMessage: 'Forbidden: Your IP is blocked.',
       });
     }
