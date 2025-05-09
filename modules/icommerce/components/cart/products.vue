@@ -691,28 +691,28 @@ function updateDomainPrice(product){
 
   product.price = product.frecuency.value //update with frecuency
 
-  let domainPrice = {
-    domainrenew: 0,
-    domainregister: 0,
-    domaintransfer: 0
-  }
-
-  //register
-  if(product.domainCheck.action.value == domainActions[0].value){
-    if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext) //get price from selected domain
-  } else {
-    if(product.domainCheck.domainName){
-      if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName)) //get ext price  from transfer input 
-    }
-  }
-
-  //default configuracion price is $0
-  let actionPrice = 0
-  if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price 
-  if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price 
-  
-
   if(isDomainNameRequired(product)){
+
+    let domainPrice = {
+      domainrenew: 0,
+      domainregister: 0,
+      domaintransfer: 0
+    }
+
+    //register
+    if(product.domainCheck.action.value == domainActions[0].value){
+      if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext) //get price from selected domain
+    } else {
+      if(product.domainCheck.domainName){
+        if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName)) //get ext price  from transfer input 
+      }
+    }
+
+    //default configuracion price is $0
+    let actionPrice = 0
+    if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price 
+    if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price 
+  
     const frecuency = getFrecuencyFromLabel(product.frecuency.label)
     
     //free domain afther 12 months
