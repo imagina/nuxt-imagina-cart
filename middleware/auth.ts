@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    
+    /*
     const ip = useState('ip', () => null)
     const config = useRuntimeConfig()
     const whiteList = config.public.ipWhiteList   
@@ -12,5 +12,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           statusMessage: `Forbidden: Your IP ${ip.value} is blocked.`,
         });
       }
+        */
     
   })
