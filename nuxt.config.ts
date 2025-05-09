@@ -57,7 +57,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiRoute: process.env.API_ROUTE || '', 
-      ipWhiteList: process.env.IP_WHITELIST || null
+      ipWhiteList: process.env.IP_WHITELIST || null,
+      ipVerify: process.env.IP_VERIFY || null
     }
   },
   /*
