@@ -8,8 +8,8 @@ export default defineEventHandler((event) => {
         xForwardedFor: true,
     });
 
-    console.log(ipVerify)
-    if(ipVerify){
+    //console.log(config.public)
+    if(ipVerify == 1){
       if (!whiteList.includes(ip)) {
         console.log(`Forbidden: IP: ${ip}`);      
         throw createError({
