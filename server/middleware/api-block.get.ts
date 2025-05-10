@@ -1,5 +1,5 @@
 export default defineEventHandler((event) => {
-    
+    /*
     const config = useRuntimeConfig(event)
     const whiteList = config.public.ipWhiteList
     const ipVerify = config.public.ipVerify
@@ -17,7 +17,8 @@ export default defineEventHandler((event) => {
           statusMessage: 'Forbidden: Your IP is blocked.',
         });
       }  
-    }   
+    } 
+      */  
 
   });
   
