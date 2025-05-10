@@ -523,7 +523,7 @@ const emits = defineEmits(['subtotal'])
 const domainPricing = ref([])
 
 //captcha could not be validated with computed due call overflow
-const loadCaptcha =  cartState.value.products.some((product) => isDomainNameRequired(product)) || false 
+const loadCaptcha = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
 const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 

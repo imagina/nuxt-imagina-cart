@@ -474,8 +474,7 @@ onMounted(() => {
 async function init() {
 	await setFormData()
 	await getCountries().then( async () => {
-		
-		addRedirect()
+		if(cartState.value.products.length) addRedirect()
 	})
 
 }
