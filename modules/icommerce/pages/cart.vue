@@ -235,13 +235,13 @@ async function  checkUrlParams(){
 		promocode: query?.promocode || null
 	}
 	
-	if(options.action && options.pid){	
-		cartState.value.products = []	
+	if(options.action && options.pid){		
 		getProduct(options.pid, options)
 	}
 }
 
 async function getProduct(id, urlOptions){
+	cartState.value.products = []
 	const params = {			
 		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues', 
 		filter: {
@@ -276,7 +276,8 @@ async function getProduct(id, urlOptions){
 				cartState.value.products[index] = product;
 			}
 			*/
-			
+
+			cartState.value.products = []
 			cartState.value.products.push(product);
 		}
 
