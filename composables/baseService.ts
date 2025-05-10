@@ -70,7 +70,7 @@ const baseService = {
 				if (!criteria) return reject('Criteria is required')//Validate criteria
 
 
-				const api = `${baseService.config().apiRoute}${configName}/${criteria}`
+				const api = `${configName}/${criteria}`
 				$fetch('/api/base', {
 					method: 'GET',
 					params: {

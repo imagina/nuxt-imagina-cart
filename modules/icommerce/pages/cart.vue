@@ -235,7 +235,8 @@ async function  checkUrlParams(){
 		promocode: query?.promocode || null
 	}
 	
-	if(options.action && options.pid){		
+	if(options.action && options.pid){	
+		cartState.value.products = []	
 		getProduct(options.pid, options)
 	}
 }
@@ -275,8 +276,7 @@ async function getProduct(id, urlOptions){
 				cartState.value.products[index] = product;
 			}
 			*/
-
-			cartState.value.products = []
+			
 			cartState.value.products.push(product);
 		}
 
