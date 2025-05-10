@@ -916,7 +916,7 @@ function addDomainExtension(product, extension){
 
     let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions[0]
     cloned.frecuency = selectedFrecuency
-    console.log(selectedFrecuency)
+    //console.log(selectedFrecuency)
     cloned.price = selectedFrecuency.value
 
     cartState.value.products.push(cloned)
