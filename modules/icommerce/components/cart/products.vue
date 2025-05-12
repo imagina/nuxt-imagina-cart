@@ -21,7 +21,8 @@
               tw-p-0
               tw-leading-5
             ">
-          {{ product.name }}
+          {{ product.id }}{{ product.name}} {{  product.externalId }}
+          {{ calcDiscount(product) }}
           </span>
           <span
             v-if="product?.domain?.domainName"
@@ -831,6 +832,30 @@ function getFrecuencyFromLabel(label){
 function calcRenovationDate(label){
   const months = getFrecuencyFromLabel(label)
   return moment().add(months, 'months').format('DD/MM/YYYY')
+}
+
+function calcDiscount(product){  
+  if(!isDomainNameRequired(product)) return null
+  /* 
+    fc = frecuencia actual
+    valor fc * 100 / (valor mensual * numero de meses fc)
+  */
+
+  const months = getFrecuencyFromLabel(product.frecuency.label)
+  const monthlyPrice = getFrecuencyOptions(product).find(x => x.frecuency == 'Monthly') ||  getFrecuencyOptions(product)[0] 
+  
+  
+  //const precent = Math.round(product.frecuency.value * 100 / (monthlyPrice.value * months))  
+  const priceByMonths =  monthlyPrice.value * months
+  const value = priceByMonths - product.frecuency.value
+  const precent = Math.round((value / priceByMonths) * 100);
+  
+  product.discount  = {
+    precent: `${precent}%`,
+    priceByMonths,
+    value
+  }
+  return product.discount
 }
 
 function selectDomain(product, selectedDomain){
