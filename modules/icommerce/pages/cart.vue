@@ -30,6 +30,7 @@
 					<!-- products -->
 					<ProductsComponent
 						@subtotal="(val) => subtotal = val"
+						@discount="(val) => discount = val"
 					/>
 					
 				</div>
@@ -73,6 +74,7 @@
 				xl:tw-ml-8
 				"
 			>
+			discount => {{ discount }}
 				<div class="
 					card
 					tw-shadow-xl
@@ -99,9 +101,11 @@
 							tw-text-[20px]
 							tw-m-0
 							tw-p-0
-							tw-leading-5
+							tw-leading-5							
 						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
+							<span :class="discountPercent() ? 'tw-line-through tw-text-[#818181] tw-font-[400]' : '' ">
+								{{ productsHelper.priceWithSymbol(discount.totalNoDiscount, cartState.currency) }}
+							</span>							
 						</span>
 					</div>
 
@@ -109,18 +113,19 @@
 						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
 							{{ $t('icommerce.cart.subtotalNoTaxes') }}
 						</span>
-						<span class="tw-text-[18px] tw-font-[600]">
-							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
+						<span class="tw-text-[20px] tw-font-[600]">
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
 					<!-- discount -->
 					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
 						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							{{ $t('icommerce.cart.discount') }} 00%
+							{{ $t('icommerce.cart.discount') }} {{ discountPercent() }}%
+							
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(discount.total, cartState.currency) }}
 						</span>
 					</div>
 
@@ -203,6 +208,12 @@ const router = useRouter()
 const route = useRoute()    
 
 const subtotal = ref(0)
+const discount = ref({
+	percent: 0,
+    total: Number(0),
+    totalNoDiscount: Number(0)
+})
+
 
 const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
@@ -290,6 +301,13 @@ function redirectCheckout() {
 	router.push({
 		path: checkoutPath
 	})
+}
+
+function discountPercent(){
+	let diff = discount.value.totalNoDiscount - subtotal.value;
+	let percent = (diff / discount.value.totalNoDiscount) * 100
+	percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
+	return percent
 }
 
 </script>
