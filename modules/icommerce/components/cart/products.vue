@@ -424,7 +424,7 @@
         </div>
       </div>
       <DevOnly>
-        <div v-if="false">
+        <div v-if="true">
           <div>
             product.frecuency {{ product.frecuency }}
           </div>
@@ -763,12 +763,17 @@ function calcDiscount(){
   }  
   
   		cartState.value.products.forEach(product => {
-      if(product?.discount){
+      
+        if(product.category){
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product.discount.priceByMonths) + (product.price - product.frecuency.value)
+        } else {
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
+        }
+
         
-        discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product.discount.priceByMonths)
         ///discount.percent = discount.percent + product.discount.percent
         discount.total  = Number(discount.total) + Number(product.discount.value)
-      }			
+      
 		});
   emits('discount', discount)
     //return Number.isInteger(total) ? total : total.toFixed(2)
@@ -787,6 +792,13 @@ function isDomainNameFree(product) {
 
 async function checkDomain(product) {
 
+
+    product.domainCheck.exactMatch = false
+    product.domainCheck.results =  []
+    product.domainCheck.suggestions = []
+    product.domainCheck.modal = true
+	  product.domainCheck.loading = true
+
     await getCaptcha()
 
     const lang = locale.value == 'es' ? 'esp' : 'eng'
@@ -799,11 +811,7 @@ async function checkDomain(product) {
       ext: ''
     }
     
-    product.domainCheck.exactMatch = false
-    product.domainCheck.results =  []
-    product.domainCheck.suggestions = []
-    product.domainCheck.modal = true
-	  product.domainCheck.loading = true
+    
 
     await $fetch(apiRoutes.domainCheck, {
       method: 'POST',
@@ -976,6 +984,7 @@ function addDomainExtension(product, extension){
     cloned.frecuency = selectedFrecuency
     //console.log(selectedFrecuency)
     cloned.price = selectedFrecuency.value
+    getDiscount(cloned)
 
     cartState.value.products.push(cloned)
 
