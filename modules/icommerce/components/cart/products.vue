@@ -655,6 +655,7 @@ function configProducts() {
       }
 
       product.domain.action = product.domainCheck.action
+      getDiscount(product)
     }
   })
   calcSubtotal()
