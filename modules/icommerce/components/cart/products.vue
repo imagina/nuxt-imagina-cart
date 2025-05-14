@@ -21,8 +21,7 @@
               tw-p-0
               tw-leading-5
             ">
-          {{ product.id }} {{ product.name}}
-          {{ getDiscount(product) }}
+          {{ product.name}}
           </span>
           <span
             v-if="product?.domain?.domainName"
@@ -424,7 +423,7 @@
         </div>
       </div>
       <DevOnly>
-        <div v-if="true">
+        <div v-if="false">
           <div>
             product.frecuency {{ product.frecuency }}
           </div>
@@ -888,7 +887,6 @@ function getDiscount(product){
     const priceByMonths =  monthlyPrice.value * months
     const value = priceByMonths - product.frecuency.value    
     const percent = Math.round((value / priceByMonths) * 100);
-    console.log((value / priceByMonths) * 100)
     
     product.discount  = {
       percent,
@@ -982,7 +980,6 @@ function addDomainExtension(product, extension){
 
     let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions[0]
     cloned.frecuency = selectedFrecuency
-    //console.log(selectedFrecuency)
     cloned.price = selectedFrecuency.value
     getDiscount(cloned)
 

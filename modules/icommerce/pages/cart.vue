@@ -74,7 +74,6 @@
 				xl:tw-ml-8
 				"
 			>
-			discount => {{ discount }}
 				<div class="
 					card
 					tw-shadow-xl
