@@ -101,7 +101,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -175,6 +175,11 @@ import productsHelper from '../helpers/products'
 import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
 
+
+definePageMeta({
+  middleware: 'auth',
+})
+
 const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
@@ -236,6 +241,7 @@ async function  checkUrlParams(){
 }
 
 async function getProduct(id, urlOptions){
+	cartState.value.products = []
 	const params = {			
 		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues', 
 		filter: {

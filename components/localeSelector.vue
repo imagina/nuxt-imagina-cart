@@ -1,5 +1,6 @@
 <template>
 	<q-select 	
+		v-if="false"
 		v-model="localeRef"		
 		:options="locales" 
 		option-label="name"

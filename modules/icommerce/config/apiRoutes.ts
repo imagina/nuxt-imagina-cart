@@ -12,6 +12,10 @@ const apiRoutes = {
 	/* imagina customs */
 	domainCheck: `/api/icommerce/verify-domain`,
 	domainPricing: `/api/icommerce/domain-pricing`,
+
+	/*imagina clients*/
+	imaginaClients: 'https://clientes.imaginacolombia.com',
+	newCartOrder: 'https://clientes.imaginacolombia.com/newcartorder.php'
 }
 
 export default apiRoutes

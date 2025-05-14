@@ -1,19 +1,22 @@
 <template>
-	<div class="tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
+	<div class="md:tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
 		</div>		
-		<div class="tw-flex items-center tw-gap-4" v-if="products.length">
-			<div>
+		<div class="md:tw-flex items-center tw-gap-4" v-if="products.length">
+			<div class="tw-my-4 md:tw-m-0">
 				<CurrencySelector />
 			</div>
-			<span>{{ $t('icommerce.products.order') }}</span>
+			<span
+				
+			>
+			{{ $t('icommerce.products.order') }}
+			</span>
 			<q-select
 				borderless
 				v-model="sort"
-				:options="sortOptions"
-				
-				class="tw-w-[160px]"
+				:options="sortOptions"				
+				class="md:tw-w-[160px]"
 				@update:model-value="getProducts()"
 			/>
 		</div>

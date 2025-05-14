@@ -298,7 +298,7 @@
 											<div>
 												<span
 													class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-													{{ productsHelper.valueWithSymbol(product.price, cartState.currency) }}
+													{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}
 												</span>
 											</div>
 										</div>
@@ -326,7 +326,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -370,7 +370,7 @@
 							tw-p-0
 							tw-leading-5
 						">
-							{{ productsHelper.valueWithSymbol(subtotal, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
 						</span>
 					</div>
 
@@ -398,6 +398,10 @@ import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
 //import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
 
+
+definePageMeta({
+  middleware: 'auth',
+})
 
 
 
@@ -470,8 +474,7 @@ onMounted(() => {
 async function init() {
 	await setFormData()
 	await getCountries().then( async () => {
-		
-		addRedirect()
+		if(cartState.value.products.length) addRedirect()
 	})
 
 }
@@ -533,7 +536,7 @@ function setFormData(reset = false) {
 }
 
 function resetFormData(){
-	console.log('RESET')
+	//console.log('RESET')
 	form.value = {
 		coupon: null,
 		email: null,
@@ -586,7 +589,6 @@ function addRedirect() {
 
 
 async function goToPayment() {
-	const postUrl = 'https://clientes.imaginacolombia.com/newcartorder.php'
 
 	const validateRegister = await refForm.value.validate()
 	if (!validateRegister) return
@@ -625,17 +627,16 @@ async function goToPayment() {
 		})
 	}
 
-	console.dir(order)
+	//console.dir(order)
 
 		
-	return 
-	const res = await $fetch(postUrl, {
+	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
 		body: JSON.stringify(order)
 	}).then((response) => {
 		//WIP
-
-		window.location.replace('https://clientes.imaginacolombia.com');
+		const redirectUrl = response.redirectUrl || apiRoutes.imaginaClients
+		window.location.replace(redirectUrl);
 		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency

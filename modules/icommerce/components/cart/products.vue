@@ -268,7 +268,7 @@
 						<div 
               v-if="product?.domainCheck.results.length"
               class="tw-grid tw-grid-cols-2 tw-gap-4"
-              :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-3' : 'md:tw-grid-cols-4'"
+              :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-2' : 'md:tw-grid-cols-3'"
             >
 							<!--extension cards -->
 							<template v-for="result in product?.domainCheck.results">
@@ -523,14 +523,14 @@ const emits = defineEmits(['subtotal'])
 const domainPricing = ref([])
 
 //captcha could not be validated with computed due call overflow
-const loadCaptcha =  cartState.value.products.some((product) => isDomainNameRequired(product)) || false 
+const loadCaptcha = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
 const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
 const domainActions =  [
 	{
 		label: 'Registrar un nuevo dominio',
-    placeholder: 'tumarca.com',
+    placeholder: '',
 		value: 'self-register'
 	},
 
@@ -724,22 +724,14 @@ function updateDomainPrice(product){
     } else {      
       let renewPrice = 0
       //aplly renew
-      if(frecuency > 12){ //renew cost every year
-        console.log('renew 1')
-        const years = ( frecuency / 12) - 1 //renovation per year - first year
-        console.log(years)
+      if(frecuency > 12){ //renew cost every year        
+        const years = ( frecuency / 12) - 1 //renovation per year - first year        
         if(domainPrice.domainrenew){
-          console.log('renew 2')
           renewPrice = domainPrice.domainrenew * years
         }
       }
       
       product.price = product.price + actionPrice + renewPrice
-      console.log({
-        price: product.price,
-        actionPrice,
-        renewPrice
-      })
     }
 
   }
@@ -924,7 +916,7 @@ function addDomainExtension(product, extension){
 
     let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions[0]
     cloned.frecuency = selectedFrecuency
-    console.log(selectedFrecuency)
+    //console.log(selectedFrecuency)
     cloned.price = selectedFrecuency.value
 
     cartState.value.products.push(cloned)
