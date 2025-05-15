@@ -21,7 +21,7 @@
               tw-p-0
               tw-leading-5
             ">
-          {{ product.name }}
+          {{ product.name}}
           </span>
           <span
             v-if="product?.domain?.domainName"
@@ -405,7 +405,7 @@
           v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
           class="tw-text-xs tw-text-[#818181]"
           >
-          Renuevas a {{ productsHelper.valueWithSymbol(product.price, cartState.currency) }} el  {{ calcRenovationDate(product.frecuency.label) }} ¡Cancela cuando quieras!
+          {{ getRenewLabel(product) }}
         </span>
         <!-- free domain -->
         <div class="tw-mt-5" v-if="isDomainNameFree(product)">
@@ -439,20 +439,21 @@
       <div
         class="
           md:tw-flex
-          md:tw-items-start
+          md:tw-items-start          
           md:tw-gap-[30px]
           tw-text-[#444444]"
+          
       >
         <div
           class="
             md:tw-flex 
             md:tw-flex-col
             md:tw-pr-0
-            tw-pr-4
-            tw-mt-4
+            tw-pr-4            
             tw-flex
             tw-align-middle
             tw-justify-between
+            tw-py-1.5
             ">
           <span class="tw-text-[13px]">Tarifa de configuración:&nbsp;</span>
           <span class="tw-text-lg tw-font-semibold"> {{ productsHelper.priceWithSymbol(0, cartState.currency) }}</span>
@@ -518,7 +519,7 @@ const cartState = useStorage('shoppingCart', {
 	currency: 'COP'
 })
 
-const emits = defineEmits(['subtotal'])
+const emits = defineEmits(['subtotal', 'discount'])
 
 const domainPricing = ref([])
 
@@ -654,6 +655,7 @@ function configProducts() {
       }
 
       product.domain.action = product.domainCheck.action
+      getDiscount(product)
     }
   })
   calcSubtotal()
@@ -736,6 +738,9 @@ function updateDomainPrice(product){
 
   }
   }
+  getDiscount(product)
+
+  
   calcSubtotal()
 }
 
@@ -747,6 +752,31 @@ function extractDomainExtension(url) {
 function calcSubtotal() {
   const subtotal = productsHelper.getSubtotal(cartState.value.products, cartState.value.currency)
   emits('subtotal', subtotal)
+  calcDiscount()
+}
+
+function calcDiscount(){
+  const discount  = {
+    //percent: 0,
+    total: Number(0),
+    totalNoDiscount: Number(0)
+  }  
+  
+  		cartState.value.products.forEach(product => {
+      
+        if(product.category){
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product.discount.priceByMonths) + (product.price - product.frecuency.value)
+        } else {
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
+        }
+
+        
+        ///discount.percent = discount.percent + product.discount.percent
+        discount.total  = Number(discount.total) + Number(product.discount.value)
+      
+		});
+  emits('discount', discount)
+    //return Number.isInteger(total) ? total : total.toFixed(2)
 }
 
 function isDomainNameRequired(product) {
@@ -762,6 +792,13 @@ function isDomainNameFree(product) {
 
 async function checkDomain(product) {
 
+
+    product.domainCheck.exactMatch = false
+    product.domainCheck.results =  []
+    product.domainCheck.suggestions = []
+    product.domainCheck.modal = true
+	  product.domainCheck.loading = true
+
     await getCaptcha()
 
     const lang = locale.value == 'es' ? 'esp' : 'eng'
@@ -774,11 +811,7 @@ async function checkDomain(product) {
       ext: ''
     }
     
-    product.domainCheck.exactMatch = false
-    product.domainCheck.results =  []
-    product.domainCheck.suggestions = []
-    product.domainCheck.modal = true
-	  product.domainCheck.loading = true
+    
 
     await $fetch(apiRoutes.domainCheck, {
       method: 'POST',
@@ -831,6 +864,38 @@ function getFrecuencyFromLabel(label){
 function calcRenovationDate(label){
   const months = getFrecuencyFromLabel(label)
   return moment().add(months, 'months').format('DD/MM/YYYY')
+}
+
+function getDiscount(product){  
+
+  product.discount  = {
+    percent: 0,
+    priceByMonths: 0,
+    value: 0
+  }
+
+  if(isDomainNameRequired(product)){
+    /* 
+      fc = frecuencia actual
+      valor fc * 100 / (valor mensual * numero de meses fc)
+    */
+
+    const months = getFrecuencyFromLabel(product.frecuency.label)
+    const monthlyPrice = getFrecuencyOptions(product).find(x => x.frecuency == 'Monthly') ||  getFrecuencyOptions(product)[0] 
+    
+    
+    //const precent = Math.round(product.frecuency.value * 100 / (monthlyPrice.value * months))  
+    const priceByMonths =  monthlyPrice.value * months
+    const value = priceByMonths - product.frecuency.value    
+    const percent = Math.round((value / priceByMonths) * 100);
+    
+    product.discount  = {
+      percent,
+      priceByMonths,
+      value
+    }
+  }
+  return product.discount
 }
 
 function selectDomain(product, selectedDomain){
@@ -916,8 +981,8 @@ function addDomainExtension(product, extension){
 
     let selectedFrecuency = cloned.frecuencyOptions.find(x => x.frecuency == cloned.frecuency.frecuency) || cloned.frecuencyOptions[0]
     cloned.frecuency = selectedFrecuency
-    //console.log(selectedFrecuency)
     cloned.price = selectedFrecuency.value
+    getDiscount(cloned)
 
     cartState.value.products.push(cloned)
 
@@ -937,6 +1002,21 @@ async function getCaptcha() {
   } catch (error) {
     console.error(error)
   }
+}
+
+
+function getRenewLabel(product){
+  //if(!product?.domainCheck?.domainName) return getExtPrice('com').domainrenew
+  //return getExtPrice(extractDomainExtension(product.domainCheck.domainName))
+  const prices = {
+    '523': '139000',
+    '524': '189000',
+    '525': '239000'
+  }
+
+  const price = prices[product.id] || product.price
+  return `Renuevas a ${productsHelper.valueWithSymbol(price, cartState.currency)} el  ${ calcRenovationDate(product.frecuency.label) } ¡Cancela cuando quieras!`
+
 }
 
 </script>

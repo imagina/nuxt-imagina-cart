@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
     try {
       const baseUrl = process.env.N8N_BASE_URL ?? '';
       const appToken = process.env.N8N_APP_TOKEN ?? '';
@@ -19,5 +19,10 @@ export default defineEventHandler(async (event) => {
         statusMessage: error.statusMessage || 'Error fetching TRM from n8n',
       });
     }
-  });
+  }, {
+    maxAge: 360 * 6
+  } 
+  
+
+);
   
