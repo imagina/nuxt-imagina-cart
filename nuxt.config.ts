@@ -62,6 +62,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiRoute: process.env.API_ROUTE || '', 
+      clarityId: process.env.CLARITY_ID || '',
       ipWhiteList: process.env.IP_WHITELIST || null,
       ipVerify: process.env.IP_VERIFY || null
     }
