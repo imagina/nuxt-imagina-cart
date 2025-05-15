@@ -15,9 +15,11 @@ export default defineNuxtConfig({
     '@vesp/nuxt-fontawesome',
     'nuxt-quasar-ui',
     '@nuxtjs/i18n',
-    '@nuxt/image',
     //'nuxt-security'
+    '@nuxt/image',
+    '@sentry/nuxt/module'
   ],
+
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -29,6 +31,7 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui'
   },
+
   i18n: {
     defaultLocale: 'es',
     locales: [
@@ -51,9 +54,11 @@ export default defineNuxtConfig({
       strictMessage: false
     }    
   },
+
   pinia: {
     storesDirs: ['./stores/**', './modules/*/stores/**'],
   },
+
   runtimeConfig: {
     public: {
       apiRoute: process.env.API_ROUTE || '', 
@@ -61,6 +66,7 @@ export default defineNuxtConfig({
       ipVerify: process.env.IP_VERIFY || null
     }
   },
+
   /*
   security: {
     rateLimiter: {
@@ -69,8 +75,8 @@ export default defineNuxtConfig({
   },
   */
 
-  
-   
+
+
 
   /* qusasar */
   quasar: {
@@ -91,5 +97,18 @@ export default defineNuxtConfig({
       fontIcons: ['material-icons', 'material-icons-outlined', 'fontawesome-v6'],
       animations: 'all',
     },
+  },
+
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: 'imagina-colombia',
+      project: 'imagina-cart'
+    },
+
+    autoInjectServerSentry: 'top-level-import'
+  },
+
+  sourcemap: {
+    client: 'hidden'
   }
 })
