@@ -654,10 +654,11 @@ function configProducts() {
 				modal: false,
       }
 
-      product.domain.action = product.domainCheck.action
-      getDiscount(product)
+      product.domain.action = product.domainCheck.action      
     }
+    getDiscount(product)
   })
+  
   calcSubtotal()
 }
 
@@ -874,7 +875,7 @@ function getDiscount(product){
     value: 0
   }
 
-  if(isDomainNameRequired(product)){
+ // if(isDomainNameRequired(product)){
     /* 
       fc = frecuencia actual
       valor fc * 100 / (valor mensual * numero de meses fc)
@@ -894,7 +895,7 @@ function getDiscount(product){
       priceByMonths,
       value
     }
-  }
+  //}
   return product.discount
 }
 
