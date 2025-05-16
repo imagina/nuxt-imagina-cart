@@ -279,9 +279,8 @@
 												<span
 													v-if="product?.domain?.action?.label"
 												>
-													{{  product?.domain?.action?.label }} :
+													{{  product?.domain?.action?.label }} : <br> {{ product?.domain?.domainName }}
 												</span>
-												{{ product?.domain?.domainName }}
 											</span>
 
 										</div>
@@ -334,10 +333,10 @@
 					<!-- discount -->
 					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
 						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							{{ $t('icommerce.cart.discount')}} 00%
+							{{ $t('icommerce.cart.discount')}} {{ calcDiscount().percent }}%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.valueWithSymbol(0, cartState.currency) }}
+							{{ productsHelper.valueWithSymbol(calcDiscount().total, cartState.currency) }}
 						</span>
 					</div>
 
@@ -481,10 +480,10 @@ async function init() {
 
 async function getCountries(){
 	countries.value = []
-	provinces.value = []	
+	provinces.value = []
 	return await baseService.index(apiRoutes.countries).then(response => {
 			if(response?.data) countries.value = response.data.filter(x => x.status).sort((a, b) => a.name.localeCompare(b.name));
-			
+
 			if(!form.value.country) form.value.country = countries.value.find(x => x.id == 48) || countries.value[0] //Colombia
 
 			getProvinces()
@@ -493,7 +492,7 @@ async function getCountries(){
 
 async function getProvinces(){
 	provinces.value = []
-	cities.value = []	
+	cities.value = []
 	return await baseService.index(apiRoutes.provinces, {
 		filter: {
 			country: form.value.country.id
@@ -535,6 +534,7 @@ function setFormData(reset = false) {
 
 }
 
+
 function resetFormData(){
 	//console.log('RESET')
 	form.value = {
@@ -556,6 +556,31 @@ function getField(name) {
 	const field = user.value.fields.find((field) => field.name == name)
 	if (field && field?.value) return field.value
 	return null
+}
+
+function calcDiscount(){
+  const discount  = {
+    //percent: 0,
+    total: Number(0),
+    totalNoDiscount: Number(0)
+  }
+
+  		cartState.value.products.forEach(product => {
+
+        if(product.category){
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product.discount.priceByMonths) + (product.price - product.frecuency.value)
+        } else {
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
+        }
+        discount.total  = Number(discount.total) + Number(product.discount.value)
+
+		});
+		/* calc percent */
+		let diff = discount.totalNoDiscount - subtotal.value;
+		let percent = (diff / discount.totalNoDiscount) * 100
+		discount.percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
+	return discount
+
 }
 
 function redirectToCart() {
@@ -629,7 +654,7 @@ async function goToPayment() {
 
 	//console.dir(order)
 
-		
+
 	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
 		body: JSON.stringify(order)
@@ -643,11 +668,6 @@ async function goToPayment() {
 		}
 
 	})
-
-
-
-
-
 }
 
 </script>
