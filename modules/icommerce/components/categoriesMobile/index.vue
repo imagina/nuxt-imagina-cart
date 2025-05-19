@@ -1,11 +1,13 @@
-<template>
-	<div v-if="drawer" >
-		<div class="lg:tw-pr-[20px]">
-			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px]">
-				CATEGORÍAS
-			</h1>
+<template>	
+		<div>
+			<hr/>
+			<q-expansion-item
+				label="Categorías"
+				expand-icon-class="tw-p-2"
+			>
+			
 			<q-list
-			class="tw-h-full tw-overflow-y-auto"
+				class="tw-h-full tw-overflow-y-auto tw-px-4"
 			>
 				<template v-for="category in categories">
 
@@ -40,13 +42,15 @@
 						clickable
 						v-ripple
 						:active="isActive(category)"
+						class="expansion-item"
 					>
 						<q-item-section>{{ category.title }}</q-item-section>
 					</q-item>	
 				</template>				
 			</q-list>
+			</q-expansion-item>
 		</div>
-	</div>
+	
 </template>
 <script setup>
 
@@ -54,13 +58,14 @@ import apiRoutes from '../../config/apiRoutes'
 import constants from '../../config/constants'
 
 const emits = defineEmits(['selectedCategory'])
+const selectedCategoryRef = useState('icommerce.products.selectedCategory', () => null)
 
 const categories = ref([])
 const drawer = ref(false)
 const isMobile = ref(false)
 const BREAKPOINT = 1024
 
-const selectedCategoryRef = useState('icommerce.products.selectedCategory', () => null)
+
 //const selectedCategoryRef = ref({})
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
@@ -107,7 +112,12 @@ async function getCategories(){
 
 function selectedCategory(category){	
 	//window.scrollTo(0, 0);
-	selectedCategoryRef.value = category
+	const router = useRouter()
+	selectedCategoryRef.value = category	
+	router.push({ path: getPath('icommerce.products') })
+
+
+
 	emits('selectedCategory', category)
 }
 
