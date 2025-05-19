@@ -36,6 +36,7 @@
                 tw-py-1
                 tw-px-2
                 md:tw-ml-2
+                tw-w-full
             ">
             <span>
               {{  product?.domain?.domainName }}
@@ -51,8 +52,22 @@
 					@click="removeProduct(product)"
 			/>
     </div>
+    <div class="tw-flex tw-justify-between tw-items-center tw-pb-2" v-if="product?.category">
+      <div class="tw-py-1">
+          <span class="              
+              tw-text-[18px]
+              tw-text-[#818181]              
+            ">
+          {{ product.category.title}}
+          </span>
+      </div>
+    </div>
+
+
+
+
     <!-- domain check-->
-    <div v-if="isDomainNameRequired(product) && product?.domain" class="tw-py-6">
+    <div v-if="isDomainNameRequired(product) && product?.domain" class="tw-py-2">
 
       <div class="md:tw-flex tw-justify-center tw-gap-4">
 

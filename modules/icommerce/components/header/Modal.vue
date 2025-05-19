@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { defineProps } from 'vue'
 import completedLogo from "../../assets/img/logo-imagina-completo-white.png";
+import CategoriesMobileComponent from '../../components/categoriesMobile';
 
 defineProps( {
   children: {
@@ -30,7 +31,7 @@ const showModal = ref( false );
               position="left"
               transition-duration="100"
               class="modal-dialog !tw-h-screen tw-max-w-lg"    >
-      <q-card class="q-pa-md !tw-overflow-x-hidden tw-w-full !tw-h-screen !tw-max-h-none tw-p-0" >
+      <q-card class="q-pa-md !tw-overflow-x-hidden tw-w-full !tw-h-screen !tw-max-h-none tw-p-0" >        
 
         <q-card-section class="tw-mb-8 tw-border-b tw-border-b-gray-300 tw-pt-2 !px-0 tw-bg-secondary tw-flex tw-justify-between tw-items-center">
 
@@ -62,6 +63,10 @@ const showModal = ref( false );
           <!--  Render Children   -->
           <slot></slot>
 
+        </q-card-section>
+
+        <q-card-section>
+          <CategoriesMobileComponent/>
         </q-card-section>
 
       </q-card>

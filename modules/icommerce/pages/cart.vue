@@ -118,7 +118,7 @@
 					</div>
 
 					<!-- discount -->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
+					<div class="tw-flex tw-justify-between tw-items-center tw-my-2" v-if="showDiscount">
 						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
 							{{ $t('icommerce.cart.discount') }} {{ discountPercent() }}%
 							
@@ -223,6 +223,7 @@ const disableContinue = computed(() => cartState.value.products.every((product) 
 }))
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
+const showDiscount = computed(() => discountPercent() > 1)
 
 const checkoutPath = getPath('icommerce.checkout')
 
@@ -303,8 +304,9 @@ function redirectCheckout() {
 }
 
 function discountPercent(){
-	let diff = discount.value.totalNoDiscount - subtotal.value;
-	let percent = (diff / discount.value.totalNoDiscount) * 100
+	let percent = 0
+	let diff = (discount.value.totalNoDiscount - subtotal.value) || 0;
+	percent = ((diff / discount.value.totalNoDiscount) * 100) || 0
 	percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
 	return percent
 }
