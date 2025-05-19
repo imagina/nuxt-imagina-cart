@@ -96,6 +96,7 @@
 					</div>
 					<div>
 						<span class="tw-text-[24px] tw-font-[700]">{{ productsHelper.getPriceWithSymbol(product, cartState.currency) }}</span>
+						<span class="tw-text-[16px] tw-font-[500]"> /  1 mes</span>
 					</div>
 				</div>
 				<!-- action buttons -->
@@ -127,7 +128,6 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							:disable="disableButton(index)"
 							@click="addTocart(index)"
 						/>
 					</div>

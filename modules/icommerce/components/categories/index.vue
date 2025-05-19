@@ -1,13 +1,5 @@
 <template>
 	<div class="lg:tw-pr-[20px]">
-		<q-btn
-			flat
-			round
-			dense
-			icon="menu"
-			@click="drawer = !drawer"
-			v-show="isMobile"
-		/>
 		<div v-show="drawer">
 			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px]">
 				CATEGORÍAS
