@@ -2,38 +2,38 @@
 	<div class="md:tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
-		</div>		
+		</div>
 		<div class="md:tw-flex items-center tw-gap-4" v-if="products.length">
 			<div class="tw-my-4 md:tw-m-0">
 				<CurrencySelector />
 			</div>
 			<span
-				
+
 			>
 			{{ $t('icommerce.products.order') }}
 			</span>
 			<q-select
 				borderless
 				v-model="sort"
-				:options="sortOptions"				
+				:options="sortOptions"
 				class="md:tw-w-[160px]"
 				@update:model-value="getProducts()"
 			/>
 		</div>
 	</div>
 	<div
-		v-if="loading" 
-		class="tw-w-full tw-h-[400px]" 
+		v-if="loading"
+		class="tw-w-full tw-h-[400px]"
 		style="position: relative;"
 	>
 		<q-inner-loading
 		:showing="loading"
-		color="primary"      
+		color="primary"
 		/>
-	</div>	
-	
-		<!-- products list -->		
-  	<div 
+	</div>
+
+		<!-- products list -->
+  	<div
 			v-if="products.length && !loading"
 			class="
 				tw-grid
@@ -49,7 +49,7 @@
 					product
 					tw-p-4
 					tw-rounded-2xl
-					tw-w-full					
+					tw-w-full
 					tw-min-w-[200px]
 					lg:tw-max-w-[390px]
 				"
@@ -63,18 +63,19 @@
 				</div>
 				<!-- description -->
 				<div
-					v-if="product?.description && getStorageDescription(product?.description)" 
+					v-if="product?.description && getStorageDescription(product?.description)"
 					class="tw-flex tw-justify-between tw-align-middle"
 				>
 					<div>
 						<span class="tw-text-[40px] tw-font-semibold">{{ getStorageDescription(product.description) }}</span>
 					</div>
-					<div
-						v-if="false"
-					>
+					<div v-if="isCPanel(product)">
 						<img src="../../assets/img/cP_white.png" />
 					</div>
-				</div>				
+					<div v-else >
+						<img src="../../assets\img\red-logo-imagina.png" />
+					</div>
+				</div>
 				<div class="tw-h-[140px]">
 					<div
 						class="
@@ -135,7 +136,7 @@
 		</div>
 		<!--pagination-->
         <master-pagination
-			v-if="paginationModel.rowsNumber"		  
+			v-if="paginationModel.rowsNumber"
 			v-model="paginationModel"
 			:pagesNumber="pagination.lastPage"
 			:isFirstPage="paginationModel.page == 1"
@@ -143,8 +144,8 @@
 			@update:modelValue="getProducts()"
 			class="tw-py-8"
         />
-	
-		
+
+
   </template>
   <script setup>
 
@@ -185,7 +186,7 @@ const cartState = useStorage('shoppingCart', {
 })
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
-	
+
 	const sortOptions = [
 		{
 			label: 'Z-A',
@@ -196,7 +197,7 @@ const cartState = useStorage('shoppingCart', {
 			value: 'asc'
 		}]
 
-		const sort = ref(sortOptions[1]	)	
+		const sort = ref(sortOptions[1]	)
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))
@@ -220,7 +221,7 @@ const cartState = useStorage('shoppingCart', {
 	})
 
 	async function init(){
-		///sort.value = sortOptions[0].value 		
+		///sort.value = sortOptions[0].value
 	}
 
 	async function getProducts(){
@@ -233,24 +234,24 @@ const cartState = useStorage('shoppingCart', {
 
 		if(props.category){
 			params.filter = {
-				categoryId: props.category?.id || constants.cagtegories.mainCategoryId 
+				categoryId: props.category?.id || constants.cagtegories.mainCategoryId
 			}
 		}
 		loading.value = true
 		/* reset pagination */
 		pagination.value.lastPage = 0
 		paginationModel.value.rowsNumber = 0
-		
+
 		await baseService.index(apiRoutes.products, params).then(response => {
 			products.value = response?.data || []
 			if(response.meta?.page){
-				pagination.value.lastPage = response.meta.page.lastPage || pagination.value.lastPage				
+				pagination.value.lastPage = response.meta.page.lastPage || pagination.value.lastPage
 				paginationModel.value.rowsNumber = response.meta.page.total
 			}
-			
-			 
 
-			
+
+
+
 
 			//add quantity
 			products.value.forEach((product) => {
@@ -270,13 +271,13 @@ const cartState = useStorage('shoppingCart', {
 			const options = productsHelper.getFrecuencyOptions(product).map(element => {
 				element.frecuency = element.label
 				element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
-				return element      
+				return element
        		});
-				
+
 
 			if(options.length) {
 				product.frecuency = options[0]
-			}      
+			}
     	}
 
 		if(settings.justOneProdcut){
@@ -296,7 +297,7 @@ const cartState = useStorage('shoppingCart', {
 			message: 'Producto agregado al carrito',
 			type: 'positive',
 		})
-	}	
+	}
 
 
 	function getStorageDescription(description){
@@ -324,7 +325,15 @@ const cartState = useStorage('shoppingCart', {
 
 		return null;
 	}
-	
+
+	function isCPanel(product){
+		const str1 = product?.category?.title || ''
+		const str2 = product?.description || ''
+		const word = 'cpanel'
+		const regex = new RegExp(`\\b${word}\\b`, 'i'); // 'i' makes it case-insensitive
+		return regex.test(str1) || regex.test(str2)
+	}
+
 	/* backup
 	function extractValueByLabel(html, label) {
 		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
@@ -338,7 +347,7 @@ const cartState = useStorage('shoppingCart', {
 	}
 	*/
 
-	
+
 	onMounted(async () => {
 		init();
 	})
