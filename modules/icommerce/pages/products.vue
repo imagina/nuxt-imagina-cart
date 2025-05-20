@@ -3,21 +3,18 @@
     <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8 tw-w-full">
         <div 
             class="
-                tw-flex 
-                tw-gap-3.5 
+                tw-flex
                 md:tw-gap-[30px]                 
                 tw-w-full
                 tw-max-w-[1680px] 
                 tw-px-3.5
             "
         >
-            <div
-                class="md:tw-max-w-[500px] "
-            >
-                <CategoriesComponent 
-                    @selectedCategory="(value) => category = value"
-                />
-            </div>
+            
+            <CategoriesComponent 
+                @selectedCategory="(value) => category = value"
+            />
+            
             <div 
                 class="
                     tw-w-lg[1024px]
@@ -29,9 +26,12 @@
                     v-if="category && bannerImage"
                     :src="bannerImage" 
                     class="
-                        tw-h-[400px]                             
-                        tw-rounded
-                        tw-w-full
+                        tw-h-[180px]                        
+                        tw-rounded-2xl
+                        tw-w-[100%]
+                        tw-h-[182px]
+                        md:tw-h-[400px]
+
                     "
                     :alt="category?.title"
                 />    

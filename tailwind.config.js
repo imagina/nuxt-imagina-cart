@@ -37,7 +37,7 @@ module.exports = {
         },
       },
       colors :{
-        "primary": "#181818",
+        "primary": "#DC3545",
         "secondary" : "#DC3545"
       },
     },
