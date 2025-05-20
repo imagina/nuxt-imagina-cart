@@ -106,7 +106,7 @@ async function getCategories(){
 		})
 
 		categories.value = parents		
-		emits('selectedCategory', categories.value[0])
+		//emits('selectedCategory', categories.value[0])
 	})
 }
 

@@ -12,7 +12,7 @@
             "
         >
             <div
-                class="tw-max-w-[500px] "
+                class="md:tw-max-w-[500px] "
             >
                 <CategoriesComponent 
                     @selectedCategory="(value) => category = value"
@@ -37,7 +37,7 @@
                 />    
                 
                 <div class="tw-pt-5 tw-mt-2.5 " v-if="category">
-                    <span class="tw-text-4xl tw-font-semibold">{{ category.title }}</span>
+                    <span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
                     <p v-html="category.description" class="tw-text-base tw-mt-3.5">                        
                     </p>
                 </div>

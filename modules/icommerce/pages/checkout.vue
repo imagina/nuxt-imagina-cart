@@ -559,16 +559,17 @@ function getField(name) {
 }
 
 function calcDiscount(){
-  const discount  = {
-    //percent: 0,
-    total: Number(0),
-    totalNoDiscount: Number(0)
-  }
+
+	const discount  = {
+		//percent: 0,
+		total: Number(0),
+		totalNoDiscount: Number(0)
+	}
 
   		cartState.value.products.forEach(product => {
 
         if(product.category){
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product.discount.priceByMonths) + (product.price - product.frecuency.value)
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product?.discount?.priceByMonths || 0) + (product.price - product.frecuency.value)
         } else {
           discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
         }
