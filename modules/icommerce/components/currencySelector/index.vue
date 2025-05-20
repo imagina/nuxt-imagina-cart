@@ -2,7 +2,7 @@
 	<q-select
         v-if="showCurrencies()"
         :label="$t('icommerce.cart.currency')"        
-        class="tw-w-[240px] tw-bg-white"
+        class="md:tw-w-[240px] tw-bg-white"
         v-model="cartState.currency"
         :options="currencies"
         emit-value

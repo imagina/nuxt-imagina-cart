@@ -1,8 +1,10 @@
 <template>
-	<div v-if="drawer" >
+	<div v-if="drawer" 
+		class="md:tw-max-w-[500px]"
+	>
 		<div class="lg:tw-pr-[20px]">
-			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px]">
-				CATEGORÍAS
+			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px] tw-text-primary">
+				Categorías
 			</h1>
 			<q-list
 			class="tw-h-full tw-overflow-y-auto"

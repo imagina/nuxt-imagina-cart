@@ -640,7 +640,7 @@ async function goToPayment() {
 
 
 			return {
-				id: product?.externalId || null,
+				id: product?.externalId || product?.domain?.ext || null,
 				//description: product.description,
 				name: product?.name || null,
 				productUrl: product?.url || null,
@@ -652,8 +652,6 @@ async function goToPayment() {
 			}
 		})
 	}
-
-	//console.dir(order)
 
 
 	const res = await $fetch(apiRoutes.newCartOrder, {
