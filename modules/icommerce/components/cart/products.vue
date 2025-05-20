@@ -27,7 +27,7 @@
 
 
             ">
-         {{ product.externalId}} {{ product.name}} {{ product.id }}
+         {{ product.name}}
           </span>
           <span
             v-if="product?.domain?.domainName"
