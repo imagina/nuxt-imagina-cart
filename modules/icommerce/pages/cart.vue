@@ -19,7 +19,16 @@
 					<!--title -->
 					<div class="tw-flex tw-justify-between tw-items-center">
 						<div>
-							<h1 class="tw-text-[35px] tw-font-[700]">{{ $t('icommerce.cart.yourCart') }}</h1>
+							<h1 
+								class="
+									tw-text-[20px] 
+									sm:tw-text-[24px] 
+									md:tw-text-[35px] 
+									tw-font-[700]
+								"
+							>
+								{{ $t('icommerce.cart.yourCart') }}
+							</h1>
 						</div>
 						
 						<!-- currency -->

@@ -15,13 +15,19 @@
     <div class="tw-flex tw-justify-between tw-items-center tw-py-6">
       <div class="">
           <span class="
-              tw-font-semibold
-              tw-text-[22px]
+              tw-text-[18px]
+              sm:tw-text-[20px]
+              md:tw-text-[22px]
+              tw-font-[600]
               tw-m-0
               tw-p-0
               tw-leading-5
+              tw-break-all
+              md:tw-break-normal
+
+
             ">
-          {{ product.name}}
+         {{ product.externalId}} {{ product.name}} {{ product.id }}
           </span>
           <span
             v-if="product?.domain?.domainName"
@@ -35,10 +41,10 @@
                 tw-text-[22px]
                 tw-py-1
                 tw-px-2
-                md:tw-ml-2
+                sm:tw-ml-2
                 tw-w-full
             ">
-            <span>
+            <span style="word-break: break-word;">
               {{  product?.domain?.domainName }}
             </span>
           </span>
@@ -54,9 +60,9 @@
     </div>
     <div class="tw-flex tw-justify-between tw-items-center tw-pb-2" v-if="product?.category">
       <div class="tw-py-1">
-          <span class="              
+          <span class="
               tw-text-[18px]
-              tw-text-[#818181]              
+              tw-text-[#818181]
             ">
           {{ product.category.title}}
           </span>
@@ -106,7 +112,7 @@
                 (val) => isSupportedDomain(product, val)
               ]"
               @update:model-value="(val) => {
-                product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '')                
+                product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '')
                 updateDomainPrice(product)
               }"
             >
@@ -279,8 +285,8 @@
 						<div class="tw-mb-5" v-if="product?.domainCheck.results.length != 0">
           		<span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
           		<p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-        		</div>            
-						<div 
+        		</div>
+						<div
               v-if="product?.domainCheck.results.length"
               class="tw-grid tw-grid-cols-2 tw-gap-4"
               :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-2' : 'md:tw-grid-cols-3'"
@@ -299,8 +305,8 @@
 									tw-p-4
                   my-hover-card"
 								>
-                
-        
+
+
 								<div>
 										<span class="tw-text-[20px] tw-font-[600]">
 												.{{ result.ext }}
@@ -380,7 +386,7 @@
 														/>
 													</div>
 												</div>
-											</div>										
+											</div>
                       </div>
 									</template>
 								<!--</q-scroll-area>-->
@@ -454,17 +460,17 @@
       <div
         class="
           md:tw-flex
-          md:tw-items-start          
+          md:tw-items-start
           md:tw-gap-[30px]
           tw-text-[#444444]"
-          
+
       >
         <div
           class="
-            md:tw-flex 
+            md:tw-flex
             md:tw-flex-col
             md:tw-pr-0
-            tw-pr-4            
+            tw-pr-4
             tw-flex
             tw-align-middle
             tw-justify-between
@@ -490,15 +496,15 @@
               tw-border-[#00000033]
               ">
             <span class="tw-text-lg tw-font-semibold">{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}</span>
-          </div>          
+          </div>
         </div>
       </div>
-    </div>    
+    </div>
   </div>
 
-  <!-- captcha -->  
+  <!-- captcha -->
   <ClientOnly>
-    <div 
+    <div
       v-if="loadCaptcha"
       class="tw-mt-4"
     >
@@ -507,13 +513,13 @@
       />
     </div>
   </ClientOnly>
-  
+
 </template>
 
 
 <script lang="ts" setup>
 
-import productsHelper from '../../helpers/products.ts';
+import productsHelper from '../../helpers/products';
 import apiRoutes from '../../config/apiRoutes.js';
 import constants from '../../config/constants.js';
 import { useStorage, useCloned  } from '@vueuse/core'
@@ -587,7 +593,7 @@ async function init() {
     await getDomainPricing().then(() => {
       configProducts()
     })
-    
+
   }
 }
 
@@ -669,11 +675,11 @@ function configProducts() {
 				modal: false,
       }
 
-      product.domain.action = product.domainCheck.action      
+      product.domain.action = product.domainCheck.action
     }
     getDiscount(product)
   })
-  
+
   calcSubtotal()
 }
 
@@ -723,32 +729,32 @@ function updateDomainPrice(product){
     if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext) //get price from selected domain
   } else {
     if(product.domainCheck.domainName){
-      if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName)) //get ext price  from transfer input 
+      if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName)) //get ext price  from transfer input
     }
   }
 
   //default configuracion price is $0
   let actionPrice = 0
-  if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price 
-  if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price 
-  
+  if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price
+  if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price
+
 
   if(isDomainNameRequired(product)){
     const frecuency = getFrecuencyFromLabel(product.frecuency.label)
-    
+
     //free domain afther 12 months
     if(frecuency > 12 && isDomainNameFree(product)){
       product.price = product.frecuency.value
-    } else {      
+    } else {
       let renewPrice = 0
       //aplly renew
-      if(frecuency > 12){ //renew cost every year        
-        const years = ( frecuency / 12) - 1 //renovation per year - first year        
+      if(frecuency > 12){ //renew cost every year
+        const years = ( frecuency / 12) - 1 //renovation per year - first year
         if(domainPrice.domainrenew){
           renewPrice = domainPrice.domainrenew * years
         }
       }
-      
+
       product.price = product.price + actionPrice + renewPrice
     }
 
@@ -756,7 +762,7 @@ function updateDomainPrice(product){
   }
   getDiscount(product)
 
-  
+
   calcSubtotal()
 }
 
@@ -776,20 +782,20 @@ function calcDiscount(){
     //percent: 0,
     total: Number(0),
     totalNoDiscount: Number(0)
-  }  
-  
+  }
+
   		cartState.value.products.forEach(product => {
-      
+
         if(product.category){
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product.discount.priceByMonths) + (product.price - product.frecuency.value)
+          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product?.discount?.priceByMonths || 0) + (product.price - product.frecuency.value)
         } else {
           discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
         }
 
-        
+
         ///discount.percent = discount.percent + product.discount.percent
         discount.total  = Number(discount.total) + Number(product.discount.value)
-      
+
 		});
   emits('discount', discount)
     //return Number.isInteger(total) ? total : total.toFixed(2)
@@ -826,8 +832,8 @@ async function checkDomain(product) {
       lang,
       ext: ''
     }
-    
-    
+
+
 
     await $fetch(apiRoutes.domainCheck, {
       method: 'POST',
@@ -882,7 +888,7 @@ function calcRenovationDate(label){
   return moment().add(months, 'months').format('DD/MM/YYYY')
 }
 
-function getDiscount(product){  
+function getDiscount(product){
 
   product.discount  = {
     percent: 0,
@@ -891,20 +897,20 @@ function getDiscount(product){
   }
 
  // if(isDomainNameRequired(product)){
-    /* 
+    /*
       fc = frecuencia actual
       valor fc * 100 / (valor mensual * numero de meses fc)
     */
 
     const months = getFrecuencyFromLabel(product.frecuency.label)
-    const monthlyPrice = getFrecuencyOptions(product).find(x => x.frecuency == 'Monthly') ||  getFrecuencyOptions(product)[0] 
-    
-    
-    //const precent = Math.round(product.frecuency.value * 100 / (monthlyPrice.value * months))  
+    const monthlyPrice = getFrecuencyOptions(product).find(x => x.frecuency == 'Monthly') ||  getFrecuencyOptions(product)[0]
+
+
+    //const precent = Math.round(product.frecuency.value * 100 / (monthlyPrice.value * months))
     const priceByMonths =  monthlyPrice.value * months
-    const value = priceByMonths - product.frecuency.value    
+    const value = priceByMonths - product.frecuency.value
     const percent = Math.round((value / priceByMonths) * 100);
-    
+
     product.discount  = {
       percent,
       priceByMonths,
@@ -917,7 +923,7 @@ function getDiscount(product){
 function selectDomain(product, selectedDomain){
     product.domain.domainName = selectedDomain.name
     product.domain.ext = selectedDomain.ext
-    
+
     const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0
 
     if(domainPrice) product.domain.price = domainPrice
@@ -1006,7 +1012,7 @@ function addDomainExtension(product, extension){
 			message: `Agregaste ${extension.name} al carrito!`,
 			type: 'positive',
 		})
-    
+
     calcSubtotal()
 }
 
@@ -1044,7 +1050,7 @@ function getRenewLabel(product){
 }
 
 .q-dialog__inner--minimized > div {
-  max-width: 100vw !important;    
+  max-width: 100vw !important;
 }
 
 
