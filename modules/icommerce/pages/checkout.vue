@@ -108,14 +108,7 @@
 
 							<q-select
 								v-model="form.identificationType"
-								:options="[
-									{ value: 'Cédula de Ciudadanía', label: 'Cedula de ciudadania' },
-									{ value: 'NIT', label: 'NIT' },
-									{ value: 'Cédula de Extranjería', label: 'Cédula de Extranjería' },
-									{ value: 'Pasaporte', label: 'Pasaporte' },
-									{ value: 'Documento de Identificación extranjero', label: 'Documento de Identificación extranjero' },
-									{ value: 'NIT Externo', label: 'NIT Externo' },
-									]"
+								:options="identificationTypeOptions"
 								option-value="value"
 								option-label="label"
 								outlined
@@ -133,6 +126,18 @@
 								dense
 								outlined
 							/>
+
+							<q-input
+								v-if="showCompanyname"
+								v-model="form.companyName"
+								label="Nombre de Empresa (Opcional)"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+
 							<q-input
 								v-model="form.mobilePhone"
 								label="Teléfono"
@@ -402,7 +407,14 @@ definePageMeta({
   middleware: 'auth',
 })
 
-
+const identificationTypeOptions = [
+	{ value: 'Cédula de Ciudadanía', label: 'Cedula de ciudadania' },
+	{ value: 'NIT', label: 'NIT' },
+	{ value: 'Cédula de Extranjería', label: 'Cédula de Extranjería' },
+	{ value: 'Pasaporte', label: 'Pasaporte' },
+	{ value: 'Documento de Identificación extranjero', label: 'Documento de Identificación extranjero' },
+	{ value: 'NIT Externo', label: 'NIT Externo' },
+]
 
 const quasar = useQuasar()
 const authStore = useAuthStore()
@@ -417,6 +429,7 @@ const form = useStorage('shoppingCheckoutForm', {
 	firstName: null,
 	lastName: null,
 	identification: null,
+	identificationType: identificationTypeOptions[0],
 	mobilePhone: null,
 	country: null,
 	address: null,
@@ -446,6 +459,8 @@ const showTaxesWarning = computed(() => cartState.value.products.some((product) 
 //const disableButton = computed( () => refForm.value.validate() )
 
 //const disableButton = ref(true)
+
+const showCompanyname = computed(() => (form.value.identificationType?.value == identificationTypeOptions[1].value) || (form.value.identificationType?.value == identificationTypeOptions[5].value) || false)
 
 watch(
 	() => cartState.value.products,
@@ -528,6 +543,7 @@ function setFormData(reset = false) {
 		form.value.lastName = form.value.lastName || user.value.lastName
 		form.value.identification = form.value.identification ||  getField('identification')
 		form.value.mobilePhone = form.value.mobilePhone || getField('cellularPhone')
+		form.value.identificationType = form.value.identificationType || identificationTypeOptions[0]
 	} else {
 		if(reset) resetFormData()
 	}
@@ -543,6 +559,7 @@ function resetFormData(){
 		firstName: null,
 		lastName: null,
 		identification: null,
+		identificationType: identificationTypeOptions[0],
 		mobilePhone: null,
 		country: null,
 		address: null,
@@ -622,37 +639,35 @@ async function goToPayment() {
 
 	quasar.loading.show({
 		message: 'Estamos procesando su pedido',
-		//messageColor: 'black',
-		//backgroundColor: 'primary',
 	})
 
 
 	const order = {
-		user: { ...form.value },
-		//user.identificationType = form.value.identificationType.toLowerCase().replaceAll(' ', '-')
-		currency: cartState.value.currency,
-		total: subtotal.value,
-
 
 		products: products.value.map((product) => {
-
-			delete product?.domain?.action?.placeholder
-
+			const frecuency = productsHelper.hasFrencuency(product) ? product?.frecuency : {}
+			const frecuencyMonths = parseInt(frecuency.label.match(/\d+/)[0], 10) || 0
+			const renewal = frecuencyMonths > 12 ? (( frecuencyMonths / 12) - 1) : 0
 
 			return {
 				id: product?.externalId || product?.domain?.ext || null,
-				//description: product.description,
-				name: product?.name || null,
-				productUrl: product?.url || null,
-				domain: product?.domain || null,
-				discount: product?.discount || null,
-				frecuency: productsHelper.hasFrencuency(product) ? product?.frecuency : null,
-				price: product?.price || null,
-				domain: product?.domain || null
+				domain: product?.domain?.domainName || null,
+				billincycle: frecuency?.frecuency || null,
+				domainType: product?.domain?.action?.value || null,
+				frecuency: frecuencyMonths,
+				renewal
 			}
 		})
 	}
 
+	const user = { ...form.value }
+	user.city = user.city.name
+	user.state = user.province.name
+	delete user.province
+	delete user.coupon
+	user.country = user.country['iso2'] || user.country['name']
+	user.identificationType = user.identificationType.value
+	order.user = user
 
 	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
