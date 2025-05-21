@@ -28,14 +28,12 @@
     methods: {
       //Init
       async init() {
-        await this.store.getSettings().then(() => {
-          this.captchaKey = getSetting('isite::reCaptchaV3Site') || null
-          this.activeCaptcha = getSetting('isite::activateCaptcha') || null
-
-          if(this.activeCaptcha){
-            this.loadCaptcha()
-          }
-        })
+        this.captchaKey = getSetting('isite::reCaptchaV3Site') || null
+        this.activeCaptcha = getSetting('isite::activateCaptcha') || null
+        if(this.activeCaptcha){
+          this.loadCaptcha()
+        }
+        
       },
       //add CDN captcha
       loadCaptcha() {
