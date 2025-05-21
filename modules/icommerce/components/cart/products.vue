@@ -505,8 +505,7 @@
   <!-- captcha -->
   <ClientOnly>
     <div
-      v-if="loadCaptcha"
-      class="tw-mt-4"
+      v-if="showCaptcha"
     >
       <captchaComponent
         ref="captchaRef"
@@ -545,7 +544,7 @@ const emits = defineEmits(['subtotal', 'discount'])
 const domainPricing = ref([])
 
 //captcha could not be validated with computed due call overflow
-const loadCaptcha = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
+const showCaptcha = ref(null)
 const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
@@ -592,9 +591,14 @@ async function init() {
   if(cartState.value.products.length){
     await getDomainPricing().then(() => {
       configProducts()
+      loadCaptcha()
     })
 
   }
+}
+
+function loadCaptcha(){       
+  showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
 }
 
 function disableCheckButton(product){
@@ -642,6 +646,7 @@ function getExtPrice(ext){
 
 
 function configProducts() {
+  try {
     cartState.value.products.forEach((product) => {
 
     product.price = product?.price || productsHelper.getPrice(product, cartState.value.currency)
@@ -680,13 +685,19 @@ function configProducts() {
     getDiscount(product)
   })
 
-  calcSubtotal()
+    calcSubtotal()
+  } catch (error){    
+      cartState.value.products = []
+      console.error(error
+
+    )
+  }
 }
 
 function removeProduct(product) {
   Notify.create({
 			message: `¿Eliminar ${product.name} ${product.domain?.domainName || '' }?`,
-			type: 'negative',
+			//type: 'negative',
       position: 'center',
       actions: [
         {
