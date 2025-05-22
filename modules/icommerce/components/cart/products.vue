@@ -531,6 +531,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
 
+const userStore = useAuthStore()
 
 const token = ref(null)
 
@@ -597,6 +598,7 @@ watch(
 
 async function init() {
   if(cartState.value.products.length){
+    await userStore.getUsdRates()    
     await getDomainPricing().then(() => {
       configProducts()
       loadCaptcha()
@@ -932,9 +934,9 @@ function getDiscount(product){
 
 
     //const precent = Math.round(product.frecuency.value * 100 / (monthlyPrice.value * months))
-    const priceByMonths =  monthlyPrice.value * months
-    const value = priceByMonths - product.frecuency.value
-    const percent = Math.round((value / priceByMonths) * 100);
+    const priceByMonths = product?.category ? monthlyPrice.value * months : monthlyPrice.value
+    const value = product?.category ? (priceByMonths - product.frecuency.value) : 0
+    const percent = product?.category ?  Math.round((value / priceByMonths) * 100) : 0; 
 
     product.discount  = {
       percent,

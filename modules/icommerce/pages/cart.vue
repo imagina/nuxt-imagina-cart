@@ -187,6 +187,7 @@ import ProductsComponent from '../components/cart/products.vue'
 import productsHelper from '../helpers/products'
 import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
+const userStore = useAuthStore()
 
 
 definePageMeta({
@@ -241,6 +242,7 @@ onMounted(async () => {
 })
 
 async function init(){
+	await userStore.getUsdRates()    
 	await checkUrlParams()
 }
 
