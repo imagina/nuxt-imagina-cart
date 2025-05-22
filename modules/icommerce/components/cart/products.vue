@@ -1,4 +1,8 @@
 <template>
+  <AlertModal 
+      ref="alertRef"
+      :params="alertParams"
+    />
   <div v-for="product in cartState.products"
     class="
         card
@@ -11,6 +15,7 @@
         "
     >
 
+    
     <!-- PRODUCT TITLE -->
     <div class="tw-flex tw-justify-between tw-items-center tw-py-6">
       <div class="">
@@ -505,8 +510,7 @@
   <!-- captcha -->
   <ClientOnly>
     <div
-      v-if="loadCaptcha"
-      class="tw-mt-4"
+      v-if="showCaptcha"
     >
       <captchaComponent
         ref="captchaRef"
@@ -527,6 +531,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
 
+
 const token = ref(null)
 
 const captchaRef = ref('captchaRef')
@@ -543,9 +548,11 @@ const cartState = useStorage('shoppingCart', {
 const emits = defineEmits(['subtotal', 'discount'])
 
 const domainPricing = ref([])
+const alertRef = ref('alertRef')
+const alertParams = ref({})
 
 //captcha could not be validated with computed due call overflow
-const loadCaptcha = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
+const showCaptcha = ref(null)
 const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
@@ -592,9 +599,14 @@ async function init() {
   if(cartState.value.products.length){
     await getDomainPricing().then(() => {
       configProducts()
+      loadCaptcha()
     })
 
   }
+}
+
+function loadCaptcha(){       
+  showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
 }
 
 function disableCheckButton(product){
@@ -642,6 +654,7 @@ function getExtPrice(ext){
 
 
 function configProducts() {
+  try {
     cartState.value.products.forEach((product) => {
 
     product.price = product?.price || productsHelper.getPrice(product, cartState.value.currency)
@@ -680,36 +693,48 @@ function configProducts() {
     getDiscount(product)
   })
 
-  calcSubtotal()
+    calcSubtotal()
+  } catch (error){    
+      cartState.value.products = []
+      console.error(error
+
+    )
+  }
 }
 
 function removeProduct(product) {
-  Notify.create({
-			message: `¿Eliminar ${product.name} ${product.domain?.domainName || '' }?`,
-			type: 'negative',
-      position: 'center',
-      actions: [
-        {
-          label: "cancelar",
-          color: 'white',
-        },
-        {
-          label: "Eliminar",
-          color: 'white',
-          handler: () => {
-            const products = cartState.value.products.filter(obj => obj.id != product.id);
+
+  alertParams.value = {
+    //icon: 'fas fa-cloud-download-alt',
+    title: `Eliminar del carrito`,
+    message: `¿Eliminar ${product.name} ${product.domain?.domainName || '' }?`, // Load as HTML
+    color: 'white',
+    actions: [
+      {
+        label: 'Cancelar',
+        icon: '',
+        handler: () => {
+          alertParams.value = {}
+          alertRef.value.hide()
+        }        
+      },
+      {
+        label: 'Eliminar',
+        icon: '',
+        color: 'red',        
+        handler: () => {
+          const products = cartState.value.products.filter(obj => obj.id != product.id);
             cartState.value = { products: products, currency: cartState.value.currency }
             calcSubtotal()
 
             if (cartState.value.products.length == 0) {
               // router.push({ path: getPath('icommerce.products') })
             }
-
-          }
-
-        }
-      ]
-		})
+        }        
+      },
+    ],
+  };
+  alertRef.value.show()
 }
 
 function updateDomainPrice(product){
