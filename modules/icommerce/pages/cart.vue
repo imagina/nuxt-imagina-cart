@@ -207,7 +207,6 @@ const form = useStorage('shoppingCheckoutForm', {
 	country: null,
 	address: null,
 	city: null,
-	region: null,
 	zipCode: null
 })
 

@@ -341,7 +341,7 @@
 							{{ $t('icommerce.cart.discount')}} {{ calcDiscount().percent }}%
 						</span>
 						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.valueWithSymbol(calcDiscount().total, cartState.currency) }}
+							{{ productsHelper.priceWithSymbol(calcDiscount().total, cartState.currency) }}
 						</span>
 					</div>
 
@@ -644,6 +644,9 @@ async function goToPayment() {
 
 	const order = {
 
+		currency: cartState.value.currency,
+		total: subtotal.value,
+
 		products: products.value.map((product) => {
 			const frecuency = productsHelper.hasFrencuency(product) ? product?.frecuency : {}
 			const frecuencyMonths = parseInt(frecuency.label.match(/\d+/)[0], 10) || 0
@@ -671,16 +674,24 @@ async function goToPayment() {
 
 	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
 		body: JSON.stringify(order)
 	}).then((response) => {
-		//WIP
+
 		const redirectUrl = response.redirectUrl || apiRoutes.imaginaClients
 		window.location.replace(redirectUrl);
+
 		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency
 		}
 
+		quasar.loading.hide()
+	}).catch((error) => {
+		quasar.loading.hide()
+		console.log(error)
 	})
 }
 
