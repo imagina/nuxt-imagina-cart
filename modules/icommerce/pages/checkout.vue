@@ -336,7 +336,7 @@
 
 
 					<!-- discount -->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
+					<div class="tw-flex tw-justify-between tw-items-center tw-my-2" v-if="calcDiscount().percent > 1">
 						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
 							{{ $t('icommerce.cart.discount')}} {{ calcDiscount().percent }}%
 						</span>
@@ -401,6 +401,7 @@ import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
 //import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
+const userStore = useAuthStore()
 
 
 definePageMeta({
@@ -486,6 +487,7 @@ onMounted(() => {
 })
 
 async function init() {
+	await userStore.getUsdRates()    
 	await setFormData()
 	await getCountries().then( async () => {
 		if(cartState.value.products.length) addRedirect()

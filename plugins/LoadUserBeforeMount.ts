@@ -8,8 +8,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     
     userStore.refreshSession()
     if(!userStore.settings) userStore.getSettings()
-    if(!userStore.usdRates) await userStore.getUsdRates()
-
-    
+    if(!userStore.usdRates) await userStore.getUsdRates()    
   }
 })

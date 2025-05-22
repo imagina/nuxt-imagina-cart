@@ -634,7 +634,8 @@ export const useAuthStore = defineStore('authStore', {
           console.error(e)
         })
     },
-    async getUsdRates(){            
+    async getUsdRates(){    
+      console.log('getrates')        
       await $fetch('/api/icommerce/trm', { method: 'GET' }).then((response) => this.usdRates = response)
      }
   },  
