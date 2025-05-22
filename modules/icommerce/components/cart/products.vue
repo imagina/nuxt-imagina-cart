@@ -560,19 +560,19 @@ const domainActions =  [
 	{
 		label: 'Registrar un nuevo dominio',
     placeholder: '',
-		value: 'self-register'
+		value: 'register'
 	},
 
 	{
 		label: 'Transferir mi dominio ',
 		placeholder: 'www.tudominio.com',
-		value: 'self-transfer'
+		value: 'transfer'
 	},
 
 	{
 		label: 'Ya tengo dominio',
 		placeholder: 'www.tudominio.com',
-		value: 'self-owndomain'
+		value: 'owndomain'
 	},
 ]
 
