@@ -313,37 +313,7 @@
 						</q-expansion-item>
 					</div>
 					<hr class="tw-my-4" />
-					<div class="tw-flex tw-justify-between tw-items-center">
-						<span class="
-							tw-font-[600]
-							tw-text-[20px]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ $t('icommerce.cart.subtotal') }}
-						</span>
-						<span class="
-							tw-text-[18px]
-							tw-font-[400]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-						</span>
-					</div>
-
-
-					<!-- discount -->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2" v-if="calcDiscount().percent > 1">
-						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							{{ $t('icommerce.cart.discount')}} {{ calcDiscount().percent }}%
-						</span>
-						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.priceWithSymbol(calcDiscount().total, cartState.currency) }}
-						</span>
-					</div>
+					<SubtotalComponent />
 
 					<div class="tw-my-4 tw-flex-nowrap">
 						<div
@@ -399,6 +369,7 @@ import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
+import SubtotalComponent from '../components/cart/subtotal.vue'
 //import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
 const userStore = useAuthStore()
@@ -449,12 +420,7 @@ const cities = ref([])
 const user = computed(() => authStore.user)
 const products = computed(() => cartState.value.products)
 
-const subtotal = computed(() => {
-	let value = 0;
-	if (!cartState?.value?.products.length) return value
-	value = productsHelper.getSubtotal(cartState?.value?.products, cartState.value.currency)
-	return value
-})
+const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 //const disableButton = computed( () => refForm.value.validate() )
@@ -578,29 +544,7 @@ function getField(name) {
 }
 
 function calcDiscount(){
-
-	const discount  = {
-		//percent: 0,
-		total: Number(0),
-		totalNoDiscount: Number(0)
-	}
-
-  		cartState.value.products.forEach(product => {
-
-        if(product.category){
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product?.discount?.priceByMonths || 0) + (product.price - product.frecuency.value)
-        } else {
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
-        }
-        discount.total  = Number(discount.total) + Number(product.discount.value)
-
-		});
-		/* calc percent */
-		let diff = discount.totalNoDiscount - subtotal.value;
-		let percent = (diff / discount.totalNoDiscount) * 100
-		discount.percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
-	return discount
-
+  return productsHelper.calcDiscount(cartState.value.products, subtotal.value)
 }
 
 function redirectToCart() {
