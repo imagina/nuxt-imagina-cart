@@ -657,6 +657,7 @@ async function goToPayment() {
 				domain: product?.domain?.domainName || null,
 				billincycle: frecuency?.frecuency || null,
 				domainType: product?.domain?.action?.value || null,
+			    transferCode: product?.domain?.transferCode || null,
 				frecuency: frecuencyMonths,
 				renewal
 			}
