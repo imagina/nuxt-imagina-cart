@@ -32,7 +32,7 @@
 
 
             ">
-         {{ product.name}} {{ product?.discount }}
+         {{ product.name}}
           </span>
           <span
             v-if="product?.domain?.domainName"
@@ -824,7 +824,6 @@ function calcDiscount(){
         discount.total  = Number(discount.total) + Number(product.discount.value)
 
 		});
-    console.log(discount)
   emits('discount', discount)
     //return Number.isInteger(total) ? total : total.toFixed(2)
 }
