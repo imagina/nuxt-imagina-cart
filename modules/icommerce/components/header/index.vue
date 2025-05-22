@@ -62,7 +62,7 @@
 <script setup>
 import {ref, computed} from 'vue'
 import Navbar from './Navbar.vue'
-import cartComponent from '../cart'
+import cartComponent from '../cart/cartIcon'
 import whiteLogo from '../../assets/img/white-logo-imagina.png'
 import redLogo from '../../assets/img/red-logo-imagina.png'
 import NavbarButtons from "./NavbarButtons.vue";

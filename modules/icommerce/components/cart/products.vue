@@ -587,13 +587,14 @@ watch(
     //configProducts()
   },
 )*/
-
+/*
 watch(
   () => cartState.value.currency,
   (newQuery, oldQuery) => {
-    calcSubtotal()
+    //calcSubtotal()
   },
 )
+  */
 
 
 async function init() {
@@ -645,8 +646,6 @@ function isSupportedDomain(product, value){
 }
 
 
-
-
 /*keys: ext , domainregister , domaintransfer, domainrenew */
 function getExtPrice(ext){
     return domainPricing?.value.find(x => x.ext ==  `.${ext}`) || 0
@@ -695,7 +694,7 @@ function configProducts() {
     getDiscount(product)
   })
 
-    calcSubtotal()
+    //calcSubtotal()
   } catch (error){    
       cartState.value.products = []
       console.error(error
@@ -706,10 +705,12 @@ function configProducts() {
 
 function removeProduct(product) {
 
+  const message =  product?.category ? `¿Eliminar ${product.name} - ${product.category.title || '' }?` :  `¿Eliminar ${product.name} ${product.domain?.domainName || '' }?`
+
   alertParams.value = {
     //icon: 'fas fa-cloud-download-alt',
     title: `Eliminar del carrito`,
-    message: `¿Eliminar ${product.name} ${product.domain?.domainName || '' }?`, // Load as HTML
+    message,
     color: 'white',
     actions: [
       {
@@ -725,13 +726,17 @@ function removeProduct(product) {
         icon: '',
         color: 'red',        
         handler: () => {
-          const products = cartState.value.products.filter(obj => obj.id != product.id);
-            cartState.value = { products: products, currency: cartState.value.currency }
-            calcSubtotal()
-
-            if (cartState.value.products.length == 0) {
-              // router.push({ path: getPath('icommerce.products') })
-            }
+          const toDelete = cartState.value.products.find(obj => obj.id == product.id);
+          let products = []
+          
+          if(!toDelete?.category){ //if is a aditional domain
+            products = cartState.value.products.filter(obj => obj.id != product.id);    
+          }
+          
+          cartState.value = { products: products, currency: cartState.value.currency }
+          if (cartState.value.products.length == 0) {
+            // router.push({ path: getPath('icommerce.products') })
+          }
         }        
       },
     ],
@@ -790,42 +795,12 @@ function updateDomainPrice(product){
   getDiscount(product)
 
 
-  calcSubtotal()
+  //calcSubtotal()
 }
 
 function extractDomainExtension(url) {
   const match = url.match(/^(?:https?:\/\/)?(?:www\.)?(?:[\w-]+\.)+((?:[\w-]+\.)?[\w-]+)(?:[\/?#:]|$)/i);
   return match ? match[1].toLowerCase() : null;
-}
-
-function calcSubtotal() {
-  const subtotal = productsHelper.getSubtotal(cartState.value.products, cartState.value.currency)
-  emits('subtotal', subtotal)
-  calcDiscount()
-}
-
-function calcDiscount(){
-  const discount  = {
-    //percent: 0,
-    total: Number(0),
-    totalNoDiscount: Number(0)
-  }
-
-  		cartState.value.products.forEach(product => {
-
-        if(product.category){
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product?.discount?.priceByMonths || 0) + (product.price - product.frecuency.value)
-        } else {
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
-        }
-
-
-        ///discount.percent = discount.percent + product.discount.percent
-        discount.total  = Number(discount.total) + Number(product.discount.value)
-
-		});
-  emits('discount', discount)
-    //return Number.isInteger(total) ? total : total.toFixed(2)
 }
 
 function isDomainNameRequired(product) {
@@ -840,7 +815,6 @@ function isDomainNameFree(product) {
 
 
 async function checkDomain(product) {
-
 
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
@@ -859,8 +833,6 @@ async function checkDomain(product) {
       lang,
       ext: ''
     }
-
-
 
     await $fetch(apiRoutes.domainCheck, {
       method: 'POST',
@@ -923,17 +895,12 @@ function getDiscount(product){
     value: 0
   }
 
- // if(isDomainNameRequired(product)){
-    /*
-      fc = frecuencia actual
-      valor fc * 100 / (valor mensual * numero de meses fc)
-    */
+ 
 
     const months = getFrecuencyFromLabel(product.frecuency.label)
     const monthlyPrice = getFrecuencyOptions(product).find(x => x.frecuency == 'Monthly') ||  getFrecuencyOptions(product)[0]
 
-
-    //const precent = Math.round(product.frecuency.value * 100 / (monthlyPrice.value * months))
+ 
     const priceByMonths = product?.category ? monthlyPrice.value * months : monthlyPrice.value
     const value = product?.category ? (priceByMonths - product.frecuency.value) : 0
     const percent = product?.category ?  Math.round((value / priceByMonths) * 100) : 0; 
@@ -961,7 +928,7 @@ function selectDomain(product, selectedDomain){
 			type: 'positive',
       timeout: 2000
 		})
-    calcSubtotal()
+    //calcSubtotal()
 }
 
 function selectDomainLabel(product){
@@ -972,7 +939,7 @@ function selectDomainLabel(product){
 function addDomainExtension(product, extension){
   if(!product?.domain?.domainName){
     selectDomain(product, extension)
-		calcSubtotal()
+		//calcSubtotal()
     return
   }
 
@@ -1040,7 +1007,7 @@ function addDomainExtension(product, extension){
 			type: 'positive',
 		})
 
-    calcSubtotal()
+    //calcSubtotal()
 }
 
 async function getCaptcha() {
@@ -1055,8 +1022,7 @@ async function getCaptcha() {
 
 
 function getRenewLabel(product){
-  //if(!product?.domainCheck?.domainName) return getExtPrice('com').domainrenew
-  //return getExtPrice(extractDomainExtension(product.domainCheck.domainName))
+  
   const prices = {
     '523': '139000',
     '524': '189000',

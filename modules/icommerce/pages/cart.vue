@@ -37,10 +37,7 @@
 						</div>
 					</div>
 					<!-- products -->
-					<ProductsComponent
-						@subtotal="(val) => subtotal = val"
-						@discount="(val) => discount = val"
-					/>
+					<ProductsComponent/>
 					
 				</div>
 				<!-- empty cart -->
@@ -94,48 +91,9 @@
 					tw-p-6
 					"
 				>
-					<div class="tw-flex tw-justify-between tw-items-center">
-						<span class="
-							tw-font-semibold
-							tw-text-[22px]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ $t('icommerce.cart.subtotal') }}
-						</span>
-						<span class="
-							tw-font-[600]
-							tw-text-[20px]
-							tw-m-0
-							tw-p-0
-							tw-leading-5							
-						">
-							<span :class="discountPercent() ? 'tw-line-through tw-text-[#818181] tw-font-[400]' : '' ">
-								{{ productsHelper.priceWithSymbol(discount.totalNoDiscount, cartState.currency) }}
-							</span>							
-						</span>
-					</div>
-
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
-						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
-							{{ $t('icommerce.cart.subtotalNoTaxes') }}
-						</span>
-						<span class="tw-text-[20px] tw-font-[600]">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-						</span>
-					</div>
-
-					<!-- discount -->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2" v-if="showDiscount">
-						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							{{ $t('icommerce.cart.discount') }} {{ discountPercent() }}%
-							
-						</span>
-						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.priceWithSymbol(discount.total, cartState.currency) }}
-						</span>
-					</div>
+					
+					<!-- subtotal -->
+					<SubtotalComponent />					
 
 					<!--coupon -->
 					<div v-if="false">
@@ -184,9 +142,13 @@
 <script setup>
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
+import SubtotalComponent from '../components/cart/subtotal.vue'
 import productsHelper from '../helpers/products'
 import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
+
+
+
 const userStore = useAuthStore()
 
 
@@ -215,13 +177,7 @@ const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()    
 
-const subtotal = ref(0)
-const discount = ref({
-	percent: 0,
-    total: Number(0),
-    totalNoDiscount: Number(0)
-})
-
+//const subtotal = ref(0)
 
 const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
@@ -232,7 +188,6 @@ const disableContinue = computed(() => cartState.value.products.every((product) 
 }))
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
-const showDiscount = computed(() => discountPercent() > 1)
 
 const checkoutPath = getPath('icommerce.checkout')
 
@@ -288,15 +243,7 @@ async function getProduct(id, urlOptions){
 					return element
        			});
 				if(options.length) product.frecuency = options[billingcycle]
-    		}
-			/*
-			const index = cartState.value.products.findIndex((obj) => obj.externalId == id);
-			if (index === -1) {
-				cartState.value.products.push(product);
-			} else {
-				cartState.value.products[index] = product;
-			}
-			*/
+    		}			
 
 			cartState.value.products = []
 			cartState.value.products.push(product);
@@ -313,12 +260,5 @@ function redirectCheckout() {
 	})
 }
 
-function discountPercent(){
-	let percent = 0
-	let diff = (discount.value.totalNoDiscount - subtotal.value) || 0;
-	percent = ((diff / discount.value.totalNoDiscount) * 100) || 0
-	percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
-	return percent
-}
 
 </script>
