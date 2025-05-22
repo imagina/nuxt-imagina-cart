@@ -768,7 +768,7 @@ function updateDomainPrice(product){
     const frecuency = getFrecuencyFromLabel(product.frecuency.label)
 
     //free domain afther 12 months
-    if(frecuency > 12 && isDomainNameFree(product)){
+    if(frecuency >= 12 && isDomainNameFree(product)){
       product.price = product.frecuency.value
     } else {
       let renewPrice = 0
