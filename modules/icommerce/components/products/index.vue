@@ -1,4 +1,29 @@
 <template>
+	<div class="tw-w-full">	
+
+	<NuxtImg 
+		v-if="category && bannerImage"
+		:src="bannerImage" 
+		class="
+			tw-h-[180px]                        
+			tw-rounded-2xl
+			tw-w-[100%]
+			tw-h-[182px]
+			md:tw-h-[400px]
+
+		"
+		:alt="category?.title"
+	/>    
+	
+	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
+		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
+		<p v-html="category.description" class="tw-text-base tw-mt-3.5">                        
+		</p>
+	</div>
+	<hr  class="tw-my-6 tw-w-full" />
+
+
+
 	<div class="md:tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
@@ -142,6 +167,7 @@
 			@update:modelValue="getProducts()"
 			class="tw-py-8"
         />
+		</div>
 
 
   </template>
@@ -153,15 +179,16 @@ import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
 
+const emit = defineEmits(["category"]);
 
-const props = defineProps({
-  category: Object
-});
+const category = ref(null)
 
 const settings = {
 	justOneProdcut: true //one product and redirects to checkout
 }
 const router = useRouter()
+const route = useRoute()
+
 const { t } = useI18n()
 const products = ref([])
 const loading = ref(false)
@@ -176,6 +203,12 @@ const paginationModel = ref({
 
 const pagination = ref({
 	lastPage: 0,
+})
+
+
+const bannerImage = computed( () =>  {    
+ if(!category.value) return false
+ return category.value?.mediaFiles?.bannerindeximage?.url || false
 })
 
 const cartState = useStorage('shoppingCart', {
@@ -203,7 +236,7 @@ const cartState = useStorage('shoppingCart', {
 
 
 	watch(
-		() => props.category,
+		() => category.value,
 		(newQuery, oldQuery) => {
 			paginationModel.value.page = 1
 			getProducts()
@@ -214,12 +247,44 @@ const cartState = useStorage('shoppingCart', {
 		return (!products.value[index].quantity != 0)
 	}
 
-	onBeforeMount( async () => {
-		await getProducts()
+	onBeforeMount( async () => {		
 	})
 
 	async function init(){
-		///sort.value = sortOptions[0].value
+		
+		category.value = route?.meta?.category || null		
+
+		if(!category.value){			
+			category.value = await getCategory()
+		}
+		emit('category', category.value)
+		await getProducts()
+	}
+
+	async function getCategory(){
+		const params = {
+			take: 60,
+			page: 1,
+			filter : {
+				parentId: constants.cagtegories.mainCategoryId,
+				order: {
+					field: "created_at",
+					way: "desc"
+				}			
+			}		
+		}	
+		let parents = []
+
+		await baseService.index(apiRoutes.categories, params).then(response => {
+			let  data =  response?.data || []				
+			parents = data
+	
+			parents.forEach((category) => {				
+				const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
+				if(children.length) category.children = children
+			})			
+		})
+		return parents[0]
 	}
 
 	async function getProducts(){
@@ -230,11 +295,13 @@ const cartState = useStorage('shoppingCart', {
 			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
 
-		if(props.category){
+		//router.getRoutes().find(page => page.name == pageName)
+
+		
 			params.filter = {
-				categoryId: props.category?.id || constants.cagtegories.mainCategoryId
+				categoryId: category.value?.id
 			}
-		}
+		
 		loading.value = true
 		/* reset pagination */
 		pagination.value.lastPage = 0

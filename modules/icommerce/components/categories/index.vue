@@ -24,27 +24,36 @@
 							class="tw-px-4"
 						>
 							<template v-for="children in category.children">
+								<NuxtLink
+					 				:to="`/products/${category.slug}`"  
+								>
 								<q-item 
-									@click="() => selectedCategory(children)"
+									
 									clickable
 									v-ripple
 									:active="isActive(children)"
+								
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
+								</NuxtLink>
 							</template>
 						</q-list>
 					</q-expansion-item>
 					<!-- no children -->
-					<q-item 
-						v-else
-						@click="() => selectedCategory(category)"
-						clickable
-						v-ripple
-						:active="isActive(category)"
-					>
-						<q-item-section>{{ category.title }}</q-item-section>
-					</q-item>	
+					 <NuxtLink 
+					 v-else 
+					 	:to="`/products/${category.slug}`"  
+						>
+						<q-item 
+							
+							clickable
+							v-ripple
+							:active="isActive(category)"
+						>
+							<q-item-section>{{ category.title }}</q-item-section>
+						</q-item>	
+					</NuxtLink>
 				</template>				
 			</q-list>
 		</div>
@@ -54,8 +63,9 @@
 
 import apiRoutes from '../../config/apiRoutes'
 import constants from '../../config/constants'
+import productsPage from '../../pages/products.vue'
 
-const emits = defineEmits(['selectedCategory'])
+
 
 const categories = ref([])
 const drawer = ref(false)
@@ -63,7 +73,7 @@ const isMobile = ref(false)
 const BREAKPOINT = 1024
 
 const selectedCategoryRef = useState('icommerce.products.selectedCategory', () => null)
-//const selectedCategoryRef = ref({})
+
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
 	drawer.value = !isMobile.value
@@ -97,24 +107,34 @@ async function getCategories(){
 		let  data =  response?.data || []				
 		const parents = data		
 		
-		parents.forEach((category) => {			
+		
+		parents.forEach((category) => {				
 			const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
 			if(children.length) category.children = children
 		})
 
-		categories.value = parents		
-		emits('selectedCategory', categories.value[0])
+		categories.value = parents
+
+		const router = useRouter()
+		parents.forEach((category) => {				
+			router.addRoute({					
+						name: `icommerce.products.${category.slug}`,
+						path: `/products/${category.slug}`,
+						meta: {
+							middleware: 'auth',
+							layout: 'icommerce',
+							category: category, 
+							breadcrumb: category.title
+						},
+						component: productsPage
+					})
+		})
 	})
 }
 
-function selectedCategory(category){	
-	//window.scrollTo(0, 0);
-	selectedCategoryRef.value = category
-	emits('selectedCategory', category)
-}
-
 function isActive(category){	
-	return (selectedCategoryRef.value?.id == category?.id) || false
+	const route = useRoute()
+	return (route.meta?.category?.id == category?.id) || false
 }
 
 onMounted(async () => {

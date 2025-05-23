@@ -9,9 +9,7 @@
                 label="Inicio"
                 :to="'/'"
             />
-                <NuxtLink
-
-                />
+                
             <q-breadcrumbs-el
                 class="tw-text-base tw-text-[#888888] tw-font-medium"
                 :label="currentRoute.label"
