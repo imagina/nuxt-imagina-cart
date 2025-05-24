@@ -279,10 +279,6 @@
               <div>
                 <span class="tw-text-[20px] tw-font-[700] tw-line-clamp-4 tw-break-all">{{ product.domainCheck.domainName }}</span>
               </div>
-
-
-
-
         		</div>
 
 

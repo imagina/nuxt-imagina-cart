@@ -2,7 +2,7 @@
 <template>
   <q-dialog id="alertModalComponent" v-model="showModal" persistent
             transition-show="slide-up" transition-hide="slide-down" :style="modalWidth">
-    <div class="tw-bg-white tw-w-full md:tw-w-1/2 tw-p-4">
+    <div class="tw-bg-white tw-w-full md:tw-w-1/3 tw-p-4">
       <!--Header-->
       <q-toolbar :class="`q-px-none`" style="min-height: auto">
         <q-toolbar-title v-if="paramsModal.title" class="box-title row items-center">

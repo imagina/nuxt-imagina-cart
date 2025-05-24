@@ -66,9 +66,7 @@ const showModal = ref( false );
         </q-card-section>
 
         <q-card-section>
-          <CategoriesMobileComponent
-            @selectedCategory="showModal = false"          
-          />
+          <CategoriesMobileComponent/>
         </q-card-section>
 
       </q-card>
