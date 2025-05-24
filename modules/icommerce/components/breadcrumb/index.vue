@@ -6,7 +6,7 @@
             </template>
             <q-breadcrumbs-el
                 class="tw-text-base tw-text-[#888888] tw-font-extrabold"
-                label="Inicio"
+                label="Tienda"
                 :to="'/'"
             />
                 

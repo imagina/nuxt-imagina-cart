@@ -1,5 +1,6 @@
 <template>
 	<div class="tw-w-full">	
+		{{  category }}
 
 	<NuxtImg 
 		v-if="category && bannerImage"
@@ -179,9 +180,24 @@ import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
 
-const emit = defineEmits(["category"]);
-
 const category = ref(null)
+
+const meta = {
+	title: 'Páginas Web - Hosting y Registro de Dominios | Imagina Colombia',
+	description: 'Lideres en Hosting y registro de Dominios en Colombia. Mayor rendimiento al mejor precio. 15 años de experiencia más de 10.000 clientes confían en nosotros. Asesores en Bogotá, Ibagué  y Medellín.'
+}
+
+
+useSeoMeta({
+  title: () =>  category?.value?.title ||  meta.title,
+  ogTitle: () =>  category?.value?.title ||  meta.title,
+  description: () =>  category?.value?.description ||  meta.description,
+  ogDescription: () =>  category?.value?.description ||  meta.description,
+  //ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image',
+  twitterImage: 'https://www.imaginacolombia.com'
+})
+
 
 const settings = {
 	justOneProdcut: true //one product and redirects to checkout
@@ -257,7 +273,6 @@ const cartState = useStorage('shoppingCart', {
 		if(!category.value){			
 			category.value = await getCategory()
 		}
-		emit('category', category.value)
 		await getProducts()
 	}
 

@@ -1,6 +1,6 @@
 <template>
-	<div v-if="drawer" 
-		class="md:tw-max-w-[500px]"
+	<div v-if="!isMobile" 
+		class="tw-w-[400px]"
 	>
 		<div class="lg:tw-pr-[20px]">
 			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px] tw-text-primary">
@@ -76,7 +76,7 @@ const selectedCategoryRef = useState('icommerce.products.selectedCategory', () =
 
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
-	drawer.value = !isMobile.value
+	//drawer.value = !isMobile.value
 }
 
 onBeforeMount(async () => {
@@ -131,6 +131,7 @@ async function getCategories(){
 		})
 	})
 }
+
 
 function isActive(category){	
 	const route = useRoute()
