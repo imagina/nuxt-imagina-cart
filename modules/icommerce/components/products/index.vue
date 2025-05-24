@@ -1,7 +1,6 @@
 <template>
 	<div class="tw-w-full">	
-		{{  category }}
-
+		
 	<NuxtImg 
 		v-if="category && bannerImage"
 		:src="bannerImage" 
@@ -10,7 +9,9 @@
 			tw-rounded-2xl
 			tw-w-[100%]
 			tw-h-[182px]
-			md:tw-h-[400px]
+			sm:tw-h-[240px]
+			md:tw-h-[320px]
+			lg:tw-h-[400px]
 
 		"
 		:alt="category?.title"
@@ -18,7 +19,7 @@
 	
 	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
 		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
-		<p v-html="category.description" class="tw-text-base tw-mt-3.5">                        
+		<p v-if="category.description"  v-html="category.description" class="tw-text-base tw-mt-3.5">                        
 		</p>
 	</div>
 	<hr  class="tw-my-6 tw-w-full" />
@@ -222,9 +223,27 @@ const pagination = ref({
 })
 
 
+
+
+
+
+
+const isMobile = ref(false)
+const BREAKPOINT = 600
+
+function updateViewport() {
+	isMobile.value = window.innerWidth < BREAKPOINT	
+}
+
+onUnmounted(() => {
+	window.removeEventListener('resize', updateViewport)
+})
+
 const bannerImage = computed( () =>  {    
  if(!category.value) return false
- return category.value?.mediaFiles?.bannerindeximage?.url || false
+ 
+ return (isMobile.value ? category.value?.mediaFiles?.secondaryimage?.url : category.value?.mediaFiles?.mainimage?.url ) || false 
+ //return category.value?.mediaFiles?.mainimage?.url || false
 })
 
 const cartState = useStorage('shoppingCart', {
@@ -425,6 +444,7 @@ const cartState = useStorage('shoppingCart', {
 
 
 	onMounted(async () => {
+		window.addEventListener('resize', updateViewport)	
 		init();
 	})
 

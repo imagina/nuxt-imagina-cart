@@ -1,6 +1,6 @@
 <template>
     <ClientOnly>
-    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center tw-py-8 tw-w-full">
+    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center md:tw-py-8 tw-w-full">
         <div 
             class="
                 tw-flex
