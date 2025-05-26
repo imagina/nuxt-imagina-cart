@@ -1,5 +1,5 @@
 <template>
-	<ClientOnly>
+	<ClientOnly>		
 		<div class="
 			lg:tw-flex
 			tw-flex-wrap
@@ -9,15 +9,25 @@
 		"
 		style="background-color:  #FAFAFA;"
 		>
+
+		<q-inner-loading
+			:showing="loading"
+			color="primary"
+		/>
+
 			<!--cart and products --->
-			<div class="
-			tw-w-full
-			lg:tw-w-[800px]
-			lg:tw-mb-4
+			<div 
+			v-if="!loading"
+			class="
+				tw-w-full
+				lg:tw-w-[800px]
+				lg:tw-mb-4	
+				tw-flex
+				tw-align-middle	
 			">
 				<div v-if="showCart" class="tw-mb-[40px]">
 					<!--title -->
-					<div class="tw-flex tw-justify-between tw-items-center">
+					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
 						<div>
 							<h1 
 								class="
@@ -41,7 +51,9 @@
 					
 				</div>
 				<!-- empty cart -->
-				<div v-else >
+				<div v-else 
+					class="tw-min-h-[50vh]"
+				>
 					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
 					<div class="tw-my-4 tw-text-[14px] tw-font-[400]">
 						<p>
@@ -136,7 +148,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		
+	</div>
 	</ClientOnly>
 </template>
 <script setup>
@@ -177,7 +190,7 @@ const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()    
 
-//const subtotal = ref(0)
+const loading = ref(false)
 
 const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
@@ -217,6 +230,7 @@ async function  checkUrlParams(){
 }
 
 async function getProduct(id, urlOptions){
+	loading.value = true
 	cartState.value.products = []
 	const params = {			
 		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues', 
@@ -250,7 +264,7 @@ async function getProduct(id, urlOptions){
 		}
 
 	})
-	//loading.value = false
+	loading.value = false
 }
 
 

@@ -3,7 +3,9 @@
 			<q-page-container>
 						<HeaderApp :scroll-position="scrollPosition" />
 						<BreadCrumb />
-						<slot />
+						<div class="tw-min-h-[400px]">
+							<slot />
+						</div>						
 						<FooterApp />
 			</q-page-container>
     </q-layout>

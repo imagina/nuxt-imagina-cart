@@ -1,6 +1,8 @@
 <template>
     <ClientOnly>
-    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center md:tw-py-8 tw-w-full">
+      
+
+    <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center md:tw-py-8 tw-w-full tw-min-h-[800px]">
         <div 
             class="
                 tw-flex
@@ -11,14 +13,22 @@
             "
         >
             
-            <CategoriesComponent/>                
-            <ProductsComponent
-              @category="(value) => category = value"
+            <CategoriesComponent
+              @category="value => category = value"
             />
+
+            
+              <ProductsComponent 
+                v-if="category"
+                :category="category"
+              />
+              
+
                 
             
         </div>
     </div>
+    
     </ClientOnly>
 
 </template>
@@ -36,15 +46,6 @@ const { t } = useI18n({
 })
 
 const category = ref(null)
-
-useSeoMeta({
-  title: () =>  category?.value?.title ||  'Products Site',
-  ogTitle: () =>  category?.value?.title ||  'Products Site',
-  description: () =>  category?.value?.description ||  'Description',
-  ogDescription: () =>  category?.value?.description ||  'Description',
-  ogImage: 'https://example.com/image.png',
-  twitterCard: 'summary_large_image',
-})
 
 
 </script>

@@ -17,7 +17,7 @@ export default defineCachedEventHandler(async (event) => {
     })
     return data;
   }, {
-      maxAge: 360 * 12,  //minimun time,
+      maxAge: 5,  //minimun time,
       //staleMaxAge: -1, // sent to the client while the cache updates in the background.
         //swr: false
       //getKey: () => cacheName
