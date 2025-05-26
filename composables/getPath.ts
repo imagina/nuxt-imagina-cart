@@ -6,12 +6,15 @@ export default function (pageName) {
     
     const page = router.getRoutes().find(page => page.name == pageName) || { path: ''}
 
+    /* clena :slug params */
+    const path = page.path.includes(':slug') ? page.path.replace('/:slug', '') : page.path
+
     /* multi lang paths */
     /*
     if(page?.meta?.paths) {
         return page.meta.paths[locale.value]
     }
     */
-    return page.path
+    return path
 } 
   

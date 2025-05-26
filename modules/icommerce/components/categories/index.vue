@@ -27,12 +27,10 @@
 								<NuxtLink
 					 				:to="`/products/${category.slug}`"  
 								>
-								<q-item 
-									
+								<q-item
 									clickable
 									v-ripple
-									:active="isActive(children)"
-								
+									:active="isActive(children)"								
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
@@ -65,27 +63,50 @@ import apiRoutes from '../../config/apiRoutes'
 import constants from '../../config/constants'
 import productsPage from '../../pages/products.vue'
 
+const route = useRoute()
+const router = useRouter()
 
 
 const categories = ref([])
-const drawer = ref(false)
 const isMobile = ref(false)
 const BREAKPOINT = 1024
 
-const selectedCategoryRef = useState('icommerce.products.selectedCategory', () => null)
+const emit = defineEmits(['category'])
 
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
-	//drawer.value = !isMobile.value
 }
 
-onBeforeMount(async () => {
+onBeforeMount(async () => {	
 	await getCategories()
 })
 
 async function init(){
+	
+	
 	updateViewport()
 	window.addEventListener('resize', updateViewport)	
+}
+
+async function getSelectedCategory(categories){
+	    const route = useRoute()		
+
+	let category = categories.find(item => {
+		if(route.params?.slug == item.slug){
+			return item
+		}
+	}) 
+	if(!category) {
+		category = categories[0]
+		/*
+		router.replace({
+			name: `icommerce.products.${category.slug}`,
+			params: { slug: category.slug }
+		})
+			*/
+	}
+
+	emit('category', category)
 }
 
 async function getCategories(){
@@ -116,26 +137,30 @@ async function getCategories(){
 		categories.value = parents
 
 		const router = useRouter()
-		parents.forEach((category) => {				
+		parents.forEach((category) => {
 			router.addRoute({					
 						name: `icommerce.products.${category.slug}`,
-						path: `/products/${category.slug}`,
+						path: `/products`,
+						params: {
+						  slug: category.slug
+						},
 						meta: {
 							middleware: 'auth',
-							layout: 'icommerce',
-							category: category, 
-							breadcrumb: category.title
+							layout: 'icommerce',							
+							breadcrumb: category.title, 
+							
 						},
 						component: productsPage
-					})
+			})
 		})
+		getSelectedCategory(parents)
 	})
 }
 
 
-function isActive(category){	
-	const route = useRoute()
-	return (route.meta?.category?.id == category?.id) || false
+
+function isActive(category){
+	return route.path.includes(category?.slug) || false
 }
 
 onMounted(async () => {

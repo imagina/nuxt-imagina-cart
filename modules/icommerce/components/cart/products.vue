@@ -594,13 +594,11 @@ watch(
 
 
 async function init() {
-  if(cartState.value.products.length){
-    await userStore.getUsdRates()    
+  if(cartState.value.products.length){    
     await getDomainPricing().then(() => {
       configProducts()
       loadCaptcha()
     })
-
   }
 }
 

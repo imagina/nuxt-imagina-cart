@@ -1,7 +1,7 @@
 const layout = 'icommerce'
 //mport page from '../pages/products/[[slug]]/index.vue'
 const pages = [
-
+/*
   {
     name: 'icommerce.products',
     path: '/products/',
@@ -14,10 +14,12 @@ const pages = [
       breadcrumb: 'Productos'
     },
   },  
+  */
+
   
   {
-    name: 'icommerce.products_',
-    path: '/products/:slug',
+    name: 'icommerce.products',
+    path: '/products/:slug?',
     paths:{
       es: '/productos/:slug',
       en: '/products/:slug',

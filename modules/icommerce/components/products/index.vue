@@ -1,6 +1,5 @@
 <template>
-	<div class="tw-w-full">	
-		
+	<div class="tw-w-full tw-min-h-[80vh]">		
 	<NuxtImg 
 		v-if="category && bannerImage"
 		:src="bannerImage" 
@@ -12,7 +11,6 @@
 			sm:tw-h-[240px]
 			md:tw-h-[320px]
 			lg:tw-h-[400px]
-
 		"
 		:alt="category?.title"
 	/>    
@@ -141,6 +139,17 @@
 								tw-bg-[#E7E7E7]
 							"
 						/>
+						<NuxtLink 
+							:to="{
+								path: getPath('icommerce.cart'), 
+								query: {
+									a: 'add',
+									pid: product.externalId
+								}
+							}"
+						>
+							
+
 						<q-btn
 							:label="productLabel"
 							text-color="black"
@@ -154,8 +163,9 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							@click="addTocart(index)"
+							
 						/>
+						</NuxtLink>
 					</div>
 			</q-card>
 		</div>
@@ -181,23 +191,29 @@ import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
 
-const category = ref(null)
+const props = defineProps( {
+  category: {
+    type: Object
+  }
+} )
 
 const meta = {
 	title: 'Páginas Web - Hosting y Registro de Dominios | Imagina Colombia',
 	description: 'Lideres en Hosting y registro de Dominios en Colombia. Mayor rendimiento al mejor precio. 15 años de experiencia más de 10.000 clientes confían en nosotros. Asesores en Bogotá, Ibagué  y Medellín.'
 }
 
+const category = computed(() => props.category)
 
 useSeoMeta({
-  title: () =>  category?.value?.title ||  meta.title,
-  ogTitle: () =>  category?.value?.title ||  meta.title,
-  description: () =>  category?.value?.description ||  meta.description,
-  ogDescription: () =>  category?.value?.description ||  meta.description,
+  title: () =>  category?.value?.title ||  meta?.title,
+  ogTitle: () =>  category?.value?.title ||  meta?.title,
+  description: () =>  category?.value?.description ||  meta?.description,
+  ogDescription: () =>  category?.value?.description ||  meta?.description,
   //ogImage: 'https://example.com/image.png',
   twitterCard: 'summary_large_image',
   twitterImage: 'https://www.imaginacolombia.com'
 })
+
 
 
 const settings = {
@@ -224,10 +240,6 @@ const pagination = ref({
 
 
 
-
-
-
-
 const isMobile = ref(false)
 const BREAKPOINT = 600
 
@@ -241,9 +253,8 @@ onUnmounted(() => {
 
 const bannerImage = computed( () =>  {    
  if(!category.value) return false
- 
  return (isMobile.value ? category.value?.mediaFiles?.secondaryimage?.url : category.value?.mediaFiles?.mainimage?.url ) || false 
- //return category.value?.mediaFiles?.mainimage?.url || false
+ 
 })
 
 const cartState = useStorage('shoppingCart', {
@@ -269,7 +280,7 @@ const cartState = useStorage('shoppingCart', {
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))
 	const frecuencyId = 1 //frecuency option
 
-
+		
 	watch(
 		() => category.value,
 		(newQuery, oldQuery) => {
@@ -277,6 +288,7 @@ const cartState = useStorage('shoppingCart', {
 			getProducts()
 		},
 	)
+		
 
 	function disableButton(index) {
 		return (!products.value[index].quantity != 0)
@@ -286,39 +298,13 @@ const cartState = useStorage('shoppingCart', {
 	})
 
 	async function init(){
+		//await getCategory()
 		
-		category.value = route?.meta?.category || null		
-
-		if(!category.value){			
-			category.value = await getCategory()
-		}
 		await getProducts()
 	}
 
 	async function getCategory(){
-		const params = {
-			take: 60,
-			page: 1,
-			filter : {
-				parentId: constants.cagtegories.mainCategoryId,
-				order: {
-					field: "created_at",
-					way: "desc"
-				}			
-			}		
-		}	
-		let parents = []
-
-		await baseService.index(apiRoutes.categories, params).then(response => {
-			let  data =  response?.data || []				
-			parents = data
-	
-			parents.forEach((category) => {				
-				const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
-				if(children.length) category.children = children
-			})			
-		})
-		return parents[0]
+		//category.value = selectedCategoryState?.value
 	}
 
 	async function getProducts(){
@@ -355,43 +341,6 @@ const cartState = useStorage('shoppingCart', {
 
 		})
 		loading.value = false
-	}
-
-	function addTocart(index){
-		//cartStore.products.push(product)
-		const product = products.value[index]
-		if(productsHelper.hasFrencuency(product)){
-      		//const options = productsHelper.getFrecuencyOptions(product)
-
-			const options = productsHelper.getFrecuencyOptions(product).map(element => {
-				element.frecuency = element.label
-				element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
-				return element
-       		});
-
-
-			if(options.length) {
-				product.frecuency = options[0]
-			}
-    	}
-
-		if(settings.justOneProdcut){
-			//reset cart
-			cartState.value = { products: [product], currency: cartState.value.currency }
-			router.push({ path: getPath('icommerce.cart')})
-			return
-		} else {
-			if(product.quantity != 0){
-				product.quantity = (product.quantity - 1)
-				const cartProducts = cartState.value.products
-				cartProducts.push(product)
-				cartState.value = { products: cartProducts, currency: cartState.value.currency }
-			}
-		}
-		Notify.create({
-			message: 'Producto agregado al carrito',
-			type: 'positive',
-		})
 	}
 
 
