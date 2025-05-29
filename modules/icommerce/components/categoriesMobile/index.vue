@@ -32,6 +32,7 @@
 									clickable
 									v-ripple
 									:active="isActive(children)"
+									:class=" isActive(category) ? 'tw-font-[700]' : 'tw-font-[500]'"
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
@@ -51,6 +52,7 @@
 						v-ripple
 						:active="isActive(category)"
 						class="expansion-item"
+						:class=" isActive(category) ? 'tw-font-[700]' : 'tw-font-[500]'"
 					>
 						<q-item-section>{{ category.title }}</q-item-section>
 					</q-item>	
@@ -65,6 +67,8 @@
 
 import apiRoutes from '../../config/apiRoutes'
 import constants from '../../config/constants'
+
+const route = useRoute()
 
 const categories = ref(null)
 const drawer = ref(false)
@@ -132,9 +136,8 @@ async function getCategories(){
 }
 
 
-function isActive(category){	
-	const route = useRoute()
-	return (route.meta?.category?.id == category?.id) || false
+function isActive(category){
+	return route.path.includes(category?.slug) || false
 }
 
 onMounted(async () => {

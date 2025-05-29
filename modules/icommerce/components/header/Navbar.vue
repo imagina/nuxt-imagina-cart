@@ -54,20 +54,21 @@ watch(isMobile, (newValue) => {
 <template>
     <!--MENU DESKTOP -->
     <ClientOnly>
-    <div v-if="!isMobile" class="tw-flex tw-items-center tw-gap-5 xl:tw-gap-[26px]">
+    <div v-if="!isMobile" class="tw-flex tw-items-center tw-gap-5 xl:tw-gap-[20px]">
       <template
           v-for="(navItem, index) in navItems"
           :key="navItem.id || index"
       >
         <q-btn
-          v-if="navItem.items"
+          
           :label="navItem.label"
           v-bind="navItem.props"
           flat
           no-caps
           padding="0"
-          icon-right="fa-solid fa-angle-down"
+          :icon-right="navItem.items? 'fa-solid fa-angle-down': 'none' "
           class="tw-text-md xl:tw-text-[15px]"
+          
           :class="{
             'hover:tw-text-[#DC3545]': !isScrolled,
             'hover:tw-text-[#F9BA48]': isScrolled
@@ -94,21 +95,7 @@ watch(isMobile, (newValue) => {
             </q-list>
           </q-menu>
         </q-btn>
-        <NuxtLink
-          v-if="!navItem.items"
-          v-bind="navItem.props"
-          :to="navItem?.to"
-          class="
-            tw-text-md xl:tw-text-[15px
-            tw-cursor-pointer
-          "
-          :class="{
-            'hover:tw-text-[#DC3545]': !isScrolled,
-            'hover:tw-text-[#F9BA48]': isScrolled
-          }"
-        >
-          {{ navItem.label }}
-        </NuxtLink>
+        
       </template>
     </div>
 
