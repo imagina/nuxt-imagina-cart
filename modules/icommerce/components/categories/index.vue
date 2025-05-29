@@ -30,7 +30,8 @@
 								<q-item
 									clickable
 									v-ripple
-									:active="isActive(children)"								
+									:active="isActive(children)"
+									:class=" isActive(category) ? 'tw-font-[700]' : 'tw-font-[500]'"
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
@@ -48,6 +49,7 @@
 							clickable
 							v-ripple
 							:active="isActive(category)"
+							:class=" isActive(category) ? 'tw-font-[700]' : 'tw-font-[500]'"
 						>
 							<q-item-section>{{ category.title }}</q-item-section>
 						</q-item>	
