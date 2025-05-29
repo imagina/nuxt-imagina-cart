@@ -7,13 +7,13 @@
     ]"
   >
     <div class="
-        tw-min-h-[60px] tw-mx-auto 2xl:tw-px-20 xl:tw-px-10 sm:tw-px-5
+        tw-min-h-[60px] 2xl:tw-px-20 xl:tw-px-4 sm:tw-px-2
         tw-px-2 tw-py-3 tw-flex tw-items-center tw-justify-between relative
       ">
 
       <!-- LOGO -->
       <div class="lg:tw-w-1/12 2xl:tw-w-3/12 tw-relative tw-order-1">
-        <NuxtLink to="/"
+        <NuxtLink to="https://www.imaginacolombia.com/"
         >
           <img
               :src="logoSrc"
@@ -25,7 +25,7 @@
 
       <!-- MENÚ DE NAVEGACIÓN -->
       <div class="
-        tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 lg:tw-px-5
+        tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 xl:tw-px-5
         tw-relative tw-order-1
       ">
         <Navbar v-model="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
