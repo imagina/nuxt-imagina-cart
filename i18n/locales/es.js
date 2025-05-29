@@ -2,7 +2,7 @@ export default {
   "iauth": {
     "captcha": 'Este sitio está protegido por reCaptcha y se aplican las <a href="https://policies.google.com/privacy" target="_blank">Politicas de Privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank">Terminos de servicios</a> de Google.',
     "login": {
-      "title": "Iniciar sesión",
+      "title": "Ingresa",
       "subtitle": "Bienvenido nuevamente",
       "inputs": {
         "email": "Email",

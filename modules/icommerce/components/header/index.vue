@@ -8,11 +8,11 @@
   >
     <div class="
         tw-min-h-[60px] 2xl:tw-px-20 xl:tw-px-4 sm:tw-px-2
-        tw-px-2 tw-py-3 tw-flex tw-items-center tw-justify-between relative
+        tw-px-2 tw-flex tw-items-center tw-justify-between relative
       ">
 
       <!-- LOGO -->
-      <div class="lg:tw-w-1/12 2xl:tw-w-3/12 tw-relative tw-order-1">
+      <div class="lg:tw-w-1/12 tw-relative tw-order-1">
         <NuxtLink to="https://www.imaginacolombia.com/"
         >
           <img
@@ -33,7 +33,7 @@
 
       <!-- BOTONES DE CUENTA, CARRITO, THEME TOGGLE -->
       <section class="
-        tw-flex tw-items-center tw-justify-end lg:tw-w-3/12 xl:tw-w-4/12
+        tw-flex tw-items-center tw-justify-end lg:tw-w-3/12 xl:tw-w-3/12
         tw-min-w-max tw-relative tw-order-2
       ">
       <div class="tw-mx-4">
