@@ -11,16 +11,27 @@
     </div>
 </template>
 <script setup>
-import { useScript } from 'unhead'
 
 const params = (Date.now()/180000|0)
 
 const scriptUrl = `https://cdn.bitrix24.com/b16889623/crm/form/loader_4.js?${params}`;
 
-useScript({
-	src: scriptUrl,
-	'data-b24-form': 'click/4/ftnt27', 
-	'data-skip-moving': 'true'
+
+
+useHead({
+  script: [{ 
+    src: scriptUrl,
+    type: 'text/javascript',
+    async: true,    
+    defer: true,
+    
+    crossorigin: 'anonymous', // Needed if the script requires CORS
+    //referrerpolicy: 'no-referrer', // Prevents referrer info from being sent
+    //integrity: 'sha384-abc123def456ghi789...', // Optional but recommended for CDNs
+    //id: 'cors-safe-script'
+    'data-b24-form': 'click/4/ftnt27', 
+	'data-skip-moving': 'true',
+  }],
 })
 
 </script>
