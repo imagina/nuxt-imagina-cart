@@ -1,7 +1,7 @@
 <template>
 	<div class="tw-w-full tw-min-h-[80vh]">		
 	<NuxtImg 
-		v-if="category && bannerImage"
+		v-if="category && bannerImage && false"
 		:src="bannerImage" 
 		class="
 			tw-h-[180px]                        
@@ -13,9 +13,15 @@
 			lg:tw-h-[400px]
 		"
 		:alt="category?.title"
-	/>    
+	/>
+	<div v-if="category">
+		  <categoryBanner :category="category" />
+	</div>
+
+
+
 	
-	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
+	<div class="tw-pt-5 tw-mt-2.5 tw-hidden" v-if="category">
 		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
 		<p v-if="category.description"  v-html="category.description" class="tw-text-base tw-mt-3.5">                        
 		</p>
@@ -190,6 +196,7 @@ import constants from '../../config/constants'
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
+import categoryBanner from './banners'
 
 const props = defineProps( {
   category: {
