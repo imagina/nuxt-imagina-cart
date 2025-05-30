@@ -1,11 +1,11 @@
 <template>
-  <div>
-
-  </div>
+  
+  
     <component
       v-if="getBannerComponent(category)"
       :is="getBannerComponent(category)?.component">
     </component>
+ 
 </template>
 <script setup>
 
@@ -14,6 +14,7 @@ import hostingIpanelPhp from './categories/hostingIpanelPhp.vue';
 import hostingCpanel from './categories/hostingCpanel.vue';
 import hostingCpanelFree from './categories/hostingCpanelFree.vue';
 import resellerHosting from './categories/resellerHosting.vue';
+ 
 
 const props = defineProps( {
   category: {
