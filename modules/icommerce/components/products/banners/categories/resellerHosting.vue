@@ -20,10 +20,10 @@
 
 		<div style="z-index: 10; position: relative;" class="tw-p-8 tw-gap-8">
 			<div>
-				<span class="tw-text-xl md:tw-text-5xl tw-font-semibold">Reseller Hosting en Colombia</span>
+				<span class="tw-hidden sm:tw-block tw-text-xl md:tw-text-5xl tw-font-semibold">Reseller Hosting en Colombia</span>
 			</div>
-			<div>
-				<span class="tw-text-md md:tw-text-2xl tw-font-semibold">Planes actualizables ilimitadamente con todas las caracteristicas de seguridad y estabilidad de nuestro Hosting Linux.</span>
+			<div class="tw-py-4">
+				<span class="tw-text-lg md:tw-text-xl tw-font-semibold">Planes actualizables ilimitadamente con todas las caracteristicas de seguridad y estabilidad de nuestro Hosting Linux.</span>
 			</div>
 
 			<div class="tw-my-2 md:tw-my-8 tw-flex tw-justify-center md:tw-justify-start" v-if="false">

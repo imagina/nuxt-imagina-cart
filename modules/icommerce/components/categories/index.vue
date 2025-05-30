@@ -68,6 +68,7 @@ import productsPage from '../../pages/products.vue'
 const route = useRoute()
 const router = useRouter()
 
+const selectedCategoryState = useState('icommerce.selected.category', () => null)
 
 const categories = ref([])
 const isMobile = ref(false)
@@ -107,7 +108,7 @@ async function getSelectedCategory(categories){
 		})
 			*/
 	}
-
+	selectedCategoryState.value = category
 	emit('category', category)
 }
 
