@@ -5,14 +5,14 @@
                 <q-icon class="tw-text-[#888888]" name="fa-solid fa-angle-right" />
             </template>
             <q-breadcrumbs-el
-                class="tw-text-base tw-text-[#888888] tw-font-extrabold"
+                class="tw-text-[14px] md:tw-text-base tw-font-[800] tw-text-[#888888] "
                 label="Tienda"
                 :to="'/'"
             />
                 
             <q-breadcrumbs-el
                 v-if="selectedCategoryState"
-                class="tw-text-base tw-text-[#888888] tw-font-medium"
+                class="tw-text-[14px] md:tw-text-base tw-text-[#888888] tw-font-medium"
                 :label="selectedCategoryState?.title"
                 
             />
