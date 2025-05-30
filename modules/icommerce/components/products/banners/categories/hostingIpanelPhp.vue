@@ -26,15 +26,10 @@
 			<div class="tw-my-4 md:tw-my-4">
 				<p class="tw-text-md md:tw-text-xl tw-hidden md:tw-block">Web hosting facil con todas las caracteristicas para crecer en el mundo digital.</p>
 			</div>
-			<div class="tw-my-2 md:tw-my-8 tw-flex tw-justify-center md:tw-justify-start" v-if="false">
-				<q-btn
-					label="Solicita una cotización"
-					color="primary"
-					class="md:tw-text-[20px] tw-font-[400] tw-duration-200 tw-rounded-full xl:tw-px-6"
-					unelevated
-					no-caps
-				/>
-			</div>
+			<bitrixScript />
 		</div>
 	</div>
 </template>
+<script setup>
+   import bitrixScript from '../bitrixScript';
+</script>

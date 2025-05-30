@@ -101,12 +101,7 @@ async function getSelectedCategory(categories){
 	}) 
 	if(!category) {
 		category = categories[0]
-		/*
-		router.replace({
-			name: `icommerce.products.${category.slug}`,
-			params: { slug: category.slug }
-		})
-			*/
+		
 	}
 	selectedCategoryState.value = category
 	emit('category', category)
@@ -163,7 +158,8 @@ async function getCategories(){
 
 
 function isActive(category){
-	return route.path.includes(category?.slug) || false
+	
+	return route.path.includes(category?.slug) || (selectedCategoryState?.value?.slug == category.slug) || false
 }
 
 onMounted(async () => {

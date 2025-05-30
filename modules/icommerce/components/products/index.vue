@@ -21,9 +21,9 @@
 
 
 	
-	<div class="tw-pt-5 tw-mt-2.5 tw-hidden" v-if="category">
+	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
 		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
-		<p v-if="category.description"  v-html="category.description" class="tw-text-base tw-mt-3.5">                        
+		<p v-if="category.description"  v-html="category.description" class="tw-text-base tw-mt-3.5  tw-hidden">                        
 		</p>
 	</div>
 	<hr  class="tw-my-6 tw-w-full" />
