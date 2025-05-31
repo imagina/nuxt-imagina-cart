@@ -28,10 +28,6 @@
 			<div class="tw-my-4 md:tw-my-4">
 				<p class="tw-text-md md:tw-text-xl tw-hidden md:tw-block">Panel de Control Plesk Última versión, Configuraciones a medida.</p>
 			</div>
-			<bitrixScript />
 		</div>
 	</div>
 </template>
-<script setup>
-   import bitrixScript from '../bitrixScript';
-</script>

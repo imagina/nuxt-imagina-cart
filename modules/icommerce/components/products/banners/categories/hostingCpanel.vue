@@ -25,11 +25,8 @@
 			<div class="tw-my-4 md:tw-my-4">
 				<p class="tw-text-lg md:tw-text-xl">Mayor velocidad para tu sitio web con Hosting cPanel.</p>
 			</div>
-			<bitrixScript />
+			
 			
 		</div>
 	</div>
 </template>
-<script setup>
-   import bitrixScript from '../bitrixScript';
-</script>

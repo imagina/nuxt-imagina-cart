@@ -25,10 +25,6 @@
 			<div class="tw-my-4 md:tw-my-4">
 				<p class="tw-text-lg md:tw-text-xl">Última versión, facilidad de uso, asistencia tecnica 24/7/365, mejor rendimiento.</p>
 			</div>
-			<bitrixScript />
 		</div>
 	</div>
 </template>
-<script setup>
-   import bitrixScript from '../bitrixScript';
-</script>
