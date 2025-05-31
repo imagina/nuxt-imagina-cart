@@ -26,10 +26,6 @@
 			<div class="tw-my-4 md:tw-my-4">
 				<p class="tw-text-md md:tw-text-xl tw-hidden md:tw-block">Web hosting facil con todas las caracteristicas para crecer en el mundo digital.</p>
 			</div>
-			<bitrixScript />
 		</div>
 	</div>
 </template>
-<script setup>
-   import bitrixScript from '../bitrixScript';
-</script>

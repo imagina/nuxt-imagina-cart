@@ -25,10 +25,7 @@
 			<div class="tw-py-4">
 				<span class="tw-text-lg md:tw-text-xl tw-font-semibold">Planes actualizables ilimitadamente con todas las caracteristicas de seguridad y estabilidad de nuestro Hosting Linux.</span>
 			</div>
-			<bitrixScript />
 		</div>
 	</div>
 </template>
-<script setup>
-   import bitrixScript from '../bitrixScript';
-</script>
+

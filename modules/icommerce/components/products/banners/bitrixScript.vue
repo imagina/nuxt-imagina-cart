@@ -19,18 +19,28 @@ const scriptUrl = `https://cdn.bitrix24.com/b16889623/crm/form/loader_4.js?${par
 
 
 useHead({
+
+  meta: [
+    {
+      name: "csrf-token",
+      content: "2TWq3071FIhk7UHe2iQuy6tDFj7sdXatp3TaQQQM"
+    }
+  ],
+
   script: [{ 
+    async: true,
     src: scriptUrl,
     type: 'text/javascript',
-    async: true,    
-    defer: true,
     
+    //defer: true,
+    
+    //crossorigin: 'use-credentials', // Needed if the script requires CORS
     crossorigin: 'anonymous', // Needed if the script requires CORS
     //referrerpolicy: 'no-referrer', // Prevents referrer info from being sent
-    //integrity: 'sha384-abc123def456ghi789...', // Optional but recommended for CDNs
+    //integrity: '', // Optional but recommended for CDNs
     //id: 'cors-safe-script'
-    'data-b24-form': 'click/4/ftnt27', 
-	'data-skip-moving': 'true',
+    //'data-b24-form': 'click/4/ftnt27', 
+	//'data-skip-moving': 'true',
   }],
 })
 

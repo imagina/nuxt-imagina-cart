@@ -104,11 +104,12 @@
         </div>
 
         <!-- input for register domain-->
-				<q-input
+				<q-input            
             v-model="product.domainCheck.domainName"
             :placeholder="product.domainCheck.action.placeholder"
             class="tw-w-full"
             outlined
+            autofocus
             no-error-icon
             :rules="[
                 (val) => !!val || 'Este campo es requerido.',
@@ -547,7 +548,6 @@ const emits = defineEmits(['subtotal', 'discount'])
 const domainPricing = ref([])
 const alertRef = ref('alertRef')
 const alertParams = ref({})
-
 //captcha could not be validated with computed due call overflow
 const showCaptcha = ref(null)
 const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
@@ -556,7 +556,7 @@ const someIsDomainNameRequired = computed(() => cartState.value.products.some((p
 const domainActions =  [
 	{
 		label: 'Registrar un nuevo dominio',
-    placeholder: '',
+    placeholder: 'Encuentra tu dominio',
 		value: 'register'
 	},
 
@@ -687,6 +687,7 @@ function configProducts() {
     }
     getDiscount(product)
     updateDomainPrice(product)
+    
   })
 
     //calcSubtotal()
