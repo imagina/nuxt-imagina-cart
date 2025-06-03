@@ -1,8 +1,7 @@
 <template>
 	<ClientOnly>
 		<bitrixSupportButton />
-	</ClientOnly>
-	
+	</ClientOnly>	
     <q-layout view="hHh lpR fFf" @scroll="handleScroll">
 			<q-page-container>
 						<HeaderApp :scroll-position="scrollPosition" />
