@@ -1,5 +1,5 @@
 <template>
-	<ClientOnly>		
+	<ClientOnly>
 		<div class="
 			lg:tw-flex
 			tw-flex-wrap
@@ -16,31 +16,31 @@
 		/>
 
 			<!--cart and products --->
-			<div 
+			<div
 			v-if="!loading"
 			class="
 				tw-w-full
 				lg:tw-w-[800px]
-				lg:tw-mb-4	
+				lg:tw-mb-4
 				tw-flex
-				tw-align-middle	
+				tw-align-middle
 			">
 				<div v-if="showCart" class="tw-mb-[40px]">
 					<!--title -->
 					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
 						<div>
-							<h1 
+							<h1
 								class="
-									tw-text-[20px] 
-									sm:tw-text-[24px] 
-									md:tw-text-[35px] 
+									tw-text-[20px]
+									sm:tw-text-[24px]
+									md:tw-text-[35px]
 									tw-font-[700]
 								"
 							>
 								{{ $t('icommerce.cart.yourCart') }}
 							</h1>
 						</div>
-						
+
 						<!-- currency -->
 						<div>
 							<CurrencySelector />
@@ -48,10 +48,10 @@
 					</div>
 					<!-- products -->
 					<ProductsComponent/>
-					
+
 				</div>
 				<!-- empty cart -->
-				<div v-else 
+				<div v-else
 					class="tw-min-h-[50vh]"
 				>
 					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
@@ -83,7 +83,7 @@
 			<div
 				v-if="showCart"
 				class="
-				tw-w-full				
+				tw-w-full
 				md:tw-my-[20px]
 				lg:tw-w-[800px]
 				lg:tw-mt-0
@@ -103,20 +103,20 @@
 					tw-p-6
 					"
 				>
-					
+
 					<!-- subtotal -->
-					<SubtotalComponent />					
+					<SubtotalComponent />
 
 					<!--coupon -->
 					<div v-if="false">
 						<div>
-							<q-btn 
+							<q-btn
 								:label="$t('icommerce.cart.coupon')"
 								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]"
 								flat
 								no-caps
 								dense
-								@click="showCouponInput = !showCouponInput" 
+								@click="showCouponInput = !showCouponInput"
 							/>
 						</div>
 						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
@@ -136,11 +136,11 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							@click="redirectCheckout()"	
+							@click="redirectCheckout()"
 							:disable="disableContinue"
 						/>
 					</div>
-					<div 
+					<div
 						v-if="showTaxesWarning"
 						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
 					>
@@ -148,7 +148,7 @@
 					</div>
 				</div>
 			</div>
-		
+
 	</div>
 	</ClientOnly>
 </template>
@@ -188,7 +188,7 @@ const form = useStorage('shoppingCheckoutForm', {
 
 const { t } = useI18n()
 const router = useRouter()
-const route = useRoute()    
+const route = useRoute()
 
 const loading = ref(false)
 
@@ -196,8 +196,8 @@ const showCouponInput = ref(false)
 const showCart = computed(() => cartState.value?.products?.length || false)
 
 const disableContinue = computed(() => cartState.value.products.every((product) => {
-	if(!product?.domain) return false   //not a domain product 
-	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false	
+	if(!product?.domain) return false   //not a domain product
+	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false
 }))
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
@@ -210,21 +210,21 @@ onMounted(async () => {
 })
 
 async function init(){
-	await userStore.getUsdRates()    
+	await userStore.getUsdRates()
 	await checkUrlParams()
 }
 
-async function  checkUrlParams(){	
-	const query = route?.query || {}	 
+async function  checkUrlParams(){
+	const query = route?.query || {}
 
 	const options = {
 		action: query?.a || null,
 		pid: query?.pid || null,
-		billingcycle: query?.billingcycle || null, 
+		billingcycle: query?.billingcycle || null,
 		promocode: query?.promocode || null
 	}
-	
-	if(options.action && options.pid){		
+
+	if(options.action && options.pid){
 		getProduct(options.pid, options)
 	}
 }
@@ -232,23 +232,24 @@ async function  checkUrlParams(){
 async function getProduct(id, urlOptions){
 	loading.value = true
 	cartState.value.products = []
-	const params = {			
-		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues', 
+	const params = {
+		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues',
 		filter: {
 			field: 'external_id'
 		}
 	}
-	
-	await baseService.show(apiRoutes.products, id,  params).then(response => {		
+
+	await baseService.show(apiRoutes.products, id,  params).then(response => {
 		if(response?.data) {
 			const product = response.data
-			
+
 			/* translate the  product options and set one if there is in url params  */
 			if(productsHelper.hasFrencuency(product)){
 				let billingcycle = 0
 				const options = productsHelper.getFrecuencyOptions(product).map((element, index) => {
 					if(urlOptions?.billingcycle){
-						if(urlOptions?.billingcycle.toLowerCase() == element.label.toLowerCase()){
+						const tempBillingcycle = Array.isArray(urlOptions.billingcycle) ? urlOptions.billingcycle[urlOptions.billingcycle.length-1 ] : urlOptions.billingcycle
+						if(tempBillingcycle.toLowerCase() == element.label.toLowerCase()){
 							billingcycle = index
 						}
 					}
@@ -257,7 +258,7 @@ async function getProduct(id, urlOptions){
 					return element
        			});
 				if(options.length) product.frecuency = options[billingcycle]
-    		}			
+    		}
 
 			cartState.value.products = []
 			cartState.value.products.push(product);
