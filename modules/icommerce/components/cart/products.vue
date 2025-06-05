@@ -118,9 +118,11 @@
                 (val) => isSupportedDomain(product, val)
               ]"
               @update:model-value="(val) => {
-                product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '')
+                product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '') // remove invalid chars
+                //product.domainCheck.domainName = product.domainCheck.domainName.replace(/\.{2,}/g, '.'); // collapse multiple dots into one
                 updateDomainPrice(product)
               }"
+              @keydown="(event) => checkDomainKeyDown(event, product)"
             >
           <template v-slot:prepend>
             <q-icon
@@ -135,12 +137,11 @@
                 label="Buscar"
                 color="amber"
                 debounce="500"
-
                 class="
-                    cursor-pointer
-                    md:tw-w-[140px]
-                    tw-rounded-md
-                    tw-text-base
+                  cursor-pointer
+                  md:tw-w-[140px]
+                  tw-rounded-md
+                  tw-text-base
                 "
                 rounded
                 no-caps
@@ -809,8 +810,15 @@ function isDomainNameFree(product) {
   return domainCategories.includes(product?.category?.id) || false
 }
 
+function checkDomainKeyDown(event, product){
+  if(product.domainCheck.action.value == domainActions[0].value) {
+    if(event.key == 'Enter'){
+      checkDomain(product)
+    }
+  }
+}
 
-async function checkDomain(product) {
+async function checkDomain(product) {    
 
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
