@@ -106,20 +106,7 @@
 
 					<!-- subtotal -->
 					<SubtotalComponent />
-
-					<!--coupon -->
-					<div v-if="false">
-						<div>
-							<q-btn
-								:label="$t('icommerce.cart.coupon')"
-								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]"
-								flat
-								no-caps
-								dense
-								@click="showCouponInput = !showCouponInput"
-							/>
-						</div>
-					</div>
+					
 					<div class="tw-mt-6">
 						<q-btn
 							:label="$t('icommerce.cart.continue')"
@@ -164,10 +151,17 @@ const userStore = useAuthStore()
 
 definePageMeta({
   middleware: 'auth',
-  layout: 'icommerce'
+  //layout: 'icommerce'
 })
 
+/*
 const cartState = useStorage('shoppingCart', {
+	products: [],
+	currency: 'COP'
+})
+	*/
+
+const cartState = ref({
 	products: [],
 	currency: 'COP'
 })
@@ -178,7 +172,7 @@ const route = useRoute()
 
 const loading = ref(false)
 
-const showCouponInput = ref(false)
+
 const showCart = computed(() => cartState.value?.products?.length || false)
 
 const disableContinue = computed(() => cartState.value.products.every((product) => {
