@@ -843,7 +843,7 @@ async function checkDomain(product) {
         method: 'POST',
         body
       }).then(response => {
-          product.domainCheck.exactMatch = response.exactMatch || false
+          product.domainCheck.exactMatch = response?.exactMatch || false
           if(product.domainCheck.exactMatch){
             product.domainCheck.exactMatch.disableButton = false
           }
@@ -853,7 +853,7 @@ async function checkDomain(product) {
             return {...element, disableButton: false }
           });
 
-          product.domainCheck.suggestions = response.suggestions || []
+          product.domainCheck.suggestions = response?.suggestions || []
           product.domainCheck.suggestion.map(element => {
             return {...element, disableButton: false }
           });

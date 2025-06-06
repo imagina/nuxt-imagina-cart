@@ -119,9 +119,6 @@
 								@click="showCouponInput = !showCouponInput"
 							/>
 						</div>
-						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
-							<q-input v-model="form.coupon" dense outlined />
-						</div>
 					</div>
 					<div class="tw-mt-6">
 						<q-btn
@@ -154,11 +151,11 @@
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
-import ProductsComponent from '../components/cart/products.vue'
-import SubtotalComponent from '../components/cart/subtotal.vue'
-import productsHelper from '../helpers/products'
-import CurrencySelector from '../components/currencySelector'
-import apiRoutes from '../config/apiRoutes'
+import ProductsComponent from '../modules/icommerce/components/cart/products.vue'
+import SubtotalComponent from '../modules/icommerce/components/cart/subtotal.vue'
+import productsHelper from '../modules/icommerce/helpers/products'
+import CurrencySelector from '../modules/icommerce/components/currencySelector'
+import apiRoutes from '../modules/icommerce/config/apiRoutes'
 
 
 
@@ -167,23 +164,12 @@ const userStore = useAuthStore()
 
 definePageMeta({
   middleware: 'auth',
+  layout: 'icommerce'
 })
 
 const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
-})
-const form = useStorage('shoppingCheckoutForm', {
-	coupon: null,
-	email: null,
-	firstName: null,
-	lastName: null,
-	identification: null,
-	mobilePhone: null,
-	country: null,
-	address: null,
-	city: null,
-	zipCode: null
 })
 
 const { t } = useI18n()
@@ -231,15 +217,21 @@ async function  checkUrlParams(){
 
 async function getProduct(id, urlOptions){
 	loading.value = true
-	cartState.value.products = []
+	///cartState.value.products = []
 	const params = {
 		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues',
 		filter: {
 			field: 'external_id'
-		}
+		}		
 	}
 
-	await baseService.show(apiRoutes.products, id,  params).then(response => {
+	await useFetch('/api/base', {
+					method: 'GET',
+					params: {
+						api:  `${apiRoutes.products}/${id}`,
+						...params
+					}
+				}).then(response => {
 		if(response?.data) {
 			const product = response.data
 
@@ -260,8 +252,9 @@ async function getProduct(id, urlOptions){
 				if(options.length) product.frecuency = options[billingcycle]
     		}
 
-			cartState.value.products = []
-			cartState.value.products.push(product);
+			console.log(product)
+			//cartState.value.products = []
+			//cartState.value.products.push(product);
 		}
 
 	})
