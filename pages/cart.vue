@@ -1,5 +1,5 @@
 <template>
-	<ClientOnly>
+	
 		<div class="
 			lg:tw-flex
 			tw-flex-wrap
@@ -134,7 +134,7 @@
 			</div>
 
 	</div>
-	</ClientOnly>
+	
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
@@ -149,10 +149,15 @@ import apiRoutes from '../modules/icommerce/config/apiRoutes'
 const userStore = useAuthStore()
 
 
+
 definePageMeta({
   middleware: 'auth',
-  //layout: 'icommerce'
+  layout: 'icommerce'
 })
+
+const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
 
 /*
 const cartState = useStorage('shoppingCart', {
@@ -161,32 +166,46 @@ const cartState = useStorage('shoppingCart', {
 })
 	*/
 
-const cartState = ref({
-	products: [],
-	currency: 'COP'
+let products = []
+const params = getParams()
+const { data, status, error, refresh, clear } = await useFetch('/api/icommerce/get-product', {
+	key: 'my-api-data',
+	params: {
+		test: 'hello'
+	}
 })
 
-const { t } = useI18n()
-const router = useRouter()
-const route = useRoute()
+
+async function  getParams(){
+	const query = route?.query || {}
+	return {
+		action: query?.a || null,
+		pid: query?.pid || null,
+		billingcycle: query?.billingcycle || null,
+		promocode: query?.promocode || null
+	}
+}
+	
+
+
 
 const loading = ref(false)
 
 
-const showCart = computed(() => cartState.value?.products?.length || false)
+const showCart = computed(() => products?.length || false)
 
-const disableContinue = computed(() => cartState.value.products.every((product) => {
+const disableContinue = computed(() => products.every((product) => {
 	if(!product?.domain) return false   //not a domain product
 	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false
 }))
 
-const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
+const showTaxesWarning = computed(() => products.some((product) => product?.domain || false ))
 
 const checkoutPath = getPath('icommerce.checkout')
 
 
 onMounted(async () => {
-	init();
+	//init();
 })
 
 async function init(){
@@ -211,7 +230,7 @@ async function  checkUrlParams(){
 
 async function getProduct(id, urlOptions){
 	loading.value = true
-	///cartState.value.products = []
+	///cartState.products = []
 	const params = {
 		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues',
 		filter: {
@@ -247,8 +266,8 @@ async function getProduct(id, urlOptions){
     		}
 
 			console.log(product)
-			//cartState.value.products = []
-			//cartState.value.products.push(product);
+			//cartState.products = []
+			//cartState.products.push(product);
 		}
 
 	})
