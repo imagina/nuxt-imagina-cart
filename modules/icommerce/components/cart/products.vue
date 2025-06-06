@@ -811,6 +811,8 @@ function isDomainNameFree(product) {
 }
 
 function checkDomainKeyDown(event, product){
+
+  if(!product.domainCheck.domainName) return
   if(product.domainCheck.action.value == domainActions[0].value) {
     if(event.key == 'Enter'){
       checkDomain(product)
@@ -819,45 +821,45 @@ function checkDomainKeyDown(event, product){
 }
 
 async function checkDomain(product) {    
-
+  product.domainCheck.loading = true
     product.domainCheck.exactMatch = false
     product.domainCheck.results =  []
     product.domainCheck.suggestions = []
-    product.domainCheck.modal = true
-	  product.domainCheck.loading = true
 
-    await getCaptcha()
+    await getCaptcha()    
+    if(token.value && product.domainCheck.domainName ){
+      product.domainCheck.modal = true
+      const lang = locale.value == 'es' ? 'esp' : 'eng'
+		  const domain = product.domainCheck.domainName.trim()
 
-    const lang = locale.value == 'es' ? 'esp' : 'eng'
-		const domain = product.domainCheck.domainName.trim()
+      const body = {
+        token: token.value.token,
+        domain,
+        lang,
+        ext: ''
+      }
+      
+      await $fetch(apiRoutes.domainCheck, {
+        method: 'POST',
+        body
+      }).then(response => {
+          product.domainCheck.exactMatch = response.exactMatch || false
+          if(product.domainCheck.exactMatch){
+            product.domainCheck.exactMatch.disableButton = false
+          }
 
-    const body = {
-      token: token.value.token,
-      domain,
-      lang,
-      ext: ''
+          product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
+          product.domainCheck.results.map(element => {
+            return {...element, disableButton: false }
+          });
+
+          product.domainCheck.suggestions = response.suggestions || []
+          product.domainCheck.suggestion.map(element => {
+            return {...element, disableButton: false }
+          });
+      }).catch(e => {});
     }
-
-    await $fetch(apiRoutes.domainCheck, {
-      method: 'POST',
-      body
-    }).then(response => {
-        product.domainCheck.exactMatch = response.exactMatch || false
-        if(product.domainCheck.exactMatch){
-          product.domainCheck.exactMatch.disableButton = false
-        }
-
-        product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
-        product.domainCheck.results.map(element => {
-          return {...element, disableButton: false }
-        });
-
-        product.domainCheck.suggestions = response.suggestions || []
-        product.domainCheck.suggestion.map(element => {
-          return {...element, disableButton: false }
-        });
-    }).catch(e => {});
-
+    
     token.value = null
     product.domainCheck.loading = false
 }
