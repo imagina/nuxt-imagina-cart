@@ -1,19 +1,28 @@
 import apiRoutes from "~/modules/icommerce/config/apiRoutes";
 
 export default defineCachedEventHandler(async (event) => {
-    const params = getQuery(event)
-    
-    if(!params?.pid) return null
+    const queries = getQuery(event)    
+    if(!queries?.pid) return null
 
     const config = useRuntimeConfig()
     const apiRoute = `${config.public.apiRoute}/api`    
 
-    let api = `${apiRoute}${apiRoutes.products}/${params.pid}`   
+    let api = `${apiRoute}${apiRoutes.products}/${queries.pid}`   
+
+    const params = {
+		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues',
+		filter: {
+			field: 'external_id'
+		}		
+	}
+
+    console.log(api)
     
     const data = await $fetch(`${api}`, {
         params: params
     }).then(response => {
-        return response
+        console.log(response?.data)
+        return response?.data || null
     })    
     return data;
   }, {

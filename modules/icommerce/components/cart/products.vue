@@ -529,13 +529,19 @@ import moment from 'moment';
 import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
 
-const userStore = useAuthStore()
+const route = useRoute()
 
 const token = ref(null)
 
 const captchaRef = ref('captchaRef')
 
-const regex = /^[a-zA-Z0-9.-]+$/;
+const props = defineProps({
+  product: {
+    type: Object,
+    required: false
+  }
+})
+
 
 const { locale, locales, setLocale, t } = useI18n()
 
@@ -543,6 +549,9 @@ const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
 })
+
+
+
 
 const emits = defineEmits(['subtotal', 'discount'])
 
@@ -595,12 +604,50 @@ watch(
 
 
 async function init() {
-  if(cartState.value.products.length){    
+  const urlOptions = await checkUrlParams()
+  if(urlOptions.pid && urlOptions.action ){
+    console.log(props.product )
+    const product  = props.product  
+  
+
+    if(productsHelper.hasFrencuency(product)){
+				let billingcycle = 0
+  
+				const options = productsHelper.getFrecuencyOptions(product).map((element, index) => {
+          console.log(element)
+					if(urlOptions?.billingcycle){
+						const tempBillingcycle = Array.isArray(urlOptions.billingcycle) ? urlOptions.billingcycle[urlOptions.billingcycle.length-1 ] : urlOptions.billingcycle
+						if(tempBillingcycle.toLowerCase() == element.label.toLowerCase()){
+							billingcycle = index
+						}
+					}
+					element.frecuency = element.label
+					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
+					return element
+       			});
+				if(options.length) product.frecuency = options[billingcycle]
+    }
+    console.log(product.frecuency)
+    cartState.value.products = []
+    cartState.value.products.push(product)
+  }
+   
+
     await getDomainPricing().then(() => {
       configProducts()
       loadCaptcha()
-    })
-  }
+    })  
+}
+
+async function checkUrlParams(){
+	const query = route?.query || {}
+	return {
+		action: query?.a || null,
+		pid: query?.pid || null,
+		billingcycle: query?.billingcycle || null,
+		promocode: query?.promocode || null
+	}
+	
 }
 
 function loadCaptcha(){       

@@ -1,5 +1,4 @@
 <template>
-	
 		<div class="
 			lg:tw-flex
 			tw-flex-wrap
@@ -8,8 +7,7 @@
 			tw-h-full
 		"
 		style="background-color:  #FAFAFA;"
-		>
-		{{ product }}
+		>		
 
 		<q-inner-loading
 			:showing="loading"
@@ -48,7 +46,10 @@
 						</div>
 					</div>
 					<!-- products -->
-					<ProductsComponent/>
+					<ProductsComponent
+						v-if="product"
+						:product="product"
+					/>
 
 				</div>
 				<!-- empty cart -->
@@ -170,7 +171,6 @@ const cartState = useStorage('shoppingCart', {
 
 let products = []
 const route = useRoute()
-const params = getParams()
 const { data: product } = await useFetch(`/api/icommerce/get-product?pid=${route.query?.pid}`, {	
 	key: `product/${route.query?.pid}`
 	/*
@@ -181,24 +181,10 @@ const { data: product } = await useFetch(`/api/icommerce/get-product?pid=${route
 	
 })
 
-
-async function  getParams(){
-	const query = route?.query || {}
-	return {
-		action: query?.a || null,
-		pid: query?.pid || null,
-		billingcycle: query?.billingcycle || null,
-		promocode: query?.promocode || null
-	}
-}
-	
-
-
-
 const loading = ref(false)
 
 
-const showCart = computed(() => products?.length || false)
+const showCart = computed(() => product || false)
 
 const disableContinue = computed(() => products.every((product) => {
 	if(!product?.domain) return false   //not a domain product
@@ -211,74 +197,25 @@ const checkoutPath = getPath('icommerce.checkout')
 
 
 onMounted(async () => {
-	//init();
+	init();
 })
 
 async function init(){
 	await userStore.getUsdRates()
-	await checkUrlParams()
 }
 
-async function  checkUrlParams(){
-	const query = route?.query || {}
 
-	const options = {
-		action: query?.a || null,
-		pid: query?.pid || null,
-		billingcycle: query?.billingcycle || null,
-		promocode: query?.promocode || null
-	}
 
-	if(options.action && options.pid){
-		getProduct(options.pid, options)
-	}
-}
 
-async function getProduct(id, urlOptions){
-	loading.value = true
-	///cartState.products = []
-	const params = {
-		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues',
-		filter: {
-			field: 'external_id'
-		}		
-	}
-
-	await useFetch('/api/base', {
-					method: 'GET',
-					params: {
-						api:  `${apiRoutes.products}/${id}`,
-						...params
-					}
-				}).then(response => {
-		if(response?.data) {
-			const product = response.data
-
+	
 			/* translate the  product options and set one if there is in url params  */
-			if(productsHelper.hasFrencuency(product)){
-				let billingcycle = 0
-				const options = productsHelper.getFrecuencyOptions(product).map((element, index) => {
-					if(urlOptions?.billingcycle){
-						const tempBillingcycle = Array.isArray(urlOptions.billingcycle) ? urlOptions.billingcycle[urlOptions.billingcycle.length-1 ] : urlOptions.billingcycle
-						if(tempBillingcycle.toLowerCase() == element.label.toLowerCase()){
-							billingcycle = index
-						}
-					}
-					element.frecuency = element.label
-					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
-					return element
-       			});
-				if(options.length) product.frecuency = options[billingcycle]
-    		}
 
-			console.log(product)
-			//cartState.products = []
-			//cartState.products.push(product);
-		}
 
-	})
-	loading.value = false
-}
+
+
+
+
+
 
 
 function redirectCheckout() {
