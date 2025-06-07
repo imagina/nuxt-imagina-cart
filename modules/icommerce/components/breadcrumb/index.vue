@@ -1,5 +1,5 @@
 <template>
-    <ClientOnly>
+    
     <div class="tw-w-full tw-flex-row tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE]">
         <q-breadcrumbs separator-color="mediumGray">
             <template v-slot:separator>
@@ -19,7 +19,7 @@
             />
             </q-breadcrumbs>
     </div>
-    </ClientOnly>
+    
 </template>
 <script setup>
 

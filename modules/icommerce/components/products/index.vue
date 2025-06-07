@@ -147,7 +147,7 @@
 						/>
 						<NuxtLink 
 							:to="{
-								path: getPath('icommerce.cart'), 
+								path: '/cart', 
 								query: {
 									a: 'add',
 									pid: product.externalId

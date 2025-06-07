@@ -9,6 +9,7 @@
 		"
 		style="background-color:  #FAFAFA;"
 		>
+		{{ product }}
 
 		<q-inner-loading
 			:showing="loading"
@@ -157,7 +158,7 @@ definePageMeta({
 
 const { t } = useI18n()
 const router = useRouter()
-const route = useRoute()
+
 
 /*
 const cartState = useStorage('shoppingCart', {
@@ -166,13 +167,18 @@ const cartState = useStorage('shoppingCart', {
 })
 	*/
 
+
 let products = []
+const route = useRoute()
 const params = getParams()
-const { data, status, error, refresh, clear } = await useFetch('/api/icommerce/get-product', {
-	key: 'my-api-data',
+const { data: product } = await useFetch(`/api/icommerce/get-product?pid=${route.query?.pid}`, {	
+	key: `product/${route.query?.pid}`
+	/*
 	params: {
-		test: 'hello'
-	}
+		id: route.query.pid
+	},
+	*/
+	
 })
 
 
