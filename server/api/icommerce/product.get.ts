@@ -19,7 +19,6 @@ export default defineCachedEventHandler(async (event) => {
     const data = await $fetch(`${api}`, {
         params: params
     }).then(response => {
-        console.log(response?.data)
         return response?.data || null
     })    
     return data;

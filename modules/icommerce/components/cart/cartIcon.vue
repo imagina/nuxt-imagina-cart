@@ -1,5 +1,5 @@
 <template>
-	<NuxtLink :to="getPath('icommerce.cart')">
+	<NuxtLink to="/cart">
 		<q-btn
 			unelevated
 			round
