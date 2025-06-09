@@ -4,14 +4,15 @@ export default defineCachedEventHandler(async (event) => {
 	console.log('domain pricing')
 	const data = await $fetch(`${apiRoute}`).then(response => {
 		const pricingList =  JSON.parse(response)
-        return Object.keys(pricingList).map(x => { return { ext: x, ...pricingList[x] } })
+		if(pricingList) return Object.keys(pricingList).map(x => { return { ext: x, ...pricingList[x] } })
+		return []
 	})
 	return data;
   }, 
   {		
 		group: 'icommerce',
 		name: 'domain_pricing',
-		maxAge: 360 * 5,  //minimun time,
+		maxAge: 10,  //minimun time,
 		//staleMaxAge: -1, // sent to the client while the cache updates in the background.
 		//swr: false
     	getKey: (event) =>  'domains'

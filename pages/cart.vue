@@ -49,6 +49,7 @@
 					<ProductsComponent
 						v-if="product"
 						:product="product"
+						:domainPricing="domainPricing"
 					/>
 
 				</div>
@@ -83,7 +84,7 @@
 
 			<!-- cart-->
 			<div
-				v-if="showCart"
+				v-if="false"
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -175,6 +176,10 @@ const { data: product } = await useAsyncData( 'product',
 	() => $fetch(`/api/icommerce/product?pid=${route.query?.pid}`)
 )
 
+const { data: domainPricing } = await useAsyncData( 'domainPricing', 
+	() => $fetch('/api/icommerce/domain-pricing')
+)
+
 
 const loading = ref(false)
 
@@ -192,12 +197,10 @@ const checkoutPath = getPath('icommerce.checkout')
 
 
 onMounted(async () => {
-	init();
+	//init();
 })
 
-async function init(){
-	await userStore.getUsdRates()
-}
+
 
 
 
