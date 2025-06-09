@@ -171,15 +171,10 @@ const cartState = useStorage('shoppingCart', {
 
 let products = []
 const route = useRoute()
-const { data: product } = await useFetch(`/api/icommerce/get-product?pid=${route.query?.pid}`, {	
-	key: `product/${route.query?.pid}`
-	/*
-	params: {
-		id: route.query.pid
-	},
-	*/
-	
-})
+const { data: product } = await useAsyncData( 'product', 
+	() => $fetch(`/api/icommerce/product?pid=${route.query?.pid}`)
+)
+
 
 const loading = ref(false)
 
