@@ -67,7 +67,7 @@ import productsPage from '../../pages/products.vue'
 const route = useRoute()
 const router = useRouter()
 
-const selectedCategoryState = useState('icommerce.selected.category', () => null)
+const selectedCategoryState = useState('icommerce.selected.category')
 
 const categories = ref([])
 const isMobile = ref(false)
@@ -96,6 +96,7 @@ parents.forEach((category) => {
 })
 
 categories.value = parents
+getSelectedCategory(parents)
 
 
 parents.forEach((category) => {
@@ -114,7 +115,7 @@ parents.forEach((category) => {
 		component: productsPage
 	})
 })
-getSelectedCategory(parents)
+
 
 
 
@@ -125,16 +126,13 @@ async function init(){
 }
 
 async function getSelectedCategory(categories){
-	    const route = useRoute()		
-
 	let category = categories.find(item => {
 		if(route.params?.slug == item.slug){
 			return item
 		}
 	}) 
 	if(!category) {
-		category = categories[0]
-		
+		category = categories[0]		
 	}
 	selectedCategoryState.value = category
 	emit('category', category)

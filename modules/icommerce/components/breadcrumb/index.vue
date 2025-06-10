@@ -1,6 +1,7 @@
 <template>
     
-    <div class="tw-w-full tw-flex-row tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE]">
+    <div class="tw-w-full tw-flex-row tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE] tw-min-h-[52px]">
+        <ClientOnly>
         <q-breadcrumbs separator-color="mediumGray">
             <template v-slot:separator>
                 <q-icon class="tw-text-[#888888]" name="fa-solid fa-angle-right" />
@@ -18,12 +19,14 @@
                 
             />
             </q-breadcrumbs>
+        </ClientOnly>
     </div>
+    
     
 </template>
 <script setup>
 
-const selectedCategoryState = useState('icommerce.selected.category', () => null)
+const selectedCategoryState = useState('icommerce.selected.category')
 
 /*
 const router =  useRouter()

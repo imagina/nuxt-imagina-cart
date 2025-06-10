@@ -110,10 +110,8 @@ watch(isMobile, (newValue) => {
         <Modal>
 
           <!--       Buttons Group-->
-          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">
-            <ClientOnly>
-            <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
-            </ClientOnly>
+          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">            
+            <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>            
           </div>
 
   <!--        Render navigation items-->

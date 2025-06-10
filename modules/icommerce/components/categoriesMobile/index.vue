@@ -98,8 +98,8 @@ async function init(){
 
 async function getCategories(){
 
-	//$fetch('/api/icommerce/categories').then(response => {
-		let  data =  props.categories || []				
+	$fetch('/api/icommerce/categories').then(response => {
+		let  data =  response || []				
 		const parents = data		
 		
 		
@@ -110,7 +110,7 @@ async function getCategories(){
 
 		categories.value = parents
 		
-	//})
+	})
 }
 
 

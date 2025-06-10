@@ -1,5 +1,4 @@
-<template>
-  
+<template>  
   <header
       :class="[
       'tw-sticky tw-top-0 tw-z-50 tw-border-b tw-border-gray-200',
@@ -28,9 +27,9 @@
         tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 xl:tw-px-5
         tw-relative tw-order-1
       ">
-      <ClientOnly>
-        <Navbar v-show="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
-      </ClientOnly>
+      
+        
+        <Navbar :nav-items="navItems" :is-scrolled="isScrolled" />      
       </div>
 
       <!-- BOTONES DE CUENTA, CARRITO, THEME TOGGLE -->
@@ -45,9 +44,9 @@
       </div>
 
       <!--       Buttons Group-->
-        <ClientOnly>
-        <NavbarButtons v-if="!isMobile" :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
-        </ClientOnly>
+        
+        <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+        
 
         <!--    Cart Component -->
         <div class="tw-pl-1 tw-relative tw-order-3">

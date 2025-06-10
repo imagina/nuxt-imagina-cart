@@ -14,10 +14,11 @@
               @category="value => category = value"
             />
             
-              <ProductsComponent 
-                v-if="category"
+            
+              <ProductsComponent                 
                 :category="category"
               />            
+            
         </div>
     </div>
     
