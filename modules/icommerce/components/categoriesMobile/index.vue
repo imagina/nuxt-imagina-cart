@@ -75,6 +75,12 @@ const drawer = ref(false)
 const isMobile = ref(false)
 const BREAKPOINT = 1024
 
+const props = defineProps( {
+	categories: {
+		type: Array,
+		required: false	
+	} 
+})
 
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
@@ -92,21 +98,8 @@ async function init(){
 
 async function getCategories(){
 
-	const params = {
-		take: 60,
-		page: 1,
-		filter : {
-			parentId: constants.cagtegories.mainCategoryId,
-			order: {
-				field: "created_at",
-				way: "desc"
-			}			
-		}
-		
-	}
-
-	baseService.index(apiRoutes.categories, params).then(response => {
-		let  data =  response?.data || []				
+	//$fetch('/api/icommerce/categories').then(response => {
+		let  data =  props.categories || []				
 		const parents = data		
 		
 		
@@ -116,23 +109,8 @@ async function getCategories(){
 		})
 
 		categories.value = parents
-		/*
-		const router = useRouter()
-		parents.forEach((category) => {				
-			router.addRoute({					
-						name: `icommerce.products.${category.slug}`,
-						path: `/products/${category.slug}`,
-						meta: {
-							middleware: 'auth',
-							layout: 'icommerce',
-							category: category, 
-							breadcrumb: category.title
-						},
-						component: productsPage
-					})
-		})*/
 		
-	})
+	//})
 }
 
 

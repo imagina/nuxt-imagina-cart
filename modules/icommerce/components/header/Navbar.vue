@@ -111,7 +111,9 @@ watch(isMobile, (newValue) => {
 
           <!--       Buttons Group-->
           <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">
+            <ClientOnly>
             <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+            </ClientOnly>
           </div>
 
   <!--        Render navigation items-->

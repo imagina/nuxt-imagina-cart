@@ -28,7 +28,9 @@
         tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 xl:tw-px-5
         tw-relative tw-order-1
       ">
-        <Navbar v-if="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
+      <ClientOnly>
+        <Navbar v-show="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
+      </ClientOnly>
       </div>
 
       <!-- BOTONES DE CUENTA, CARRITO, THEME TOGGLE -->
@@ -43,7 +45,9 @@
       </div>
 
       <!--       Buttons Group-->
+        <ClientOnly>
         <NavbarButtons v-if="!isMobile" :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+        </ClientOnly>
 
         <!--    Cart Component -->
         <div class="tw-pl-1 tw-relative tw-order-3">

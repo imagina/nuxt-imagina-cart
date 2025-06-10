@@ -23,6 +23,8 @@ import bitrixSupportButton from '~/components/bitrixSupportButton.vue';
 const scrollPosition = ref(null);
 
 function handleScroll(position) {
-  scrollPosition.value = position;
+	if(position.position != scrollPosition.value){
+		scrollPosition.value = position;
+	}  
 }
 </script>

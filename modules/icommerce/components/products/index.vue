@@ -23,7 +23,7 @@
 	
 	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
 		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
-		<p v-if="category.description"  v-html="category.description" class="tw-text-base tw-mt-3.5  tw-hidden">                        
+		<p v-if="category.description" v-show="false" v-html="category.description" class="tw-text-base tw-mt-3.5">                        
 		</p>
 	</div>
 	<hr  class="tw-my-6 tw-w-full" />
@@ -264,9 +264,11 @@ const bannerImage = computed( () =>  {
  
 })
 
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
+const cartState = useState('icommerce.shoppingCart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
@@ -384,20 +386,6 @@ const cartState = useStorage('shoppingCart', {
 		const regex = new RegExp(`\\b${word}\\b`, 'i'); // 'i' makes it case-insensitive
 		return regex.test(str1) || regex.test(str2)
 	}
-
-	/* backup
-	function extractValueByLabel(html, label) {
-		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
-		const match = html.match(regex);
-		console.log(match)
-		if (match) {
-			// Replace &nbsp; with normal space and trim the result
-			return match[1].replace(/&nbsp;/g, ' ').trim();
-		}
-		return null;
-	}
-	*/
-
 
 	onMounted(async () => {
 		window.addEventListener('resize', updateViewport)	
