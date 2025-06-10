@@ -28,7 +28,7 @@
         tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 xl:tw-px-5
         tw-relative tw-order-1
       ">
-        <Navbar v-model="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
+        <Navbar v-if="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
       </div>
 
       <!-- BOTONES DE CUENTA, CARRITO, THEME TOGGLE -->
