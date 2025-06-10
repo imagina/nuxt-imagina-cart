@@ -88,12 +88,7 @@ const props = defineProps( {
 
 
 let data =  props.categories || []				
-const parents = data		
-		
-parents.forEach((category) => {
-	const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
-	if(children.length) category.children = children
-})
+const parents = data
 
 categories.value = parents
 getSelectedCategory(parents)

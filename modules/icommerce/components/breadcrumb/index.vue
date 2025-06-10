@@ -1,7 +1,6 @@
 <template>
     
-    <div class="tw-w-full tw-flex-row tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE] tw-min-h-[52px]">
-        <ClientOnly>
+    <div class="tw-w-full tw-flex-row tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE] tw-min-h-[52px]">        
         <q-breadcrumbs separator-color="mediumGray">
             <template v-slot:separator>
                 <q-icon class="tw-text-[#888888]" name="fa-solid fa-angle-right" />
@@ -13,20 +12,21 @@
             />
                 
             <q-breadcrumbs-el
-                v-if="selectedCategoryState"
                 class="tw-text-[14px] md:tw-text-base tw-text-[#888888] tw-font-medium"
-                :label="selectedCategoryState?.title"
+                :label="category?.title"
                 
             />
-            </q-breadcrumbs>
-        </ClientOnly>
+            </q-breadcrumbs>        
     </div>
     
     
 </template>
 <script setup>
+import categoriesHelper from '../../helpers/categories';
+const route = useRoute()
 
-const selectedCategoryState = useState('icommerce.selected.category')
+const selectedCategory = await categoriesHelper.getSelectedCategory(route.params)
+const category = ref(selectedCategory)
 
 /*
 const router =  useRouter()

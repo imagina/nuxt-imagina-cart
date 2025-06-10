@@ -195,8 +195,12 @@ import apiRoutes from '../../config/apiRoutes'
 import constants from '../../config/constants'
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
+import categoriesHelper from '../helpers/categories.ts'
 import CurrencySelector from '../../components/currencySelector'
 import categoryBanner from './banners'
+
+const router = useRouter()
+const route = useRoute()
 
 const props = defineProps( {
   category: {
@@ -209,7 +213,10 @@ const meta = {
 	description: 'Lideres en Hosting y registro de Dominios en Colombia. Mayor rendimiento al mejor precio. 15 años de experiencia más de 10.000 clientes confían en nosotros. Asesores en Bogotá, Ibagué  y Medellín.'
 }
 
-const category = computed(() => props.category)
+//const category = computed(() => props.category)
+const selectedCategory = await categoriesHelper.getSelectedCategory(route.params)
+const category = ref(selectedCategory)
+
 
 useSeoMeta({
   title: () =>  category?.value?.title ||  meta?.title,
@@ -226,8 +233,7 @@ useSeoMeta({
 const settings = {
 	justOneProdcut: true //one product and redirects to checkout
 }
-const router = useRouter()
-const route = useRoute()
+
 
 const { t } = useI18n()
 const products = ref([])

@@ -1,9 +1,21 @@
+import { useRouter } from "vue-router";
 import apiRoutes from "~/modules/icommerce/config/apiRoutes";
 import constants from "~/modules/icommerce/config/constants";
 
 
+function getParents(data){
+  
+  const parents = data		
+
+  parents.forEach((category) => {
+    const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
+    if(children.length) category.children = children
+  })
+  return parents
+
+}
+
 export default defineCachedEventHandler(async (event) => {
-    const queries = getQuery(event)
 
     const config = useRuntimeConfig()
     const apiRoute = `${config.public.apiRoute}/api`    
@@ -26,7 +38,7 @@ export default defineCachedEventHandler(async (event) => {
     const data = await $fetch(`${api}`, {
         params: params
     }).then(response => {
-        return response?.data || null
+         return response?.data ? getParents(response.data) : null
     })    
     return data;
   }, {

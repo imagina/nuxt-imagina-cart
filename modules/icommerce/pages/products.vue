@@ -1,4 +1,5 @@
 <template>
+    <BreadCrumb />
     <div class="tw-flex tw-gap-16 tw-flex-col tw-items-center md:tw-py-8 tw-w-full tw-min-h-[800px]">
         <div 
             class="
@@ -11,13 +12,10 @@
         >            
             <CategoriesComponent
               :categories="categories"
-              @category="value => category = value"
             />
             
             
-              <ProductsComponent                 
-                :category="category"
-              />            
+              <ProductsComponent/>            
             
         </div>
     </div>
@@ -28,6 +26,7 @@
 <script setup lang="ts">
 import ProductsComponent from '../components/products'
 import CategoriesComponent from '../components/categories'
+import BreadCrumb from '../modules/icommerce/components/breadcrumb';
 
 const { data: categories } = await useAsyncData( 'categories', 
 	() => $fetch('/api/icommerce/categories')

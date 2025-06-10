@@ -98,18 +98,8 @@ async function init(){
 
 async function getCategories(){
 
-	$fetch('/api/icommerce/categories').then(response => {
-		let  data =  response || []				
-		const parents = data		
-		
-		
-		parents.forEach((category) => {				
-			const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
-			if(children.length) category.children = children
-		})
-
-		categories.value = parents
-		
+	$fetch('/api/icommerce/categories').then(response => {		
+		categories.value = response		
 	})
 }
 

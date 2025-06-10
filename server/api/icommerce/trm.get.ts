@@ -10,7 +10,6 @@ export default defineCachedEventHandler(async (event) => {
           'app_token': appToken
         },
       });
-      console.log('console.log(n8nResponse)')
       return n8nResponse;
     } catch (error: any) {
       // Captura errores y lanza un error con contexto

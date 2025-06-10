@@ -1,4 +1,5 @@
 <template>
+	<BreadCrumb />
 		<div class="
 			lg:tw-flex
 			tw-flex-wrap
@@ -146,6 +147,7 @@ import SubtotalComponent from '../modules/icommerce/components/cart/subtotal.vue
 import productsHelper from '../modules/icommerce/helpers/products'
 import CurrencySelector from '../modules/icommerce/components/currencySelector'
 import apiRoutes from '../modules/icommerce/config/apiRoutes'
+import BreadCrumb from '../modules/icommerce/components/breadcrumb';
 
 
 
