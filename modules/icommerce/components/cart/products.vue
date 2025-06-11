@@ -548,7 +548,15 @@ const cartState = useStorage('shoppingCart', {
 	currency: 'COP'
 })
   */
- const cartState = useState('icommerce.shoppingCart')
+  
+ 
+ const cartState = useState('icommerce.shoppingCart', () => {
+  return {
+    products: [],
+	  currency: 'COP'
+  }
+ })
+ 
 
 
 
@@ -563,14 +571,14 @@ const cartState = ref({
 
 
 
-const emits = defineEmits(['subtotal', 'discount'])
+const emits = defineEmits(['subtotal', 'discount', 'emptyCart'])
 
 const domainPricing = ref(props.domainPricing)
 const alertRef = ref('alertRef')
 const alertParams = ref({})
 //captcha could not be validated with computed due call overflow
 const showCaptcha = ref(null)
-const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
+///const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 
 
 const domainActions =  [
@@ -593,7 +601,7 @@ const domainActions =  [
 	},
 ]
 
-onBeforeMount( () => init() )
+//onBeforeMount( () => init() )
 
 /*
 onMounted(() => {
@@ -607,13 +615,18 @@ watch(
     //configProducts()
   },
 )*/
-
+/*
 watch(
   () => cartState.value.currency,
   (newQuery, oldQuery) => {
     init()
   },
 )
+  */
+
+  init()
+
+
 
 
 
@@ -641,10 +654,7 @@ async function init() {
     }
     cartState.value.products = []
     cartState.value.products.push(product)
-  }
-   
-
-    
+  } 
     configProducts()
     loadCaptcha()
     
@@ -790,6 +800,8 @@ function removeProduct(product) {
           
           cartState.value = { products: products, currency: cartState.value.currency }
           if (cartState.value.products.length == 0) {
+            loadCaptcha()
+            emits('emptyCart', null)
             // router.push({ path: getPath('icommerce.products') })
           }
         }        

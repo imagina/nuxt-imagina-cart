@@ -10,14 +10,9 @@
 		style="background-color:  #FAFAFA;"
 		>		
 
-		<q-inner-loading
-			:showing="loading"
-			color="primary"
-		/>
-
+		
 			<!--cart and products --->
-			<div
-			v-if="!loading"
+			<div			
 			class="
 				tw-w-full
 				lg:tw-w-[800px]
@@ -25,7 +20,9 @@
 				tw-flex
 				tw-align-middle
 			">
-				<div v-if="showCart" class="tw-mb-[40px]">
+				<div					
+					class="tw-mb-[40px]"
+				>
 					<!--title -->
 					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
 						<div>
@@ -48,44 +45,22 @@
 					</div>
 					<!-- products -->
 					<ProductsComponent
-						v-if="product"
 						:product="product"
 						:domainPricing="domainPricing"
+						@emptyCart="(value) => product = value "
 					/>
 
 				</div>
-				<!-- empty cart -->
-				<div v-else
-					class="tw-min-h-[50vh]"
-				>
-					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
-					<div class="tw-my-4 tw-text-[14px] tw-font-[400]">
-						<p>
-							{{ $t('icommerce.cart.emptyCart') }}
-						</p>
-					</div>
-					<q-btn
-						:label="$t('icommerce.goToStore')"
-						text-color="black"
-						color="amber"
-						no-caps
-						unelevated
-						class="
-							tw-w-2/4
-							tw-justify-center
-							tw-font-bold
-							tw-rounded-lg
-							tw-mt-4
-							tw-my-8
-						"
-						@click="() => { router.push({ path: getPath('icommerce.products') })}"
-					/>
-				</div>
+				
+				<emptyCart 
+					v-if="!product"
+				/>
+				
 			</div>
 
 			<!-- cart-->
 			<div
-				v-if="false"
+				
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -125,7 +100,7 @@
 								tw-rounded-lg
 							"
 							@click="redirectCheckout()"
-							:disable="disableContinue"
+							
 						/>
 					</div>
 					<div
@@ -138,7 +113,7 @@
 			</div>
 
 	</div>
-	
+
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
@@ -146,6 +121,7 @@ import ProductsComponent from '../components/cart/products.vue'
 import SubtotalComponent from '../components/cart/subtotal.vue'
 import CurrencySelector from '../components/currencySelector'
 import BreadCrumb from '../components/breadcrumb';
+import emptyCart from '../components/cart/emptyCart.vue';
 
 
 const userStore = useAuthStore()
@@ -161,12 +137,12 @@ const { t } = useI18n()
 const router = useRouter()
 
 
-/*
+
 const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
 })
-	*/
+
 
 
 let products = []
@@ -183,7 +159,7 @@ const { data: domainPricing } = await useAsyncData( 'domainPricing',
 const loading = ref(false)
 
 
-const showCart = computed(() => product || false)
+const showCart = computed(() => true)
 
 const disableContinue = computed(() => products.every((product) => {
 	if(!product?.domain) return false   //not a domain product
