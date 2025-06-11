@@ -23,7 +23,7 @@
 	
 	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
 		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
-		<p v-if="category.description" v-show="false" v-html="category.description" class="tw-text-base tw-mt-3.5">                        
+		<p v-if="false" v-html="category.description" class="tw-text-base tw-mt-3.5">                        
 		</p>
 	</div>
 	<hr  class="tw-my-6 tw-w-full" />
@@ -214,7 +214,8 @@ const meta = {
 }
 
 //const category = computed(() => props.category)
-const selectedCategory = await categoriesHelper.getSelectedCategory(route.params)
+const slug = route?.params?.slug || null
+const selectedCategory = await categoriesHelper.getSelectedCategory(slug)
 const category = ref(selectedCategory)
 
 
@@ -309,19 +310,18 @@ const cartState = useState('icommerce.shoppingCart', () => {
 		return (!products.value[index].quantity != 0)
 	}
 
-	onBeforeMount( async () => {		
-	})
-
+	/*
 	async function init(){
-		//await getCategory()
-		
-		await getProducts()
+		getProducts()
 	}
+		*/
 
 	async function getCategory(){
 		//category.value = selectedCategoryState?.value
 	}
 
+
+	getProducts()
 	async function getProducts(){
 		const params = {
 			take: paginationModel?.value?.rowsPerPage || 10,
@@ -395,7 +395,7 @@ const cartState = useState('icommerce.shoppingCart', () => {
 
 	onMounted(async () => {
 		window.addEventListener('resize', updateViewport)	
-		init();
+		//init();
 	})
 
   </script>

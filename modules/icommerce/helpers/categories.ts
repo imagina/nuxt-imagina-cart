@@ -1,13 +1,13 @@
 const categories = {
     
-	async getSelectedCategory(params){		
+	async getSelectedCategory(slug){		
     
     let categories = null
     await $fetch('/api/icommerce/categories').then(response => {		
 			categories = response			
 		})
 		let category = categories.find(item => {
-			if(params?.slug == item.slug){
+			if(slug == item.slug){
 				return item
 			}
 		}) 

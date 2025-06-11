@@ -33,7 +33,7 @@ const pages = [
     },
   },  
   
-/*
+
   {
     name: 'icommerce.cart',
     path: '/cart',
@@ -48,7 +48,7 @@ const pages = [
       breadcrumb: 'Carrito'
     }
   },
-  */
+
 
   {
     name: 'icommerce.checkout',

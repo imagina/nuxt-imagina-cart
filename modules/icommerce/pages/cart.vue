@@ -142,13 +142,10 @@
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
-import ProductsComponent from '../modules/icommerce/components/cart/products.vue'
-import SubtotalComponent from '../modules/icommerce/components/cart/subtotal.vue'
-import productsHelper from '../modules/icommerce/helpers/products'
-import CurrencySelector from '../modules/icommerce/components/currencySelector'
-import apiRoutes from '../modules/icommerce/config/apiRoutes'
-import BreadCrumb from '../modules/icommerce/components/breadcrumb';
-
+import ProductsComponent from '../components/cart/products.vue'
+import SubtotalComponent from '../components/cart/subtotal.vue'
+import CurrencySelector from '../components/currencySelector'
+import BreadCrumb from '../components/breadcrumb';
 
 
 const userStore = useAuthStore()

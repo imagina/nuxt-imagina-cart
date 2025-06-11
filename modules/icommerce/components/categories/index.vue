@@ -63,11 +63,13 @@
 
 import constants from '../../config/constants'
 import productsPage from '../../pages/products.vue'
+import categoriesHelper from '../../helpers/categories'
 
 const route = useRoute()
 const router = useRouter()
 
-const selectedCategoryState = useState('icommerce.selected.category')
+//const selectedCategoryState = useState('icommerce.selected.category')
+const selectedCategoryState = ref(null)
 
 const categories = ref([])
 const isMobile = ref(false)
@@ -91,7 +93,8 @@ let data =  props.categories || []
 const parents = data
 
 categories.value = parents
-getSelectedCategory(parents)
+const slug = route?.params?.slug || null
+selectedCategoryState.value =  await categoriesHelper.getSelectedCategory(slug)
 
 
 parents.forEach((category) => {

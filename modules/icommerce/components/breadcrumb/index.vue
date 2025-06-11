@@ -13,30 +13,17 @@
                 
             <q-breadcrumbs-el
                 class="tw-text-[14px] md:tw-text-base tw-text-[#888888] tw-font-medium"
-                :label="category?.title"
-                
+                :label="currentRoute"
             />
-            </q-breadcrumbs>        
+            </q-breadcrumbs>
     </div>
     
     
 </template>
 <script setup>
-import categoriesHelper from '../../helpers/categories';
 const route = useRoute()
-
-const selectedCategory = await categoriesHelper.getSelectedCategory(route.params)
-const category = ref(selectedCategory)
-
-/*
-const router =  useRouter()
-const currentRoute = computed(() => {
-    return {
-        path: router.currentRoute.value.name,
-        label: router.currentRoute.value.meta.breadcrumb
-    }      
-});
-*/
-
-
+const currentRoute = computed(() =>  {
+    if(route.name == 'icommerce.products') return (route?.params?.slug || route.meta.breadcrumb )
+    return route?.meta?.breadcrumb || ''
+})
 </script>
