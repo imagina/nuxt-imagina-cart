@@ -6,7 +6,7 @@
         ref="alertRef"
         :params="alertParams"
       />
-    </ClientOnly>
+    </ClientOnly>    
     
     <div v-for="product in cartState.products" :key="product.name"
       class="
@@ -19,8 +19,6 @@
           tw-my-5
           "
       >
-
-      
       <!-- PRODUCT TITLE -->
       <div class="tw-flex tw-justify-between tw-items-center tw-py-6">
         <div class="">
@@ -542,20 +540,21 @@ const props = defineProps({
 
 const { locale, locales, setLocale, t } = useI18n()
 
-/*
+
 const cartState = useStorage('shoppingCart', {
 	products: [],
 	currency: 'COP'
 })
-  */
+
   
- 
+ /*
  const cartState = useState('icommerce.shoppingCart', () => {
   return {
     products: [],
 	  currency: 'COP'
   }
  })
+  */
  
 
 
@@ -631,7 +630,13 @@ watch(
 
 
 async function init() {
-  const urlOptions = await checkUrlParams()
+  const urlOptions =  {
+		action: route?.query?.a || null,
+		pid: route?.query?.pid || null,
+		billingcycle: route?.query?.billingcycle || null,
+		promocode: route?.query?.promocode || null
+	}
+  
   if(urlOptions.pid && urlOptions.action ){
     const product  = props.product  
   
@@ -660,16 +665,6 @@ async function init() {
     
 }
 
-async function checkUrlParams(){
-	const query = route?.query || {}
-	return {
-		action: query?.a || null,
-		pid: query?.pid || null,
-		billingcycle: query?.billingcycle || null,
-		promocode: query?.promocode || null
-	}
-	
-}
 
 function loadCaptcha(){       
   showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false

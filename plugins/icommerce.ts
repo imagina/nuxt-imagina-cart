@@ -9,7 +9,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     userStore.refreshSession()
     if(!userStore.settings) userStore.getSettings()
     //userStore.getUsdRates()        
-    const usdRates =  await $fetch('/api/icommerce/trm')     
+    const usdRates =  await $fetch('/api/icommerce/trm')  
+    console.count('icommerce.trm')
     useState('icommerce.trm', () => usdRates)
     
   }

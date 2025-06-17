@@ -12,7 +12,7 @@
 
 		
 			<!--cart and products --->
-			<div			
+			<div				
 			class="
 				tw-w-full
 				lg:tw-w-[800px]
@@ -24,7 +24,7 @@
 					class="tw-mb-[40px]"
 				>
 					<!--title -->
-					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
+					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
 						<div>
 							<h1
 								class="
@@ -53,14 +53,13 @@
 				</div>
 				
 				<emptyCart 
-					v-if="!product"
+					v-if="!showCart"
 				/>
 				
 			</div>
 
 			<!-- cart-->
-			<div
-				
+			<div				
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -124,9 +123,6 @@ import BreadCrumb from '../components/breadcrumb';
 import emptyCart from '../components/cart/emptyCart.vue';
 
 
-const userStore = useAuthStore()
-
-
 
 definePageMeta({
   middleware: 'auth',
@@ -147,26 +143,29 @@ const cartState = useStorage('shoppingCart', {
 
 let products = []
 const route = useRoute()
-const { data: product } = await useAsyncData( 'product', 
-	() => $fetch(`/api/icommerce/product?pid=${route.query?.pid}`)
-)
 
 const { data: domainPricing } = await useAsyncData( 'domainPricing', 
 	() => $fetch('/api/icommerce/domain-pricing')
 )
 
+const { data: product } = await useAsyncData( 'product', 
+	() => route.query?.pid ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
+)
+
+
+
 
 const loading = ref(false)
 
 
-const showCart = computed(() => true)
+const showCart = computed(() => (cartState.value.products.length || product) || false)
 
-const disableContinue = computed(() => products.every((product) => {
+const disableContinue = computed(() => cartState.value.products.every((product) => {
 	if(!product?.domain) return false   //not a domain product
 	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false
 }))
 
-const showTaxesWarning = computed(() => products.some((product) => product?.domain || false ))
+const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 
 const checkoutPath = getPath('icommerce.checkout')
 

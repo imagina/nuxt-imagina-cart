@@ -205,6 +205,9 @@ const route = useRoute()
 const props = defineProps( {
   category: {
     type: Object
+  }, 
+  products: {
+	type: Object
   }
 } )
 
@@ -237,19 +240,22 @@ const settings = {
 
 
 const { t } = useI18n()
-const products = ref([])
+const products = ref(props?.products?.data || [])
 const loading = ref(false)
+
+//pagination.value.lastPage = response.meta.page.lastPage || pagination.value.lastPage
+//paginationModel.value.rowsNumber = response.meta.page.total
 
 const paginationModel = ref({
       page: 1,
-      rowsNumber: null,
+      rowsNumber: props?.products?.meta?.page?.total || null,
       rowsPerPage: 12,
       descending: true,
       maxPages: 6
     })
 
 const pagination = ref({
-	lastPage: 0,
+	lastPage: props?.products?.meta?.page?.lastPage || 0
 })
 
 
@@ -271,11 +277,18 @@ const bannerImage = computed( () =>  {
  
 })
 
+/*
 const cartState = useState('icommerce.shoppingCart', () => {
 	return {
 		products: [],
 		currency: 'COP'
 	}
+})
+	*/
+
+const cartState = useStorage('shoppingCart', {
+	products: [],
+	currency: 'COP'
 })
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
@@ -297,6 +310,7 @@ const cartState = useState('icommerce.shoppingCart', () => {
 	const frecuencyId = 1 //frecuency option
 
 		
+	/*
 	watch(
 		() => category.value,
 		(newQuery, oldQuery) => {
@@ -304,6 +318,7 @@ const cartState = useState('icommerce.shoppingCart', () => {
 			getProducts()
 		},
 	)
+		*/
 		
 
 	function disableButton(index) {
@@ -321,8 +336,9 @@ const cartState = useState('icommerce.shoppingCart', () => {
 	}
 
 
-	getProducts()
+	//getProducts()
 	async function getProducts(){
+		console.log('getProducts')
 		const params = {
 			take: paginationModel?.value?.rowsPerPage || 10,
 			page: paginationModel?.value?.page || 1,
@@ -350,9 +366,11 @@ const cartState = useState('icommerce.shoppingCart', () => {
 			}
 
 			//add quantity
+			/*
 			products.value.forEach((product) => {
 				if (product?.quantity) { product.quantity = 1 }
 			})
+			*/
 
 		})
 		loading.value = false

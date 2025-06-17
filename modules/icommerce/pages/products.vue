@@ -12,10 +12,11 @@
         >            
             <CategoriesComponent
               :categories="categories"
-            />
+            />            
             
-            
-              <ProductsComponent/>            
+            <ProductsComponent
+             :products="products"            
+            />            
             
         </div>
     </div>
@@ -27,10 +28,24 @@
 import ProductsComponent from '../components/products'
 import CategoriesComponent from '../components/categories'
 import BreadCrumb from '../modules/icommerce/components/breadcrumb';
+import categoriesHelper from '../helpers/categories'
+
+const route = useRoute()
+const slug = route.params.slug
 
 const { data: categories } = await useAsyncData( 'categories', 
 	() => $fetch('/api/icommerce/categories')
 )
+
+const category = await categoriesHelper.getSelectedCategory(slug)
+const {data: products } = await useAsyncData('products', 
+  () => $fetch(`/api/icommerce/products?categoryId=${category.id}`)
+)
+
+
+
+
+
 
 definePageMeta({
   middleware: 'auth'
@@ -39,8 +54,5 @@ definePageMeta({
 const { t } = useI18n({
   useScope: 'local'
 })
-
-const category = ref(null)
-
 
 </script>
