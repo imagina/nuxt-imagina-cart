@@ -1,11 +1,8 @@
-const categories = {
+const helper = {
     
-	async getSelectedCategory(slug){		
-    
-    let categories = null
-    await $fetch('/api/icommerce/categories').then(response => {		
-			categories = response			
-		})
+	async getSelectedCategory(slug, categories){
+		console.log(categories)
+			
 		let category = categories.find(item => {
 			if(slug == item.slug){
 				return item
@@ -18,4 +15,4 @@ const categories = {
   }
 }
 
-export default categories
+export default helper

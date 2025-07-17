@@ -1,5 +1,6 @@
 <template>
 	<div class="tw-w-full tw-min-h-[80vh]">		
+		
 	<NuxtImg 
 		v-if="category && bannerImage && false"
 		:src="bannerImage" 
@@ -218,8 +219,7 @@ const meta = {
 
 //const category = computed(() => props.category)
 const slug = route?.params?.slug || null
-const selectedCategory = await categoriesHelper.getSelectedCategory(slug)
-const category = ref(selectedCategory)
+const category = ref(props.category)
 
 
 useSeoMeta({

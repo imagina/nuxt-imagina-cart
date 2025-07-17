@@ -23,7 +23,7 @@
 <script setup>
 const route = useRoute()
 const currentRoute = computed(() =>  {
-    if(route.name == 'icommerce.products') return (route?.params?.slug || route.meta.breadcrumb )
+    //if(route.name == 'icommerce.products') return (route?.params?.slug ||  route.meta.breadcrumb )
     return route?.meta?.breadcrumb || ''
 })
 </script>

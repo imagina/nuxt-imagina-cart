@@ -866,12 +866,12 @@ function extractDomainExtension(url) {
 }
 
 function isDomainNameRequired(product) {
-  const domainCategories = constants.cagtegories.domainNameRequired
+  const domainCategories = constants.categories.domainNameRequired
   return domainCategories.includes(product?.category?.id) || false
 }
 
 function isDomainNameFree(product) {
-  const domainCategories = constants.cagtegories.dominNameFree
+  const domainCategories = constants.categories.dominNameFree
   return domainCategories.includes(product?.category?.id) || false
 }
 

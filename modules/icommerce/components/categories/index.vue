@@ -61,15 +61,21 @@
 </template>
 <script setup>
 
-import constants from '../../config/constants'
 import productsPage from '../../pages/products.vue'
-import categoriesHelper from '../../helpers/categories'
+
+const props = defineProps( {
+	categories: {
+		type: Array,
+		required: false	
+	}, 
+	category: {
+		type: Object, 
+		required: false
+	}
+})
 
 const route = useRoute()
 const router = useRouter()
-
-//const selectedCategoryState = useState('icommerce.selected.category')
-const selectedCategoryState = ref(null)
 
 const categories = ref([])
 const isMobile = ref(false)
@@ -81,21 +87,11 @@ function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
 }
 
-const props = defineProps( {
-	categories: {
-		type: Array,
-		required: false	
-	} 
-})
-
 
 let data =  props.categories || []				
 const parents = data
 
 categories.value = parents
-const slug = route?.params?.slug || null
-selectedCategoryState.value =  await categoriesHelper.getSelectedCategory(slug)
-
 
 parents.forEach((category) => {
 	router.addRoute({					
@@ -123,23 +119,8 @@ async function init(){
 	window.addEventListener('resize', updateViewport)	
 }
 
-async function getSelectedCategory(categories){
-	let category = categories.find(item => {
-		if(route.params?.slug == item.slug){
-			return item
-		}
-	}) 
-	if(!category) {
-		category = categories[0]		
-	}
-	selectedCategoryState.value = category
-	emit('category', category)
-}
-
-
 function isActive(category){
-	
-	return route.path.includes(category?.slug) || (selectedCategoryState?.value?.slug == category.slug) || false
+	return props.category.slug == category.slug
 }
 
 onMounted(async () => {

@@ -8,7 +8,7 @@ function getParents(data){
   const parents = data		
 
   parents.forEach((category) => {
-    const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
+    const children = data.filter(item => item.parentId == category.id && item.parentId != constants.categories.mainCategoryId )
     if(children.length) category.children = children
   })
   return parents
@@ -26,7 +26,7 @@ export default defineCachedEventHandler(async (event) => {
       take: 60,
       page: 1,
       filter : {
-        parentId: constants.cagtegories.mainCategoryId,
+        parentId: constants.categories.mainCategoryId,
         order: {
           field: "created_at",
           way: "desc"

@@ -1,14 +1,20 @@
 
-import { createResolver, defineNuxtModule, extendPages } from '@nuxt/kit'
+import { addLayout, createResolver, defineNuxtModule, extendPages } from '@nuxt/kit'
 
 import pagesConfig from './config/pages.ts'
 
 export default defineNuxtModule({
   meta: {
-    name: 'icommerce'
+    name: '@icommerce'
   },
   setup(options) {
     const resolver = createResolver(import.meta.url)
+    
+    addLayout({
+      src: resolver.resolve('layouts/icommerce.vue'), 
+      filename: 'icommerce.vue'
+    }, 'icommerce')
+    
     extendPages((pages) => {      
       pagesConfig.forEach((page) => {        
         pages.unshift({
