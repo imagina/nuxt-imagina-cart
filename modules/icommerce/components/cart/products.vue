@@ -540,32 +540,21 @@ const props = defineProps({
 
 const { locale, locales, setLocale, t } = useI18n()
 
-
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
-})
-
-  
- /*
- const cartState = useState('icommerce.shoppingCart', () => {
-  return {
-    products: [],
-	  currency: 'COP'
-  }
- })
-  */
- 
-
-
-
-/*
 const cartState = ref({
 	products: [],
 	currency: 'COP'
 })
-  */
 
+
+const cartStorage = useStorage('icommerce.cart', {
+	products: [],
+	currency: 'COP'
+})
+
+watch(cartState, (newValue) => {  
+  console.log('me')
+  cartStorage.value.products = newValue.products
+})
 
 
 
@@ -600,42 +589,23 @@ const domainActions =  [
 	},
 ]
 
-//onBeforeMount( () => init() )
-
-/*
-onMounted(() => {
-  init()
-})
-  */
-/*
-watch(
-  () => cartState.value.products,
-  (newQuery, oldQuery) => {
-    //configProducts()
-  },
-)*/
-/*
-watch(
-  () => cartState.value.currency,
-  (newQuery, oldQuery) => {
-    init()
-  },
-)
-  */
-
-  init()
-
-
-
-
-
-async function init() {
-  const urlOptions =  {
+const urlOptions =  {
 		action: route?.query?.a || null,
 		pid: route?.query?.pid || null,
 		billingcycle: route?.query?.billingcycle || null,
 		promocode: route?.query?.promocode || null
-	}
+}
+ 
+init() 
+
+onMounted(() => {
+  updatecartStorage()
+  loadCaptcha()
+})
+
+async function init() {
+  console.log('hello fron product')
+  
   
   if(urlOptions.pid && urlOptions.action ){
     const product  = props.product  
@@ -658,13 +628,19 @@ async function init() {
 				if(options.length) product.frecuency = options[billingcycle]
     }
     cartState.value.products = []
+    console.log(product)
     cartState.value.products.push(product)
+    console.log('here3')
   } 
-    configProducts()
-    loadCaptcha()
+  configProducts()    
     
 }
 
+function updatecartStorage(){
+  if(urlOptions.pid && urlOptions.action ){
+    cartStorage.value.products = cartState.value.products
+  }
+}
 
 function loadCaptcha(){       
   showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false

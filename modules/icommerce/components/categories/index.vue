@@ -120,7 +120,8 @@ async function init(){
 }
 
 function isActive(category){
-	return props.category.slug == category.slug
+	if(!props.category || !category) return false
+	return props.category?.slug == category?.slug
 }
 
 onMounted(async () => {

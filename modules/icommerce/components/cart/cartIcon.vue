@@ -29,7 +29,7 @@ const props = defineProps({
   color: String
 });
 
-const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })

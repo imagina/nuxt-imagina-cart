@@ -277,16 +277,7 @@ const bannerImage = computed( () =>  {
  
 })
 
-/*
-const cartState = useState('icommerce.shoppingCart', () => {
-	return {
-		products: [],
-		currency: 'COP'
-	}
-})
-	*/
-
-const cartState = useStorage('shoppingCart', {
+ const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })
@@ -307,38 +298,16 @@ const cartState = useStorage('shoppingCart', {
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))
-	const frecuencyId = 1 //frecuency option
-
-		
-	/*
-	watch(
-		() => category.value,
-		(newQuery, oldQuery) => {
-			paginationModel.value.page = 1
-			getProducts()
-		},
-	)
-		*/
-		
+	const frecuencyId = 1 //frecuency option		
+	
 
 	function disableButton(index) {
 		return (!products.value[index].quantity != 0)
 	}
-
-	/*
-	async function init(){
-		getProducts()
-	}
-		*/
-
-	async function getCategory(){
-		//category.value = selectedCategoryState?.value
-	}
-
+	
 
 	//getProducts()
 	async function getProducts(){
-		console.log('getProducts')
 		const params = {
 			take: paginationModel?.value?.rowsPerPage || 10,
 			page: paginationModel?.value?.page || 1,

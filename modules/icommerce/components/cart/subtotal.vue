@@ -54,7 +54,7 @@ import productsHelper from '../../helpers/products';
 
 const { t } = useI18n()
 
-const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })

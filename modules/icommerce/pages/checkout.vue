@@ -390,12 +390,12 @@ const identificationTypeOptions = [
 
 const quasar = useQuasar()
 const authStore = useAuthStore()
-const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })
 
-const form = useStorage('shoppingCheckoutForm', {
+const form = useStorage('icommerce.CheckoutForm', {
 	coupon: null,
 	email: null,
 	firstName: null,

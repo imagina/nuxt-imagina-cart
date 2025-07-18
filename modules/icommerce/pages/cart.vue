@@ -22,6 +22,7 @@
 			">
 				<div					
 					class="tw-mb-[40px]"
+					
 				>
 					<!--title -->
 					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
@@ -59,7 +60,8 @@
 			</div>
 
 			<!-- cart-->
-			<div				
+			<div		
+				v-if="showCart"		
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -99,6 +101,7 @@
 								tw-rounded-lg
 							"
 							@click="redirectCheckout()"
+							:disable="disableContinue"
 							
 						/>
 					</div>
@@ -134,36 +137,37 @@ const router = useRouter()
 
 
 
-const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })
 
+const productsState = useState('icommerce.productsState')
 
 
-let products = []
+
+
 const route = useRoute()
 
 const { data: domainPricing } = await useAsyncData( 'domainPricing', 
 	() => $fetch('/api/icommerce/domain-pricing')
 )
 
-const { data: product } = await useAsyncData( 'product', 
+let product = await useAsyncData( 'product', 
 	() => route.query?.pid ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
 )
+product = product.data.value
+productsState.value = product
 
+const showCart = computed(() => cartState.value.products.length )
 
-
-
-const loading = ref(false)
-
-
-const showCart = computed(() => (cartState.value.products.length || product) || false)
-
-const disableContinue = computed(() => cartState.value.products.every((product) => {
+const disableContinue = computed(() => { 
+	if(!showCart.value) return false
+	return cartState.value?.products?.every((product) => {
 	if(!product?.domain) return false   //not a domain product
 	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false
-}))
+	}) 
+})
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 

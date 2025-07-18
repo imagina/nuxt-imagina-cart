@@ -17,15 +17,7 @@
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../../helpers/products'
 
-/*
- const cartState = useState('icommerce.shoppingCart', () => {
-  return {
-    products: [],
-	  currency: 'COP'
-  }
-})
-  */
- const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })

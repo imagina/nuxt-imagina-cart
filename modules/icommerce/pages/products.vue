@@ -38,9 +38,8 @@ const categories = categoriesData.data.value
 const category = categoriesData.data.value?.find(item => slug == item?.slug)
 const categoryId = category?.id || 1
 
-const {data: products } = await useAsyncData('icommerce.products', () => $fetch(`/api/icommerce/products?categoryId=${ categoryId}`)
-)
-  
+const {data: products } = await useAsyncData('icommerce.products', () => $fetch(`/api/icommerce/products?categoryId=${categoryId}`) )
+
 //useState('icommerce.categories', () => categories)
 //useState('icommerce.selectedCategory', () => category)
 
