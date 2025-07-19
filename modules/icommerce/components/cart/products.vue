@@ -540,21 +540,14 @@ const props = defineProps({
 
 const { locale, locales, setLocale, t } = useI18n()
 
-const cartState = ref({
-	products: [],
-	currency: 'COP'
+
+ const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 
-
-const cartStorage = useStorage('icommerce.cart', {
-	products: [],
-	currency: 'COP'
-})
-
-watch(cartState, (newValue) => {  
-  console.log('me')
-  cartStorage.value.products = newValue.products
-})
 
 
 
@@ -598,8 +591,7 @@ const urlOptions =  {
  
 init() 
 
-onMounted(() => {
-  updatecartStorage()
+onMounted(() => {  
   loadCaptcha()
 })
 
@@ -636,11 +628,6 @@ async function init() {
     
 }
 
-function updatecartStorage(){
-  if(urlOptions.pid && urlOptions.action ){
-    cartStorage.value.products = cartState.value.products
-  }
-}
 
 function loadCaptcha(){       
   showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false

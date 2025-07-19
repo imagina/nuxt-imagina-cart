@@ -277,9 +277,11 @@ const bannerImage = computed( () =>  {
  
 })
 
- const cartState = useStorage('icommerce.cart', {
-	products: [],
-	currency: 'COP'
+ const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)

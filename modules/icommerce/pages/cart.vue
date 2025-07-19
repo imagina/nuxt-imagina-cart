@@ -25,7 +25,8 @@
 					
 				>
 					<!--title -->
-					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
+					
+					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="product">
 						<div>
 							<h1
 								class="
@@ -53,15 +54,16 @@
 
 				</div>
 				
-				<emptyCart 
-					v-if="!showCart"
-				/>
+					<emptyCart 
+						v-if="!showCart"
+					/>
+				
 				
 			</div>
 
 			<!-- cart-->
 			<div		
-				v-if="showCart"		
+				v-if="product"		
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -137,13 +139,12 @@ const router = useRouter()
 
 
 
-const cartState = useStorage('icommerce.cart', {
-	products: [],
-	currency: 'COP'
+ const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
-
-const productsState = useState('icommerce.productsState')
-
 
 
 
@@ -157,7 +158,8 @@ let product = await useAsyncData( 'product',
 	() => route.query?.pid ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
 )
 product = product.data.value
-productsState.value = product
+
+
 
 const showCart = computed(() => cartState.value.products.length )
 

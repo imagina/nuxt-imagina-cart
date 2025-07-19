@@ -54,10 +54,7 @@ import productsHelper from '../../helpers/products';
 
 const { t } = useI18n()
 
-const cartState = useStorage('icommerce.cart', {
-	products: [],
-	currency: 'COP'
-})
+const cartState = useState('icommerce.cart')
 
 const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 const showDiscount = computed(() => calcDiscount().percent > 1)
