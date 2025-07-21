@@ -87,7 +87,9 @@
 				>
 
 					<!-- subtotal -->
-					<SubtotalComponent />
+					<SubtotalComponent 
+						:cartState="cartState"
+					/>
 					
 					<div class="tw-mt-6">
 						<q-btn

@@ -53,12 +53,21 @@ import productsHelper from '../../helpers/products';
 
 const { t } = useI18n()
 
-const cartState = useState('icommerce.cart')
+const props = defineProps({
+	cartState: {
+		type: Array,		
+    	required: true
+	}
+})
 
-const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
+
+
+//const cartState = useState('icommerce.cart')
+
+const subtotal = computed(() => productsHelper.getSubtotal(props.cartState.products, props.cartState.currency))
 const showDiscount = computed(() => calcDiscount().percent > 1)
 
 function calcDiscount(){
-  return productsHelper.calcDiscount(cartState.value.products, subtotal.value)
+  return productsHelper.calcDiscount(props.cartState.products, subtotal.value)
 }
 </script>
