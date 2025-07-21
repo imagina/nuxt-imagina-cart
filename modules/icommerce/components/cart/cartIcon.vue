@@ -29,9 +29,11 @@ const props = defineProps({
   color: String
 });
 
-const cartState = useStorage('icommerce.cart', {
-	products: [],
-	currency: 'COP'
+const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 const isHovered = ref(false);
 

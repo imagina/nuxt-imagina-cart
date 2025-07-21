@@ -193,10 +193,7 @@
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
-import constants from '../../config/constants'
-import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
-import categoriesHelper from '../helpers/categories.ts'
 import CurrencySelector from '../../components/currencySelector'
 import categoryBanner from './banners'
 

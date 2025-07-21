@@ -49,7 +49,6 @@
 
 </template>
 <script setup>
-import { useStorage } from '@vueuse/core'
 import productsHelper from '../../helpers/products';
 
 const { t } = useI18n()

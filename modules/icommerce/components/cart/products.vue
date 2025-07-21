@@ -241,7 +241,8 @@
                           </div>
                           <div>
                             <q-btn
-                              :label="product.domainCheck.exactMatch.disableButton ? 'Agregado al carrito' : 'Compralo ya'"
+                              v-if="!product.domainCheck.exactMatch.disableButton"
+                              label="Compralo ya"
                               color="amber"
                               no-caps
                               unelevated
@@ -250,7 +251,19 @@
                               @click="() => {
                                 product.domainCheck.exactMatch.disableButton = true
                                 selectDomain(product, product.domainCheck.exactMatch)
-                                }"
+                              }"
+                            />
+
+                            <q-btn
+                              v-if="product.domainCheck.exactMatch.disableButton"
+                              label="Continuar con tu compra"
+                              color="positive"
+                              no-caps
+                              unelevated
+                              class="tw-font-bold tw-rounded-lg tw-w-2/4"                              
+                              @click="() => {
+                                product.domainCheck.modal = false
+                              }"
                             />
                           </div>
                   </div>
@@ -280,10 +293,10 @@
                 "
               >
                 <div>
-                  <span class="tw-text-[18px] tw-font-[600] ">Sin resultados disponibles para:</span><br>
+                  <span class="tw-text-[18px] tw-font-[600] ">{{ product.domainCheck.domainName }} ya está ocupado! </span><br>
                 </div>
                 <div>
-                  <span class="tw-text-[20px] tw-font-[700] tw-line-clamp-4 tw-break-all">{{ product.domainCheck.domainName }}</span>
+                  <span class="tw-text-[20px] tw-font-[700] tw-line-clamp-4 tw-break-all">Pero no te preocupes, ¡hemos encontrado las mejores alternativas para ti!</span>
                 </div>
               </div>
 
@@ -510,11 +523,10 @@
 
 
 <script lang="ts" setup>
-
+import { useStorage } from '@vueuse/core'
 import productsHelper from '../../helpers/products';
 import apiRoutes from '../../config/apiRoutes.js';
 import constants from '../../config/constants.js';
-import { useStorage, useCloned  } from '@vueuse/core'
 import moment from 'moment';
 import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
@@ -537,19 +549,18 @@ const props = defineProps({
   
 })
 
-
 const { locale, locales, setLocale, t } = useI18n()
-
-
- const cartState = useState('icommerce.cart', () => {
+const cartState = useState('icommerce.cart', () => {
 	return {
 		products: [],
 		currency: 'COP'
 	}
 })
 
-
-
+const cartStateStorage = useStorage('icommerce.cart', {
+	products: [],
+	currency: 'COP'
+})
 
 
 const emits = defineEmits(['subtotal', 'discount', 'emptyCart'])
@@ -596,10 +607,8 @@ onMounted(() => {
 })
 
 async function init() {
-  console.log('hello fron product')
   
-  
-  if(urlOptions.pid && urlOptions.action ){
+  if(urlOptions.pid && urlOptions.action == 'add'){
     const product  = props.product  
   
 
@@ -620,12 +629,9 @@ async function init() {
 				if(options.length) product.frecuency = options[billingcycle]
     }
     cartState.value.products = []
-    console.log(product)
     cartState.value.products.push(product)
-    console.log('here3')
   } 
-  configProducts()    
-    
+  configProducts()  
 }
 
 
@@ -757,6 +763,8 @@ function removeProduct(product) {
           }
           
           cartState.value = { products: products, currency: cartState.value.currency }
+          cartStateStorage.value.products = cartState.value.products
+          
           if (cartState.value.products.length == 0) {
             loadCaptcha()
             emits('emptyCart', null)
@@ -923,7 +931,7 @@ function calcRenovationDate(label){
 
 function getDiscount(product){
 
-  product.discount  = {
+  product.discount = {
     percent: 0,
     priceByMonths: 0,
     value: 0

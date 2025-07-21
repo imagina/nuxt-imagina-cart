@@ -26,7 +26,7 @@
 				>
 					<!--title -->
 					
-					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="product">
+					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
 						<div>
 							<h1
 								class="
@@ -49,7 +49,7 @@
 					<ProductsComponent
 						:product="product"
 						:domainPricing="domainPricing"
-						@emptyCart="(value) => product = value "
+						
 					/>
 
 				</div>
@@ -63,7 +63,7 @@
 
 			<!-- cart-->
 			<div		
-				v-if="product"		
+				v-if="showCart"		
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -101,6 +101,7 @@
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
+								tw-text-white
 							"
 							@click="redirectCheckout()"
 							:disable="disableContinue"
@@ -127,8 +128,6 @@ import CurrencySelector from '../components/currencySelector'
 import BreadCrumb from '../components/breadcrumb';
 import emptyCart from '../components/cart/emptyCart.vue';
 
-
-
 definePageMeta({
   middleware: 'auth',
   layout: 'icommerce'
@@ -137,29 +136,37 @@ definePageMeta({
 const { t } = useI18n()
 const router = useRouter()
 
-
-
- const cartState = useState('icommerce.cart', () => {
+const cartState = useState('icommerce.cart', () => {
 	return {
 		products: [],
 		currency: 'COP'
 	}
 })
 
-
+const cartStateStorage = useStorage('icommerce.cart', {
+	products: [],
+	currency: 'COP'
+})
 
 const route = useRoute()
+
+const urlOptions =  {
+	action: route?.query?.a || null,
+	pid: route?.query?.pid || null,
+	billingcycle: route?.query?.billingcycle || null,
+	promocode: route?.query?.promocode || null
+}
+const product = ref(null)
+const isAddAction = computed(() => (urlOptions.pid && urlOptions.action == 'add') || false)
 
 const { data: domainPricing } = await useAsyncData( 'domainPricing', 
 	() => $fetch('/api/icommerce/domain-pricing')
 )
 
-let product = await useAsyncData( 'product', 
-	() => route.query?.pid ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
+const productData = await useAsyncData( 'product', 
+	() => isAddAction.value ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
 )
-product = product.data.value
-
-
+product.value = productData.data.value
 
 const showCart = computed(() => cartState.value.products.length )
 
@@ -175,28 +182,23 @@ const showTaxesWarning = computed(() => cartState.value.products.some((product) 
 
 const checkoutPath = getPath('icommerce.checkout')
 
-
-onMounted(async () => {
-	//init();
+onMounted(() => {
+	restoreFromCheckout()
 })
 
-
-
-
-
-
-	
-			/* translate the  product options and set one if there is in url params  */
-
-
-
-
-
-
-
-
+function restoreFromCheckout(){
+	if(isAddAction.value){
+		cartStateStorage.value.products = []		
+	} else {
+		if(cartStateStorage.value.products.length){
+			//product.value = cartStateStorage.value.products[0]
+			cartState.value.products = cartStateStorage.value.products
+		}		
+	}
+}
 
 function redirectCheckout() {
+	cartStateStorage.value.products = cartState.value.products
 	router.push({
 		path: checkoutPath
 	})

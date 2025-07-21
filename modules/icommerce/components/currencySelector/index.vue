@@ -14,7 +14,6 @@
       </client-only> 
 </template>
 <script setup>
-import { useStorage } from '@vueuse/core'
 import productsHelper from '../../helpers/products'
 
  const cartState = useState('icommerce.cart')
