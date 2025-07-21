@@ -392,8 +392,6 @@ export const useAuthStore = defineStore('authStore', {
     async getSettings(settings: string[]) {      
       const data = useState('app.settings')
       this.settings = data
-      console.log(data)
-
       /*
       const params = {
         filter: {
