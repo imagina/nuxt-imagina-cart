@@ -1,6 +1,6 @@
 <template>
 	<BreadCrumb />
-		<div class="
+	<div class="
 			lg:tw-flex
 			tw-flex-wrap
 			tw-justify-center

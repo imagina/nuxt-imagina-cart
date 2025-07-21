@@ -3,15 +3,13 @@
 		<bitrixSupportButton />
 	</ClientOnly>	
     <q-layout view="hHh lpR fFf" @scroll="handleScroll">
-			<q-page-container>
-						<HeaderApp :scroll-position="scrollPosition" />						
-						<div class="tw-min-h-[400px]">							
-							<slot 
-								@loaded="(value) => handlePageReady(value)"
-							/>
-						</div>						
-						<FooterApp />
-			</q-page-container>
+		<q-page-container>
+			<HeaderApp :scroll-position="scrollPosition" />						
+			<div class="tw-min-h-[400px]">							
+				<slot />
+			</div>						
+			<FooterApp />
+		</q-page-container>
     </q-layout>
 </template>
 <script setup>
@@ -27,7 +25,6 @@ function handleScroll(position) {
 	if(position.position != scrollPosition.value){
 		scrollPosition.value = position;
 	}  
-}
- function handlePageReady(value){}
+} 
 
 </script>
