@@ -55,7 +55,7 @@ const { t } = useI18n()
 
 const props = defineProps({
 	cartState: {
-		type: Array,		
+		type: Object,		
     	required: true
 	}
 })
