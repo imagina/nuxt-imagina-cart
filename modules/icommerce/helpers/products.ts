@@ -1,4 +1,8 @@
 
+
+
+
+
 const helper = {
 
 	/**/
@@ -6,7 +10,7 @@ const helper = {
 		return product?.optionsPivot?.length || false
 	},
 
-	/* 
+	/*
 		frecuency id: 1
 	*/
 	getFrecuencyOptions: (product) => {
@@ -32,20 +36,20 @@ const helper = {
 			'Monthly': "icommerce.frecuencies.monthly",
 		}
 
-		return labels[label] || label	
+		return labels[label] || label
 
-	}, 
+	},
 
 	/**/
 	getPrice: (product, currencyValue = 'COP') => {
 		const frecuencies = helper.getFrecuencyOptions(product)
-		const defaultFrecuency = frecuencies?.length ? (frecuencies[0]?.value || 0) : (product?.price || 0)
-
+		//get the lowest value 
+		const defaultFrecuency = frecuencies?.length ? (frecuencies.reduce((min, obj) => obj.value < min.value ? obj : min).value || 0) : (product?.price || 0)
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
-		
+
 		//if(product.price) price = price + product.price
 		if(price > 0 && currencyValue != 'COP'){
-			price = helper.COPtoCurrency(price, currencyValue)			
+			price = helper.COPtoCurrency(price, currencyValue)
 		}
 		return price
 	},
@@ -53,7 +57,7 @@ const helper = {
 	COPtoCurrency(value, currency){
 			if(currency == 'USD') return helper.COPtoUSD(value)
 			if(currency == 'EUR') return helper.COPtoEUR(value)
-			return value	
+			return value
 	},
 
 	/* currency helper */
@@ -85,7 +89,7 @@ const helper = {
 	},
 
 	priceWithSymbol(value, currency = 'COP'){
-		
+
 		return `${helper.currencyFormat(helper.COPtoCurrency(value, currency), currency)} ${helper.getCurrency(currency).value}`
 	},
 
@@ -136,10 +140,11 @@ const helper = {
 
 
 	getTrm(currency){
-		const authStore = useAuthStore()
-		let usdRates = authStore.usdRates
-		if(!usdRates) return false
-		const trm = Number(usdRates['USDRates'][currency])
+		//const authStore = useAuthStore()
+		//let usdRates = authStore.usdRates
+		const usdRates = useState('icommerce.trm')
+		if(!usdRates?.value) return false
+		const trm = Number(usdRates.value['USDRates'][currency])
 		return trm.toFixed(2)
 	},
 
@@ -164,7 +169,39 @@ const helper = {
 			}),
 		}
 		return currencies[currency].format(value)
+	},
+
+	calcDiscount(products, subtotal){
+
+		let total = Number(0)
+		let totalNoDiscount = Number(0)
+		let percent = 0
+
+		products.forEach(product => {
+
+			if(product?.category){
+				totalNoDiscount = Number(totalNoDiscount) + Number(product?.discount?.priceByMonths || 0) + (product.price - product.frecuency.value)
+			} else {
+				totalNoDiscount = Number(totalNoDiscount) + product.price
+			}
+			total  = Number(total) + (Number(product?.discount?.value) || 0 )
+
+		});
+
+
+		let diff = (totalNoDiscount - subtotal) || 0;
+		percent = ((diff / totalNoDiscount) * 100) || 0
+		percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
+
+		return {
+			total,
+			totalNoDiscount,
+			percent
+		}
 	}
+
+
+
 
 }
 

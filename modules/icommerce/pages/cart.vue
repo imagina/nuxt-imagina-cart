@@ -1,6 +1,6 @@
 <template>
-	<ClientOnly>
-		<div class="
+	<BreadCrumb />
+	<div class="
 			lg:tw-flex
 			tw-flex-wrap
 			tw-justify-center
@@ -8,29 +8,38 @@
 			tw-h-full
 		"
 		style="background-color:  #FAFAFA;"
-		>
+		>		
+
+		
 			<!--cart and products --->
-			<div class="
-			tw-w-full
-			lg:tw-w-[800px]
-			lg:tw-mb-4
+			<div				
+			class="
+				tw-w-full
+				lg:tw-w-[800px]
+				lg:tw-mb-4
+				tw-flex
+				tw-align-middle
 			">
-				<div v-if="showCart" class="tw-mb-[40px]">
+				<div					
+					class="tw-mb-[40px]"
+					
+				>
 					<!--title -->
-					<div class="tw-flex tw-justify-between tw-items-center">
+					
+					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
 						<div>
-							<h1 
+							<h1
 								class="
-									tw-text-[20px] 
-									sm:tw-text-[24px] 
-									md:tw-text-[35px] 
+									tw-text-[20px]
+									sm:tw-text-[24px]
+									md:tw-text-[35px]
 									tw-font-[700]
 								"
 							>
 								{{ $t('icommerce.cart.yourCart') }}
 							</h1>
 						</div>
-						
+
 						<!-- currency -->
 						<div>
 							<CurrencySelector />
@@ -38,43 +47,25 @@
 					</div>
 					<!-- products -->
 					<ProductsComponent
-						@subtotal="(val) => subtotal = val"
-						@discount="(val) => discount = val"
+						:product="product"
+						:domainPricing="domainPricing"
+						
 					/>
-					
+
 				</div>
-				<!-- empty cart -->
-				<div v-else >
-					<h1 class="tw-text-[35px] tw-font-[700]">Tu Carrito</h1>
-					<div class="tw-my-4 tw-text-[14px] tw-font-[400]">
-						<p>
-							{{ $t('icommerce.cart.emptyCart') }}
-						</p>
-					</div>
-					<q-btn
-						:label="$t('icommerce.goToStore')"
-						text-color="black"
-						color="amber"
-						no-caps
-						unelevated
-						class="
-							tw-w-2/4
-							tw-justify-center
-							tw-font-bold
-							tw-rounded-lg
-							tw-mt-4
-							tw-my-8
-						"
-						@click="() => { router.push({ path: getPath('icommerce.products') })}"
+				
+					<emptyCart 
+						v-if="!showCart"
 					/>
-				</div>
+				
+				
 			</div>
 
 			<!-- cart-->
-			<div
-				v-if="showCart"
+			<div		
+				v-if="showCart"		
 				class="
-				tw-w-full				
+				tw-w-full
 				md:tw-my-[20px]
 				lg:tw-w-[800px]
 				lg:tw-mt-0
@@ -94,65 +85,12 @@
 					tw-p-6
 					"
 				>
-					<div class="tw-flex tw-justify-between tw-items-center">
-						<span class="
-							tw-font-semibold
-							tw-text-[22px]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ $t('icommerce.cart.subtotal') }}
-						</span>
-						<span class="
-							tw-font-[600]
-							tw-text-[20px]
-							tw-m-0
-							tw-p-0
-							tw-leading-5							
-						">
-							<span :class="discountPercent() ? 'tw-line-through tw-text-[#818181] tw-font-[400]' : '' ">
-								{{ productsHelper.priceWithSymbol(discount.totalNoDiscount, cartState.currency) }}
-							</span>							
-						</span>
-					</div>
 
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
-						<span class="tw-text-[12px] tw-font-[400] tw-text-[#818181]">
-							{{ $t('icommerce.cart.subtotalNoTaxes') }}
-						</span>
-						<span class="tw-text-[20px] tw-font-[600]">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-						</span>
-					</div>
-
-					<!-- discount -->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2" v-if="showDiscount">
-						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							{{ $t('icommerce.cart.discount') }} {{ discountPercent() }}%
-							
-						</span>
-						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.priceWithSymbol(discount.total, cartState.currency) }}
-						</span>
-					</div>
-
-					<!--coupon -->
-					<div v-if="false">
-						<div>
-							<q-btn 
-								:label="$t('icommerce.cart.coupon')"
-								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]"
-								flat
-								no-caps
-								dense
-								@click="showCouponInput = !showCouponInput" 
-							/>
-						</div>
-						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
-							<q-input v-model="form.coupon" dense outlined />
-						</div>
-					</div>
+					<!-- subtotal -->
+					<SubtotalComponent 
+						:cartState="cartState"
+					/>
+					
 					<div class="tw-mt-6">
 						<q-btn
 							:label="$t('icommerce.cart.continue')"
@@ -165,12 +103,14 @@
 								tw-justify-center
 								tw-font-bold
 								tw-rounded-lg
+								tw-text-white
 							"
-							@click="redirectCheckout()"	
+							@click="redirectCheckout()"
 							:disable="disableContinue"
+							
 						/>
 					</div>
-					<div 
+					<div
 						v-if="showTaxesWarning"
 						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
 					>
@@ -178,146 +118,93 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</ClientOnly>
+
+	</div>
+
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
-import productsHelper from '../helpers/products'
+import SubtotalComponent from '../components/cart/subtotal.vue'
 import CurrencySelector from '../components/currencySelector'
-import apiRoutes from '../config/apiRoutes'
-
+import BreadCrumb from '../components/breadcrumb';
+import emptyCart from '../components/cart/emptyCart.vue';
 
 definePageMeta({
   middleware: 'auth',
-})
-
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
-})
-const form = useStorage('shoppingCheckoutForm', {
-	coupon: null,
-	email: null,
-	firstName: null,
-	lastName: null,
-	identification: null,
-	mobilePhone: null,
-	country: null,
-	address: null,
-	city: null,
-	region: null,
-	zipCode: null
+  layout: 'icommerce'
 })
 
 const { t } = useI18n()
 const router = useRouter()
-const route = useRoute()    
 
-const subtotal = ref(0)
-const discount = ref({
-	percent: 0,
-    total: Number(0),
-    totalNoDiscount: Number(0)
+const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 
+const cartStateStorage = useStorage('icommerce.cart', {
+	products: [],
+	currency: 'COP'
+})
 
-const showCouponInput = ref(false)
-const showCart = computed(() => cartState.value?.products?.length || false)
+const route = useRoute()
 
-const disableContinue = computed(() => cartState.value.products.every((product) => {
-	if(!product?.domain) return false   //not a domain product 
-	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false	
-}))
+const urlOptions =  {
+	action: route?.query?.a || null,
+	pid: route?.query?.pid || null,
+	billingcycle: route?.query?.billingcycle || null,
+	promocode: route?.query?.promocode || null
+}
+const product = ref(null)
+const isAddAction = computed(() => (urlOptions.pid && urlOptions.action == 'add') || false)
+
+const { data: domainPricing } = await useAsyncData( 'domainPricing', 
+	() => $fetch('/api/icommerce/domain-pricing')
+)
+
+const productData = await useAsyncData( 'product', 
+	() => isAddAction.value ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
+)
+product.value = productData.data.value
+
+const showCart = computed(() => cartState.value.products.length )
+
+const disableContinue = computed(() => { 
+	if(!showCart.value) return false
+	return cartState.value?.products?.every((product) => {
+	if(!product?.domain) return false   //not a domain product
+	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false
+	}) 
+})
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
-const showDiscount = computed(() => discountPercent() > 1)
 
 const checkoutPath = getPath('icommerce.checkout')
 
-
-onMounted(async () => {
-	init();
+onMounted(() => {
+	restoreFromCheckout()
 })
 
-async function init(){
-	await checkUrlParams()
-}
-
-async function  checkUrlParams(){	
-	const query = route?.query || {}	 
-
-	const options = {
-		action: query?.a || null,
-		pid: query?.pid || null,
-		billingcycle: query?.billingcycle || null, 
-		promocode: query?.promocode || null
-	}
-	
-	if(options.action && options.pid){		
-		getProduct(options.pid, options)
+function restoreFromCheckout(){
+	if(isAddAction.value){
+		cartStateStorage.value.products = []		
+	} else {
+		if(cartStateStorage.value.products.length){
+			//product.value = cartStateStorage.value.products[0]
+			cartState.value.products = cartStateStorage.value.products
+		}		
 	}
 }
-
-async function getProduct(id, urlOptions){
-	cartState.value.products = []
-	const params = {			
-		include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues', 
-		filter: {
-			field: 'external_id'
-		}
-	}
-	
-	await baseService.show(apiRoutes.products, id,  params).then(response => {		
-		if(response?.data) {
-			const product = response.data
-			
-			/* translate the  product options and set one if there is in url params  */
-			if(productsHelper.hasFrencuency(product)){
-				let billingcycle = 0
-				const options = productsHelper.getFrecuencyOptions(product).map((element, index) => {
-					if(urlOptions?.billingcycle){
-						if(urlOptions?.billingcycle.toLowerCase() == element.label.toLowerCase()){
-							billingcycle = index
-						}
-					}
-					element.frecuency = element.label
-					element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
-					return element
-       			});
-				if(options.length) product.frecuency = options[billingcycle]
-    		}
-			/*
-			const index = cartState.value.products.findIndex((obj) => obj.externalId == id);
-			if (index === -1) {
-				cartState.value.products.push(product);
-			} else {
-				cartState.value.products[index] = product;
-			}
-			*/
-
-			cartState.value.products = []
-			cartState.value.products.push(product);
-		}
-
-	})
-	//loading.value = false
-}
-
 
 function redirectCheckout() {
+	cartStateStorage.value.products = cartState.value.products
 	router.push({
 		path: checkoutPath
 	})
 }
 
-function discountPercent(){
-	let percent = 0
-	let diff = (discount.value.totalNoDiscount - subtotal.value) || 0;
-	percent = ((diff / discount.value.totalNoDiscount) * 100) || 0
-	percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
-	return percent
-}
 
 </script>

@@ -1,8 +1,7 @@
 <template>
     <ClientOnly>
-        <div id="masterCaptchaComponent" v-if="captcha.key">
-          <!--Text V3-->
-          <div v-if="captcha.version == '3'" class="text-info-v3" v-html="$t('iauth.captcha')"></div>
+        <div id="masterCaptchaComponent" v-if="captchaKey">
+          <div class="text-info-v3" v-html="$t('iauth.captcha')"></div>
         </div>
     </ClientOnly>
 </template>
@@ -17,37 +16,31 @@
         store
       }
     },
+    data(){
+      return {
+        captchaKey: null,
+        activeCaptcha: null
+      }
+    },
     mounted() {
         this.init()
-    },
-    computed: {
-      //Return settings data
-      settings() {
-        return {
-          captchV3: getSetting('isite::reCaptchaV3Site'),
-          activeCaptcha: getSetting('isite::activateCaptcha')
-        }
-      },
-      //Return config captcha
-      captcha() {
-          return {version: 3, key: this.settings.captchV3}
-      },
     },
     methods: {
       //Init
       async init() {
-        await this.store.getSettings().then(() => {
-          if(this.settings.activeCaptcha){
-            this.loadCaptcha()
-          }
-        })
+        this.captchaKey = getSetting('isite::reCaptchaV3Site') || null
+        this.activeCaptcha = getSetting('isite::activateCaptcha') || null
+        if(this.activeCaptcha){
+          this.loadCaptcha()
+        }
+        
       },
       //add CDN captcha
       loadCaptcha() {
-        if (this.captcha.key) {
+        if (this.captchaKey) {
           try {
             //Instance attributes by version
-            let cdnAttributes = '?render=' + this.captcha.key
+            let cdnAttributes = '?render=' + this.captchaKey
             let recaptcha = document.createElement('script')//create CDN google recaptcha
             recaptcha.setAttribute('src', 'https://www.google.com/recaptcha/api.js' + cdnAttributes)
             document.head.appendChild(recaptcha)//add to head
@@ -59,8 +52,8 @@
       //Listen token catpcha and emit token
       async getToken(){
         return new Promise((resolve, reject) => {
-          if(this.captcha.key){
-            grecaptcha.execute(this.captcha.key, {action: 'submit'}).then(token => {
+          if(this.captchaKey){
+            grecaptcha.execute(this.captchaKey, {action: 'submit'}).then(token => {
               const response = {version: 3, token}
               resolve(response)
             })

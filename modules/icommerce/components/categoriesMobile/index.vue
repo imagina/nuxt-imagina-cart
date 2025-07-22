@@ -24,28 +24,39 @@
 							class="tw-px-4"
 						>
 							<template v-for="children in category.children">
+								<NuxtLink
+									:to="`/products/${category.slug}`"  >
+
 								<q-item 
-									@click="() => selectedCategory(children)"
+								
 									clickable
 									v-ripple
 									:active="isActive(children)"
+									:class=" isActive(category) ? 'tw-font-[700]' : 'tw-font-[500]'"
 								>
 									<q-item-section>{{ children.title }}</q-item-section>
 								</q-item>
+								</NuxtLink>
 							</template>
 						</q-list>
 					</q-expansion-item>
 					<!-- no children -->
+				<NuxtLink
+				v-else
+					:to="`/products/${category.slug}`">
+					 
 					<q-item 
-						v-else
-						@click="() => selectedCategory(category)"
+						
+						:to="`/products/${category.slug}`"  
 						clickable
 						v-ripple
 						:active="isActive(category)"
 						class="expansion-item"
+						:class=" isActive(category) ? 'tw-font-[700]' : 'tw-font-[500]'"
 					>
 						<q-item-section>{{ category.title }}</q-item-section>
 					</q-item>	
+					</NuxtLink>
 				</template>				
 			</q-list>
 			</q-expansion-item>
@@ -57,16 +68,20 @@
 import apiRoutes from '../../config/apiRoutes'
 import constants from '../../config/constants'
 
-const emits = defineEmits(['selectedCategory'])
-const selectedCategoryRef = useState('icommerce.products.selectedCategory', () => null)
+const route = useRoute()
 
-const categories = ref([])
+const categories = ref(null)
 const drawer = ref(false)
 const isMobile = ref(false)
 const BREAKPOINT = 1024
 
+const props = defineProps( {
+	categories: {
+		type: Array,
+		required: false	
+	} 
+})
 
-//const selectedCategoryRef = ref({})
 function updateViewport() {
 	isMobile.value = window.innerWidth < BREAKPOINT
 	drawer.value = !isMobile.value
@@ -83,46 +98,14 @@ async function init(){
 
 async function getCategories(){
 
-	const params = {
-		take: 60,
-		page: 1,
-		filter : {
-			parentId: constants.cagtegories.mainCategoryId,
-			order: {
-				field: "created_at",
-				way: "desc"
-			}			
-		}
-		
-	}
-
-	baseService.index(apiRoutes.categories, params).then(response => {
-		let  data =  response?.data || []				
-		const parents = data		
-		
-		parents.forEach((category) => {			
-			const children = data.filter(item => item.parentId == category.id && item.parentId != constants.cagtegories.mainCategoryId )
-			if(children.length) category.children = children
-		})
-
-		categories.value = parents		
-		//emits('selectedCategory', categories.value[0])
+	$fetch('/api/icommerce/categories').then(response => {		
+		categories.value = response		
 	})
 }
 
-function selectedCategory(category){	
-	//window.scrollTo(0, 0);
-	const router = useRouter()
-	selectedCategoryRef.value = category	
-	router.push({ path: getPath('icommerce.products') })
 
-
-
-	emits('selectedCategory', category)
-}
-
-function isActive(category){	
-	return (selectedCategoryRef.value?.id == category?.id) || false
+function isActive(category){
+	return route.path.includes(category?.slug) || false
 }
 
 onMounted(async () => {

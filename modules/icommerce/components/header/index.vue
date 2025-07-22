@@ -1,5 +1,4 @@
-<template>
-  <ClientOnly>
+<template>  
   <header
       :class="[
       'tw-sticky tw-top-0 tw-z-50 tw-border-b tw-border-gray-200',
@@ -7,13 +6,13 @@
     ]"
   >
     <div class="
-        tw-min-h-[60px] tw-mx-auto 2xl:tw-px-20 xl:tw-px-10 sm:tw-px-5
-        tw-px-2 tw-py-3 tw-flex tw-items-center tw-justify-between relative
+        tw-min-h-[60px] 2xl:tw-px-20 xl:tw-px-4 sm:tw-px-2
+        tw-px-2 tw-flex tw-items-center tw-justify-between relative
       ">
 
       <!-- LOGO -->
-      <div class="lg:tw-w-1/12 2xl:tw-w-3/12 tw-relative tw-order-1">
-        <NuxtLink to="/"
+      <div class="lg:tw-w-1/12 tw-relative tw-order-1">
+        <NuxtLink to="https://www.imaginacolombia.com/"
         >
           <img
               :src="logoSrc"
@@ -25,15 +24,17 @@
 
       <!-- MENÚ DE NAVEGACIÓN -->
       <div class="
-        tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 lg:tw-px-5
+        tw-flex justify-end lg:tw-justify-center tw-w-full tw-pl-4 xl:tw-px-5
         tw-relative tw-order-1
       ">
-        <Navbar v-model="isMobile" :nav-items="navItems" :is-scrolled="isScrolled" />
+      
+        
+        <Navbar :nav-items="navItems" :is-scrolled="isScrolled" />      
       </div>
 
       <!-- BOTONES DE CUENTA, CARRITO, THEME TOGGLE -->
       <section class="
-        tw-flex tw-items-center tw-justify-end lg:tw-w-3/12 xl:tw-w-4/12
+        tw-flex tw-items-center tw-justify-end lg:tw-w-3/12 xl:tw-w-3/12
         tw-min-w-max tw-relative tw-order-2
       ">
       <div class="tw-mx-4">
@@ -43,7 +44,9 @@
       </div>
 
       <!--       Buttons Group-->
-        <NavbarButtons v-if="!isMobile" :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+        
+        <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+        
 
         <!--    Cart Component -->
         <div class="tw-pl-1 tw-relative tw-order-3">
@@ -56,13 +59,13 @@
 
     </div>
   </header>
-</ClientOnly>
+
 </template>
 
 <script setup>
 import {ref, computed} from 'vue'
 import Navbar from './Navbar.vue'
-import cartComponent from '../cart'
+import cartComponent from '../cart/cartIcon'
 import whiteLogo from '../../assets/img/white-logo-imagina.png'
 import redLogo from '../../assets/img/red-logo-imagina.png'
 import NavbarButtons from "./NavbarButtons.vue";

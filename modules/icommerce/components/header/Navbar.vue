@@ -53,25 +53,23 @@ watch(isMobile, (newValue) => {
 
 <template>
     <!--MENU DESKTOP -->
-    <ClientOnly>
-    <div v-if="!isMobile" class="tw-flex tw-items-center tw-gap-5 xl:tw-gap-[26px]">
+    
+    <div v-if="!isMobile" class="tw-flex tw-items-center">
       <template
           v-for="(navItem, index) in navItems"
           :key="navItem.id || index"
       >
+      <div class="tw-flex-row tw-align-middle">
+
+      
         <q-btn
-          v-if="navItem.items"
           :label="navItem.label"
           v-bind="navItem.props"
-          flat
+          unelevated
           no-caps
-          padding="0"
-          icon-right="fa-solid fa-angle-down"
-          class="tw-text-md xl:tw-text-[15px]"
-          :class="{
-            'hover:tw-text-[#DC3545]': !isScrolled,
-            'hover:tw-text-[#F9BA48]': isScrolled
-          }"
+          :icon-right="navItem.items? 'fa-solid fa-angle-down': '' "
+          class="tw-text-md xl:tw-text-[15px] tw-h-[68px] tw-p-0 lg:tw-p-2 hover:tw-bg-[#DC3545] hover:tw-text-[#ffffff]"
+          :href="navItem?.to"
         >
           <q-menu>
             <q-list>
@@ -94,21 +92,15 @@ watch(isMobile, (newValue) => {
             </q-list>
           </q-menu>
         </q-btn>
-        <NuxtLink
-          v-if="!navItem.items"
-          v-bind="navItem.props"
-          :to="navItem?.to"
-          class="
-            tw-text-md xl:tw-text-[15px
-            tw-cursor-pointer
-          "
-          :class="{
-            'hover:tw-text-[#DC3545]': !isScrolled,
-            'hover:tw-text-[#F9BA48]': isScrolled
-          }"
-        >
-          {{ navItem.label }}
-        </NuxtLink>
+        
+ 
+
+
+      </div>
+
+
+      
+        
       </template>
     </div>
 
@@ -118,8 +110,8 @@ watch(isMobile, (newValue) => {
         <Modal>
 
           <!--       Buttons Group-->
-          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">
-            <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">            
+            <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>            
           </div>
 
   <!--        Render navigation items-->
@@ -128,7 +120,7 @@ watch(isMobile, (newValue) => {
         </Modal>
       </q-list>
     </div>
-  </ClientOnly>
+  
 </template>
 
 <style scoped>

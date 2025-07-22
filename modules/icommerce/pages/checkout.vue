@@ -108,14 +108,7 @@
 
 							<q-select
 								v-model="form.identificationType"
-								:options="[
-									{ value: 'Cédula de Ciudadanía', label: 'Cedula de ciudadania' },
-									{ value: 'NIT', label: 'NIT' },
-									{ value: 'Cédula de Extranjería', label: 'Cédula de Extranjería' },
-									{ value: 'Pasaporte', label: 'Pasaporte' },
-									{ value: 'Documento de Identificación extranjero', label: 'Documento de Identificación extranjero' },
-									{ value: 'NIT Externo', label: 'NIT Externo' },
-									]"
+								:options="identificationTypeOptions"
 								option-value="value"
 								option-label="label"
 								outlined
@@ -133,6 +126,18 @@
 								dense
 								outlined
 							/>
+
+							<q-input
+								v-if="showCompanyname"
+								v-model="form.companyName"
+								label="Nombre de Empresa (Opcional)"
+								:rules="[
+									(val) => !!val || 'Campo requerido.',
+								]"
+								dense
+								outlined
+							/>
+
 							<q-input
 								v-model="form.mobilePhone"
 								label="Teléfono"
@@ -308,37 +313,9 @@
 						</q-expansion-item>
 					</div>
 					<hr class="tw-my-4" />
-					<div class="tw-flex tw-justify-between tw-items-center">
-						<span class="
-							tw-font-[600]
-							tw-text-[20px]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ $t('icommerce.cart.subtotal') }}
-						</span>
-						<span class="
-							tw-text-[18px]
-							tw-font-[400]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-						</span>
-					</div>
-
-
-					<!-- discount -->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
-						<span class="tw-text-[14px] tw-font-[500] tw-text-[#818181]">
-							{{ $t('icommerce.cart.discount')}} {{ calcDiscount().percent }}%
-						</span>
-						<span class="tw-text-[14px] tw-font-[600] tw-text-[#66BB6A]">
-							{{ productsHelper.valueWithSymbol(calcDiscount().total, cartState.currency) }}
-						</span>
-					</div>
+					<SubtotalComponent 
+						:cartState="cartState"
+					/>
 
 					<div class="tw-my-4 tw-flex-nowrap">
 						<div
@@ -394,29 +371,39 @@ import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
+import SubtotalComponent from '../components/cart/subtotal.vue'
 //import CurrencySelector from '../components/currencySelector'
 import apiRoutes from '../config/apiRoutes'
+const userStore = useAuthStore()
 
 
 definePageMeta({
   middleware: 'auth',
 })
 
-
+const identificationTypeOptions = [
+	{ value: 'Cédula de Ciudadanía', label: 'Cedula de ciudadania' },
+	{ value: 'NIT', label: 'NIT' },
+	{ value: 'Cédula de Extranjería', label: 'Cédula de Extranjería' },
+	{ value: 'Pasaporte', label: 'Pasaporte' },
+	{ value: 'Documento de Identificación extranjero', label: 'Documento de Identificación extranjero' },
+	{ value: 'NIT Externo', label: 'NIT Externo' },
+]
 
 const quasar = useQuasar()
 const authStore = useAuthStore()
-const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })
 
-const form = useStorage('shoppingCheckoutForm', {
+const form = useStorage('icommerce.CheckoutForm', {
 	coupon: null,
 	email: null,
 	firstName: null,
 	lastName: null,
 	identification: null,
+	identificationType: identificationTypeOptions[0],
 	mobilePhone: null,
 	country: null,
 	address: null,
@@ -435,17 +422,14 @@ const cities = ref([])
 const user = computed(() => authStore.user)
 const products = computed(() => cartState.value.products)
 
-const subtotal = computed(() => {
-	let value = 0;
-	if (!cartState?.value?.products.length) return value
-	value = productsHelper.getSubtotal(cartState?.value?.products, cartState.value.currency)
-	return value
-})
+const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 //const disableButton = computed( () => refForm.value.validate() )
 
 //const disableButton = ref(true)
+
+const showCompanyname = computed(() => (form.value.identificationType?.value == identificationTypeOptions[1].value) || (form.value.identificationType?.value == identificationTypeOptions[5].value) || false)
 
 watch(
 	() => cartState.value.products,
@@ -528,6 +512,7 @@ function setFormData(reset = false) {
 		form.value.lastName = form.value.lastName || user.value.lastName
 		form.value.identification = form.value.identification ||  getField('identification')
 		form.value.mobilePhone = form.value.mobilePhone || getField('cellularPhone')
+		form.value.identificationType = form.value.identificationType || identificationTypeOptions[0]
 	} else {
 		if(reset) resetFormData()
 	}
@@ -543,6 +528,7 @@ function resetFormData(){
 		firstName: null,
 		lastName: null,
 		identification: null,
+		identificationType: identificationTypeOptions[0],
 		mobilePhone: null,
 		country: null,
 		address: null,
@@ -559,29 +545,7 @@ function getField(name) {
 }
 
 function calcDiscount(){
-
-	const discount  = {
-		//percent: 0,
-		total: Number(0),
-		totalNoDiscount: Number(0)
-	}
-
-  		cartState.value.products.forEach(product => {
-
-        if(product.category){
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + Number(product?.discount?.priceByMonths || 0) + (product.price - product.frecuency.value)
-        } else {
-          discount.totalNoDiscount = Number(discount.totalNoDiscount) + product.price
-        }
-        discount.total  = Number(discount.total) + Number(product.discount.value)
-
-		});
-		/* calc percent */
-		let diff = discount.totalNoDiscount - subtotal.value;
-		let percent = (diff / discount.totalNoDiscount) * 100
-		discount.percent =  (percent > 1) || percent == 0 ? Math.round(percent) : percent.toFixed(2)
-	return discount
-
+  return productsHelper.calcDiscount(cartState.value.products, subtotal.value)
 }
 
 function redirectToCart() {
@@ -622,52 +586,60 @@ async function goToPayment() {
 
 	quasar.loading.show({
 		message: 'Estamos procesando su pedido',
-		//messageColor: 'black',
-		//backgroundColor: 'primary',
 	})
 
 
 	const order = {
-		user: { ...form.value },
-		//user.identificationType = form.value.identificationType.toLowerCase().replaceAll(' ', '-')
+
 		currency: cartState.value.currency,
 		total: subtotal.value,
 
-
 		products: products.value.map((product) => {
-
-			delete product?.domain?.action?.placeholder
-
+			const frecuency = productsHelper.hasFrencuency(product) ? product?.frecuency : {}
+			const frecuencyMonths = parseInt(frecuency.label.match(/\d+/)[0], 10) || 0
+			const renewal = frecuencyMonths > 12 ? (( frecuencyMonths / 12) - 1) : 0
 
 			return {
-				id: product?.externalId || null,
-				//description: product.description,
-				name: product?.name || null,
-				productUrl: product?.url || null,
-				domain: product?.domain || null,
-				discount: product?.discount || null,
-				frecuency: productsHelper.hasFrencuency(product) ? product?.frecuency : null,
-				price: product?.price || null,
-				domain: product?.domain || null
+				id: product?.externalId || product?.domain?.ext || null,
+				domain: product?.domain?.domainName || null,
+				billincycle: frecuency?.frecuency || null,
+				domainType: product?.domain?.action?.value || null,
+			    transferCode: product?.domain?.transferCode || null,
+				frecuency: frecuencyMonths,
+				renewal
 			}
 		})
 	}
 
-	//console.dir(order)
-
+	const user = { ...form.value }
+	user.city = user.city.name
+	user.state = user.province.name
+	delete user.province
+	delete user.coupon
+	user.country = user.country['iso2'] || user.country['name']
+	user.identificationType = user.identificationType.value
+	order.user = user
 
 	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
 		body: JSON.stringify(order)
 	}).then((response) => {
-		//WIP
+
 		const redirectUrl = response.redirectUrl || apiRoutes.imaginaClients
 		window.location.replace(redirectUrl);
+
 		cartState.value = {
 			products: [],
 			currency:  cartState.value.currency
 		}
 
+		quasar.loading.hide()
+	}).catch((error) => {
+		quasar.loading.hide()
+		console.log(error)
 	})
 }
 

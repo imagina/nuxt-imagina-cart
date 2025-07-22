@@ -14,8 +14,9 @@
           v-if="authStore.isLogged()"
           :label="user.fullName"
           flat no-caps padding="0"
+          
           dropdown-icon="fa-solid fa-angle-down"
-          class="dropdown-sign-in tw-text-[15px]"
+          class="dropdown-sign-in tw-text-[15px] tw-min-w-[140px] tw-w-full tw-overflow-hidden tw-font-[600]"
       >
         <q-list>
           <q-item clickable v-close-popup>
@@ -23,7 +24,7 @@
               <q-item-label>
                 <NuxtLink
                     :to="{ path: getPath('iauth.logout'), query: { redirectTo: 'icommerce.products' } }"
-                    class="dropdown-sign-in tw-text-[15px]"
+                    class="dropdown-sign-in tw-text-[15px] "
                 >
                   Cerrar sesión
                 </NuxtLink>
@@ -33,14 +34,17 @@
         </q-list>
       </q-btn-dropdown>
 
-      <NuxtLink
-          v-if="!authStore.isLogged()"
-          :to="{ path: getPath('iauth.login'), query: { redirectTo: 'icommerce.products' } }"
-          class="dropdown-sign-in tw-text-[15px] tw-duration-200"
+      <q-btn
+        v-if="!authStore.isLogged()"
+        unelevated
+        color="primary"
+        no-caps          
+        :to="{ path: getPath('iauth.login'), query: { redirectTo: 'icommerce.products' } }"
+        class="dropdown-sign-in tw-text-[15px] tw-duration-200 tw-rounded-full xl:tw-px-8"
       >
         <span class="tw-block lg:tw-hidden xl:tw-block">{{ $t('iauth.login.title') }}</span>
         <i class="tw-hidden lg:tw-block xl:tw-hidden fa fa-user" />
-      </NuxtLink>
+    </q-btn>
     </div>
 
     <div class="tw-pr-4 lg:tw-pl-4 tw-relative tw-order-1 lg:tw-order-2">

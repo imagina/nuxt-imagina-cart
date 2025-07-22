@@ -1,22 +1,52 @@
 <template>
+	<div class="tw-w-full tw-min-h-[80vh]">		
+		
+	<NuxtImg 
+		v-if="category && bannerImage && false"
+		:src="bannerImage" 
+		class="
+			tw-h-[180px]                        
+			tw-rounded-2xl
+			tw-w-[100%]
+			tw-h-[182px]
+			sm:tw-h-[240px]
+			md:tw-h-[320px]
+			lg:tw-h-[400px]
+		"
+		:alt="category?.title"
+	/>
+	<div v-if="category">
+		  <categoryBanner :category="category" />
+	</div>
+
+
+
+	
+	<div class="tw-pt-5 tw-mt-2.5 " v-if="category">
+		<span class="tw-text-2xl md:tw-text-4xl tw-font-semibold">{{ category.title }}</span>
+		<p v-if="false" v-html="category.description" class="tw-text-base tw-mt-3.5">                        
+		</p>
+	</div>
+	<hr  class="tw-my-6 tw-w-full" />
+
+
+
 	<div class="md:tw-flex tw-justify-between tw-align-middle tw-mb-8" v-if="!loading">
 		<div class="tw-flex items-center">
 			<p>{{ products.length }} {{ $t('icommerce.products.articles')}}</p>
 		</div>
-		<div class="md:tw-flex items-center tw-gap-4" v-if="products.length">
+		<div class="tw-flex items-center tw-gap-4" v-if="products.length">
 			<div class="tw-my-4 md:tw-m-0">
 				<CurrencySelector />
 			</div>
-			<span
-
-			>
-			{{ $t('icommerce.products.order') }}
+			<span>
+				&nbsp;{{ $t('icommerce.products.order') }}&nbsp;
 			</span>
 			<q-select
 				borderless
 				v-model="sort"
 				:options="sortOptions"
-				class="md:tw-w-[160px]"
+				class="tw-w-[100px] md:tw-w-[160px]"
 				@update:model-value="getProducts()"
 			/>
 		</div>
@@ -116,6 +146,17 @@
 								tw-bg-[#E7E7E7]
 							"
 						/>
+						<NuxtLink 
+							:to="{
+								path: '/cart', 
+								query: {
+									a: 'add',
+									pid: product.externalId
+								}
+							}"
+						>
+							
+
 						<q-btn
 							:label="productLabel"
 							text-color="black"
@@ -129,8 +170,9 @@
 								tw-font-bold
 								tw-rounded-lg
 							"
-							@click="addTocart(index)"
+							
 						/>
+						</NuxtLink>
 					</div>
 			</q-card>
 		</div>
@@ -144,45 +186,99 @@
 			@update:modelValue="getProducts()"
 			class="tw-py-8"
         />
+		</div>
 
 
   </template>
   <script setup>
 
 import apiRoutes from '../../config/apiRoutes'
-import constants from '../../config/constants'
-import { useStorage } from '@vueuse/core'
 import productsHelper from '../helpers/products.ts'
 import CurrencySelector from '../../components/currencySelector'
+import categoryBanner from './banners'
+
+const router = useRouter()
+const route = useRoute()
+
+const props = defineProps( {
+  category: {
+    type: Object
+  }, 
+  products: {
+	type: Object
+  }
+} )
+
+const meta = {
+	title: 'Páginas Web - Hosting y Registro de Dominios | Imagina Colombia',
+	description: 'Lideres en Hosting y registro de Dominios en Colombia. Mayor rendimiento al mejor precio. 15 años de experiencia más de 10.000 clientes confían en nosotros. Asesores en Bogotá, Ibagué  y Medellín.'
+}
+
+//const category = computed(() => props.category)
+const slug = route?.params?.slug || null
+const category = ref(props.category)
 
 
-const props = defineProps({
-  category: Object
-});
+useSeoMeta({
+  title: () =>  category?.value?.title ||  meta?.title,
+  ogTitle: () =>  category?.value?.title ||  meta?.title,
+  description: () =>  category?.value?.description ||  meta?.description,
+  ogDescription: () =>  category?.value?.description ||  meta?.description,
+  //ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image',
+  twitterImage: 'https://www.imaginacolombia.com'
+})
+
+
 
 const settings = {
 	justOneProdcut: true //one product and redirects to checkout
 }
-const router = useRouter()
+
+
 const { t } = useI18n()
-const products = ref([])
+const products = ref(props?.products?.data || [])
 const loading = ref(false)
+
+//pagination.value.lastPage = response.meta.page.lastPage || pagination.value.lastPage
+//paginationModel.value.rowsNumber = response.meta.page.total
 
 const paginationModel = ref({
       page: 1,
-      rowsNumber: null,
+      rowsNumber: props?.products?.meta?.page?.total || null,
       rowsPerPage: 12,
       descending: true,
       maxPages: 6
     })
 
 const pagination = ref({
-	lastPage: 0,
+	lastPage: props?.products?.meta?.page?.lastPage || 0
 })
 
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
+
+
+const isMobile = ref(false)
+const BREAKPOINT = 600
+
+function updateViewport() {
+	isMobile.value = window.innerWidth < BREAKPOINT	
+}
+
+onUnmounted(() => {
+	window.removeEventListener('resize', updateViewport)
+})
+
+const bannerImage = computed( () =>  {    
+ if(!category.value) return false
+ return (isMobile.value ? category.value?.mediaFiles?.secondaryimage?.url : category.value?.mediaFiles?.mainimage?.url ) || false 
+ 
+})
+
+ const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 
   // 'ad' (ascending-descending) or 'da' (descending-ascending)
@@ -201,29 +297,15 @@ const cartState = useStorage('shoppingCart', {
 
 	//peding to check on cart..
 	const productLabel = computed(() => settings.justOneProdcut ? t('icommerce.products.buyNow') : t('icommerce.products.addToCart'))
-	const frecuencyId = 1 //frecuency option
-
-
-	watch(
-		() => props.category,
-		(newQuery, oldQuery) => {
-			paginationModel.value.page = 1
-			getProducts()
-		},
-	)
+	const frecuencyId = 1 //frecuency option		
+	
 
 	function disableButton(index) {
 		return (!products.value[index].quantity != 0)
 	}
+	
 
-	onBeforeMount( async () => {
-		await getProducts()
-	})
-
-	async function init(){
-		///sort.value = sortOptions[0].value
-	}
-
+	//getProducts()
 	async function getProducts(){
 		const params = {
 			take: paginationModel?.value?.rowsPerPage || 10,
@@ -232,11 +314,13 @@ const cartState = useStorage('shoppingCart', {
 			include: 'relatedProducts,categories,category,parent,manufacturer,optionsPivot.option,optionsPivot.productOptionValues'
 		}
 
-		if(props.category){
+		//router.getRoutes().find(page => page.name == pageName)
+
+		
 			params.filter = {
-				categoryId: props.category?.id || constants.cagtegories.mainCategoryId
+				categoryId: category.value?.id
 			}
-		}
+		
 		loading.value = true
 		/* reset pagination */
 		pagination.value.lastPage = 0
@@ -249,54 +333,15 @@ const cartState = useStorage('shoppingCart', {
 				paginationModel.value.rowsNumber = response.meta.page.total
 			}
 
-
-
-
-
 			//add quantity
+			/*
 			products.value.forEach((product) => {
 				if (product?.quantity) { product.quantity = 1 }
 			})
+			*/
 
 		})
 		loading.value = false
-	}
-
-	function addTocart(index){
-		//cartStore.products.push(product)
-		const product = products.value[index]
-		if(productsHelper.hasFrencuency(product)){
-      		//const options = productsHelper.getFrecuencyOptions(product)
-
-			const options = productsHelper.getFrecuencyOptions(product).map(element => {
-				element.frecuency = element.label
-				element.label =  t(productsHelper.translateFrecuencyOptionLabel(element.label))
-				return element
-       		});
-
-
-			if(options.length) {
-				product.frecuency = options[0]
-			}
-    	}
-
-		if(settings.justOneProdcut){
-			//reset cart
-			cartState.value = { products: [product], currency: cartState.value.currency }
-			router.push({ path: getPath('icommerce.cart')})
-			return
-		} else {
-			if(product.quantity != 0){
-				product.quantity = (product.quantity - 1)
-				const cartProducts = cartState.value.products
-				cartProducts.push(product)
-				cartState.value = { products: cartProducts, currency: cartState.value.currency }
-			}
-		}
-		Notify.create({
-			message: 'Producto agregado al carrito',
-			type: 'positive',
-		})
 	}
 
 
@@ -334,22 +379,9 @@ const cartState = useStorage('shoppingCart', {
 		return regex.test(str1) || regex.test(str2)
 	}
 
-	/* backup
-	function extractValueByLabel(html, label) {
-		const regex = new RegExp(`${label}:\\s*(?:<[^>]+>)*([^<]+)`, 'i');
-		const match = html.match(regex);
-		console.log(match)
-		if (match) {
-			// Replace &nbsp; with normal space and trim the result
-			return match[1].replace(/&nbsp;/g, ' ').trim();
-		}
-		return null;
-	}
-	*/
-
-
 	onMounted(async () => {
-		init();
+		window.addEventListener('resize', updateViewport)	
+		//init();
 	})
 
   </script>

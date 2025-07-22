@@ -1,43 +1,29 @@
 <template>
-    <div class="tw-w-full tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE]">
+    
+    <div class="tw-w-full tw-flex-row tw-py-3.5 tw-pl-3.5 lg:tw-pl-[80px] tw-bg-[#EEEEEE] tw-min-h-[52px]">        
         <q-breadcrumbs separator-color="mediumGray">
             <template v-slot:separator>
                 <q-icon class="tw-text-[#888888]" name="fa-solid fa-angle-right" />
             </template>
             <q-breadcrumbs-el
-                class="tw-text-base tw-text-[#888888] tw-font-extrabold"
-                label="Inicio"
+                class="tw-text-[14px] md:tw-text-base tw-font-[800] tw-text-[#888888] "
+                label="Tienda"
                 :to="'/'"
             />
-                <NuxtLink
-
-                />
+                
             <q-breadcrumbs-el
-                class="tw-text-base tw-text-[#888888] tw-font-medium"
-                :label="currentRoute.label"
-                :to="getPath(currentRoute.path)"
+                class="tw-text-[14px] md:tw-text-base tw-text-[#888888] tw-font-medium"
+                :label="currentRoute"
             />
             </q-breadcrumbs>
     </div>
+    
+    
 </template>
 <script setup>
-
-const router =  useRouter()
-const currentRoute = computed(() => {
-    return {
-        path: router.currentRoute.value.name,
-        label: router.currentRoute.value.meta.breadcrumb
-    }
-      /*
-
-      return matchedRoutes.map((routeRecord, index) => {
-        return {
-          text: routeRecord.meta.breadcrumb || routeRecord.name, // Use meta breadcrumb or fallback to route name
-          to: index < matchedRoutes.length - 1 ? { name: routeRecord.name } : null, // Don't make last breadcrumb clickable
-        };
-      });
-      */
-    });
-
-
+const route = useRoute()
+const currentRoute = computed(() =>  {
+    //if(route.name == 'icommerce.products') return (route?.params?.slug ||  route.meta.breadcrumb )
+    return route?.meta?.breadcrumb || ''
+})
 </script>
