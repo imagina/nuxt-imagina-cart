@@ -68,6 +68,12 @@ export default defineNuxtConfig({
     }
   },
 
+  routeRules: {
+    '/cart' : {
+      ssr: true
+    }
+  },
+
   /*
   security: {
     rateLimiter: {

@@ -1,8 +1,6 @@
-import { useStorage } from '@vueuse/core'
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
-})
+
+
+
 
 
 const helper = {
@@ -142,10 +140,11 @@ const helper = {
 
 
 	getTrm(currency){
-		const authStore = useAuthStore()
-		let usdRates = authStore.usdRates
-		if(!usdRates) return false
-		const trm = Number(usdRates['USDRates'][currency])
+		//const authStore = useAuthStore()
+		//let usdRates = authStore.usdRates
+		const usdRates = useState('icommerce.trm')
+		if(!usdRates?.value) return false
+		const trm = Number(usdRates.value['USDRates'][currency])
 		return trm.toFixed(2)
 	},
 

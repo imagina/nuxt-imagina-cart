@@ -1,5 +1,6 @@
 <template>
-	<NuxtLink :to="getPath('icommerce.cart')">
+	<NuxtLink to="/cart">
+
 		<q-btn
 			unelevated
 			round
@@ -10,7 +11,7 @@
 		>
 			<ClientOnly>
 				<q-badge
-					v-if="cartState?.products.length || false"
+					v-if="showCart"
 					floating
 					rounded
 					:class="{ 'hover-active': isHovered }"
@@ -18,22 +19,25 @@
 						{{ cartState.products.length }}
 				</q-badge>
 			</ClientOnly>
+			
 		</q-btn>
 	</NuxtLink>
 
 </template>
 <script setup>
-import { useStorage } from '@vueuse/core'
 
 const props = defineProps({
   color: String
 });
 
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
+const cartState = useState('icommerce.cart', () => {
+	return {
+		products: [],
+		currency: 'COP'
+	}
 })
 const isHovered = ref(false);
+const showCart = computed(() => cartState.value.products.length || false)
 
 </script>
 <style>

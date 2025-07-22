@@ -49,20 +49,25 @@
 
 </template>
 <script setup>
-import { useStorage } from '@vueuse/core'
 import productsHelper from '../../helpers/products';
 
 const { t } = useI18n()
 
-const cartState = useStorage('shoppingCart', {
-	products: [],
-	currency: 'COP'
+const props = defineProps({
+	cartState: {
+		type: Object,		
+    	required: true
+	}
 })
 
-const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
+
+
+//const cartState = useState('icommerce.cart')
+
+const subtotal = computed(() => productsHelper.getSubtotal(props.cartState.products, props.cartState.currency))
 const showDiscount = computed(() => calcDiscount().percent > 1)
 
 function calcDiscount(){
-  return productsHelper.calcDiscount(cartState.value.products, subtotal.value)
+  return productsHelper.calcDiscount(props.cartState.products, subtotal.value)
 }
 </script>

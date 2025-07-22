@@ -49,6 +49,7 @@ const pages = [
     }
   },
 
+
   {
     name: 'icommerce.checkout',
     path: '/checkout',

@@ -313,7 +313,9 @@
 						</q-expansion-item>
 					</div>
 					<hr class="tw-my-4" />
-					<SubtotalComponent />
+					<SubtotalComponent 
+						:cartState="cartState"
+					/>
 
 					<div class="tw-my-4 tw-flex-nowrap">
 						<div
@@ -390,12 +392,12 @@ const identificationTypeOptions = [
 
 const quasar = useQuasar()
 const authStore = useAuthStore()
-const cartState = useStorage('shoppingCart', {
+const cartState = useStorage('icommerce.cart', {
 	products: [],
 	currency: 'COP'
 })
 
-const form = useStorage('shoppingCheckoutForm', {
+const form = useStorage('icommerce.CheckoutForm', {
 	coupon: null,
 	email: null,
 	firstName: null,
@@ -453,7 +455,6 @@ onMounted(() => {
 })
 
 async function init() {
-	await userStore.getUsdRates()    
 	await setFormData()
 	await getCountries().then( async () => {
 		if(cartState.value.products.length) addRedirect()
