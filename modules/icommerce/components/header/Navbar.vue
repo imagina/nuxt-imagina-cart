@@ -25,36 +25,14 @@ async function executeAction(action) {
   }
 }
 
-// Handle mobile Section
-const isMobile = ref( false );
-const breakpoint = 1024;
 
-function updateViewport() {
-  isMobile.value = window.innerWidth < breakpoint;
-}
-
-onMounted( () => {
-  updateViewport();
-  window.addEventListener( "resize", updateViewport );
-} );
-
-onUnmounted( () => {
-  window.removeEventListener( "resize", updateViewport );
-} );
-
-// Send isMobile to parent
-const emit = defineEmits(["update:modelValue"]);
-
-watch(isMobile, (newValue) => {
-  emit("update:modelValue", newValue);
-});
 
 </script>
 
 <template>
     <!--MENU DESKTOP -->
     
-    <div v-if="!isMobile" class="tw-flex tw-items-center">
+    <div class="tw-hidden md:tw-flex tw-items-center ">
       <template
           v-for="(navItem, index) in navItems"
           :key="navItem.id || index"
@@ -105,12 +83,12 @@ watch(isMobile, (newValue) => {
     </div>
 
     <!--MENU MOBILE -->
-    <div v-if="isMobile" class="tw-flex tw-items-center tw-gap-[26px]">
+    <div class="tw-flex md:tw-hidden tw-items-center tw-gap-[26px]">
       <q-list>
         <Modal>
 
           <!--       Buttons Group-->
-          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">            
+          <div class="tw-flex md:hidden tw-justify-end tw-items-center tw-mb-12">            
             <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>            
           </div>
 

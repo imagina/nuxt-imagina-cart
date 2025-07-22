@@ -65,15 +65,10 @@
 </template>
 <script setup>
 
-import apiRoutes from '../../config/apiRoutes'
-import constants from '../../config/constants'
 
 const route = useRoute()
 
 const categories = ref(null)
-const drawer = ref(false)
-const isMobile = ref(false)
-const BREAKPOINT = 1024
 
 const props = defineProps( {
 	categories: {
@@ -82,19 +77,9 @@ const props = defineProps( {
 	} 
 })
 
-function updateViewport() {
-	isMobile.value = window.innerWidth < BREAKPOINT
-	drawer.value = !isMobile.value
-}
-
 onBeforeMount(async () => {
 	await getCategories()
 })
-
-async function init(){
-	updateViewport()
-	window.addEventListener('resize', updateViewport)	
-}
 
 async function getCategories(){
 
@@ -107,14 +92,6 @@ async function getCategories(){
 function isActive(category){
 	return route.path.includes(category?.slug) || false
 }
-
-onMounted(async () => {
-	init();
-})
-
-onUnmounted(() => {
-	window.removeEventListener('resize', updateViewport)
-})
 
 </script>
 <style>
