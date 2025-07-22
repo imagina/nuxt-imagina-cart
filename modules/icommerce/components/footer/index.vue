@@ -27,6 +27,7 @@
     ]
 </script>
 <template>
+    
     <footer class="tw-flex tw-items-center tw-flex-col tw-w-full tw-bg-[#101923]">
         <div class="tw-flex tw-items-center tw-flex-col tw-pt-24 tw-pb-14">
             <span class="tw-text-sm tw-text-[#777777]">ESTAMOS LISTOS</span>
@@ -159,4 +160,5 @@
             Copyright © 2025 Imagina Colombia .Todos los Derechos Reservados
         </span>
     </footer>
+    
 </template>

@@ -390,6 +390,9 @@ export const useAuthStore = defineStore('authStore', {
 
     /* site settings */
     async getSettings(settings: string[]) {      
+      const data = useState('app.settings')
+      this.settings = data
+      /*
       const params = {
         filter: {
           name: settings,
@@ -398,6 +401,7 @@ export const useAuthStore = defineStore('authStore', {
       return await baseService.index(apiRoutes.settings, params).then(response => {
         if(response?.data) this.settings = response.data
       })
+        */
     },
     /* facebook settings */
     async getFacebookSettings() {

@@ -1,6 +1,7 @@
 <template>
   <!--pagination-->
-  <div :class="`full-width flex items-center ${isMobile ? 'justify-center' : 'justify-between'}`">         
+  <client-only>
+  <div :class="`full-width flex items-center ${isMobile ? 'justify-center' : 'justify-between'}`">             
     <div class="sm:tw-text-sm":class="`text-blue-grey ${isMobile ? 'q-mb-sm' : ''} `">
       {{ $t('isite.cms.label.showing') }} <b>{{ countPage() }}</b> {{ $t('isite.cms.label.entry') }}
     </div>
@@ -64,6 +65,7 @@
       </div>
     </div>
   </div>
+  </client-only>
 </template>
 <script lang="ts">
 import {defineComponent} from 'vue'

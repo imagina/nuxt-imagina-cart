@@ -53,7 +53,7 @@ watch(isMobile, (newValue) => {
 
 <template>
     <!--MENU DESKTOP -->
-    <ClientOnly>
+    
     <div v-if="!isMobile" class="tw-flex tw-items-center">
       <template
           v-for="(navItem, index) in navItems"
@@ -110,8 +110,8 @@ watch(isMobile, (newValue) => {
         <Modal>
 
           <!--       Buttons Group-->
-          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">
-            <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>
+          <div class="tw-flex tw-justify-end tw-items-center tw-mb-12">            
+            <NavbarButtons :scroll-position="scrollPosition" :is-scrolled="isScrolled"/>            
           </div>
 
   <!--        Render navigation items-->
@@ -120,7 +120,7 @@ watch(isMobile, (newValue) => {
         </Modal>
       </q-list>
     </div>
-  </ClientOnly>
+  
 </template>
 
 <style scoped>
