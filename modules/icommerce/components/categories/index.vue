@@ -1,6 +1,8 @@
 <template>
-	<div v-if="!isMobile" 
-		class="tw-w-[400px]"
+	<div
+		class="tw-w-[400px]
+		tw-hidden md:tw-block
+		"
 	>
 		<div class="lg:tw-pr-[20px]">
 			<h1 class="tw-text-lg tw-font-semibold tw-mb-[30px] tw-text-primary">
@@ -78,15 +80,6 @@ const route = useRoute()
 const router = useRouter()
 
 const categories = ref([])
-const isMobile = ref(false)
-const BREAKPOINT = 1024
-
-const emit = defineEmits(['category'])
-
-function updateViewport() {
-	isMobile.value = window.innerWidth < BREAKPOINT
-}
-
 
 let data =  props.categories || []				
 const parents = data
@@ -110,27 +103,11 @@ parents.forEach((category) => {
 	})
 })
 
-
-
-
-
-async function init(){
-	updateViewport()
-	window.addEventListener('resize', updateViewport)	
-}
-
 function isActive(category){
 	if(!props.category || !category) return false
 	return props.category?.slug == category?.slug
 }
 
-onMounted(async () => {
-	init();
-})
-
-onUnmounted(() => {
-	window.removeEventListener('resize', updateViewport)
-})
 
 </script>
 <style>

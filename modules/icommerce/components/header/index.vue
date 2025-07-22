@@ -81,8 +81,6 @@ const logoSrc = computed( () =>
         : redLogo
 );
 
-const isMobile = ref(false);
-
 const navItems = ref([
   { 
     label: 'Imagina', 
