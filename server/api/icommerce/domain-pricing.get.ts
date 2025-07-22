@@ -11,7 +11,7 @@ export default defineCachedEventHandler(async (event) => {
   {
 	group: 'icommerce',
 	name: 'domain_pricing',
-	maxAge: 10,  //minimun time,
+	maxAge: 360 * 12,  //minimun time,      
 	//staleMaxAge: -1, // sent to the client while the cache updates in the background.
 	//swr: false
 	getKey: (event) =>  'domains'
