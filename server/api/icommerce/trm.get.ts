@@ -22,7 +22,7 @@ export default defineCachedEventHandler(async (event) => {
      group: 'icommerce',
      name: 'trm',
      getKey: (event) => 'usd', 
-     maxAge: 1,
+     maxAge: 360 * 12  //minimun time,
   } 
   
 
