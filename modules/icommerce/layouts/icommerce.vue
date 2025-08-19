@@ -1,6 +1,7 @@
 <template>
 	<ClientOnly>
 		<bitrixSupportButton />
+		<googleTag />
 	</ClientOnly>	
     <q-layout view="hHh lpR fFf" @scroll="handleScroll">
 		<q-page-container>
@@ -17,6 +18,7 @@ import { ref } from 'vue';
 import HeaderApp from '~/modules/icommerce/components/header';
 import FooterApp from '~/modules/icommerce/components/footer';
 import bitrixSupportButton from '~/components/bitrixSupportButton.vue';
+import googleTag from '~/components/googleTag.vue';
 
 
 const scrollPosition = ref(null);
