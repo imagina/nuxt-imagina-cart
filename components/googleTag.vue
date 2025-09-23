@@ -20,9 +20,9 @@ function addScript(w,d,u){
 }
 
 onMounted(() => {
-	if (import.meta.env.PROD) {
+	//if (import.meta.env.PROD) {
     addScript(window, document,  `${src}?id=${id}`);
-	}
+	//}
 })
 
 </script>

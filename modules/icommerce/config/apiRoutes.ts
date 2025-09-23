@@ -11,6 +11,7 @@ const apiRoutes = {
 	cities: '/v2/ilocations/cities',
 	/* imagina customs */
 	domainCheck: `/api/icommerce/verify-domain`,
+	verifySuggestion: `/api/icommerce/verify-suggestion`,
 	domainPricing: `/api/icommerce/domain-pricing`,
 
 	/*imagina clients*/
