@@ -900,24 +900,14 @@ async function checkDomain(product) {
           //product.domainCheck.suggestions = response?.suggestions || []
           /* remove in-use domains in suggestions */
           product.domainCheck.suggestions = response?.suggestions.filter((suggestion) => {
-            
+
             let exist = response?.results.find((result) => result.name.toLowerCase() == suggestion.name.toLowerCase()) || false
-            exist = cartState.value.products.find(prodcut => product.domain.domainName.toLowerCase() == suggestion.name.toLowerCase() ) || false
             if( (exist && exist?.isAvailable) || !exist ) return suggestion
           }).map(element => {
             element.name = element.name.toLowerCase()
             return {...element, disableButton: false }
           }) || []
 
-          //try to remove if exist in the cart         
-          /*  
-          cartState.value.products.forEach(product => {
-            console.log(product.domain.domainName)
-            product.domainCheck.results = product.domainCheck.results.filter(x => x.name != product.domain.domainName)
-            product.domainCheck.suggestions = product.domainCheck.suggestions.filter(x => x.name != product.domain.domainName)
-          });
-          */
-          
       }).catch(e => {});
     }
 
@@ -994,7 +984,7 @@ async function selectDomain(product, selectedDomain){
 			type: 'positive',
       timeout: 2000
 		})
-    
+
     return true //disables button
     //calcSubtotal()
   }
@@ -1117,7 +1107,7 @@ async function addDomainExtension(product, extension){
 			message: `Agregaste ${extension.name} al carrito!`,
 			type: 'positive',
 		})
-    
+
     return true
   }
 
