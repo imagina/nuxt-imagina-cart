@@ -1,6 +1,7 @@
 <template>
 	<BreadCrumb />
-	<div class="
+	<div
+		class="
 			lg:tw-flex
 			tw-flex-wrap
 			tw-justify-center
@@ -8,11 +9,10 @@
 			tw-h-full
 		"
 		style="background-color:  #FAFAFA;"
-		>		
+	>
 
-		
-			<!--cart and products --->
-			<div				
+		<!--cart and products --->
+		<div
 			class="
 				tw-w-full
 				lg:tw-w-[800px]
@@ -20,12 +20,11 @@
 				tw-flex
 				tw-align-middle
 			">
-				<div					
+				<div
 					class="tw-mb-[40px]"
-					
+
 				>
 					<!--title -->
-					
 					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
 						<div>
 							<h1
@@ -49,21 +48,17 @@
 					<ProductsComponent
 						:product="product"
 						:domainPricing="domainPricing"
-						
 					/>
 
 				</div>
-				
-					<emptyCart 
+					<emptyCart
 						v-if="!showCart"
 					/>
-				
-				
-			</div>
+				</div>
 
 			<!-- cart-->
-			<div		
-				v-if="showCart"		
+			<div
+				v-if="showCart"
 				class="
 				tw-w-full
 				md:tw-my-[20px]
@@ -85,47 +80,38 @@
 					tw-p-6
 					"
 				>
-
 					<!-- subtotal -->
-					<SubtotalComponent 
+					<SummaryComponent
 						:cartState="cartState"
-					/>
-					
-					<div class="tw-mt-6">
-						<q-btn
-							:label="$t('icommerce.cart.continue')"
-							text-color="black"
-							color="amber"
-							no-caps
-							unelevated
-							class="
-								tw-w-full
-								tw-justify-center
-								tw-font-bold
-								tw-rounded-lg
-								tw-text-white
-							"
-							@click="redirectCheckout()"
-							:disable="disableContinue"
-							
-						/>
-					</div>
-					<div
-						v-if="showTaxesWarning"
-						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
 					>
-						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
-					</div>
+						<template #action>
+							<q-btn
+								:label="$t('icommerce.cart.continue')"
+								text-color="black"
+								color="amber"
+								no-caps
+								unelevated
+								class="
+									tw-w-full
+									tw-justify-center
+									tw-font-bold
+									tw-rounded-lg
+									tw-text-white
+								"
+								@click="redirectCheckout()"
+								:disable="disableContinue"
+							/>
+						</template>
+					</SummaryComponent>
 				</div>
 			</div>
-
 	</div>
 
 </template>
 <script setup>
 import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
-import SubtotalComponent from '../components/cart/subtotal.vue'
+import SummaryComponent from '../components/cart/summary.vue'
 import CurrencySelector from '../components/currencySelector'
 import BreadCrumb from '../components/breadcrumb';
 import emptyCart from '../components/cart/emptyCart.vue';
@@ -161,26 +147,24 @@ const urlOptions =  {
 const product = ref(null)
 const isAddAction = computed(() => (urlOptions.pid && urlOptions.action == 'add') || false)
 
-const { data: domainPricing } = await useAsyncData( 'domainPricing', 
+const { data: domainPricing } = await useAsyncData( 'domainPricing',
 	() => $fetch('/api/icommerce/domain-pricing')
 )
 
-const productData = await useAsyncData( 'product', 
+const productData = await useAsyncData( 'product',
 	() => isAddAction.value ? $fetch(`/api/icommerce/product?pid=${route?.query?.pid}`) : null
 )
 product.value = productData.data.value
 
 const showCart = computed(() => cartState.value.products.length )
 
-const disableContinue = computed(() => { 
+const disableContinue = computed(() => {
 	if(!showCart.value) return false
 	return cartState.value?.products?.every((product) => {
 	if(!product?.domain) return false   //not a domain product
 	return product?.domain?.domainName == null || product?.domain.domainName == '' ? true : false
-	}) 
+	})
 })
-
-const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
 
 const checkoutPath = getPath('icommerce.checkout')
 
@@ -190,12 +174,12 @@ onMounted(() => {
 
 function restoreFromCheckout(){
 	if(isAddAction.value){
-		cartStateStorage.value.products = []		
+		cartStateStorage.value.products = []
 	} else {
 		if(cartStateStorage.value.products.length){
 			//product.value = cartStateStorage.value.products[0]
 			cartState.value.products = cartStateStorage.value.products
-		}		
+		}
 	}
 }
 
