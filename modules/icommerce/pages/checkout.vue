@@ -246,121 +246,9 @@
 				xl:tw-ml-8
 			">
 				<div class="shadow-card tw-bg-white  tw-rounded-3xl !tw-pt-8 tw-p-5">
-					<div class="tw-my-2">
-						<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
-							{{ $t('icommerce.checkout.orderSummary') }}
-						</h2>
-					</div>
-					<div class="tw-my-2">
-						<q-expansion-item class="shadow-1 overflow-hidden"
-							style="border-radius: 8px; background-color: #eceded;"
-							:label="`${products.length} ${$t('icommerce.checkout.articles')}`"
-							header-class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg tw-px-4"
-							expand-icon-class="">
-							<template v-for="product in products" class="tw-my-4">
-								<q-card>
-									<q-card-section>
-										<!-- title -->
-										<div>
-											<span
-												class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg"
-											>
-											{{ product.name }}
-											</span>
-										</div>
-										<!-- details -->
-										<div v-if="product?.domain?.domainName">
-											<span
-												class="
-													tw-leading-normal
-													tw-font-semibold
-													tw-text-md
-													md:tw-text-base
-													xl:tw-text-lg
-													tw-line-clamp-4
-													tw-break-all
-												"
-											>
-												<span
-													v-if="product?.domain?.action?.label"
-												>
-													{{  product?.domain?.action?.label }} : <br> {{ product?.domain?.domainName }}
-												</span>
-											</span>
-
-										</div>
-
-
-										<div class="tw-flex tw-justify-between">
-											<div>
-												<span v-if="productsHelper.hasFrencuency(product)"
-													class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
-													{{ product.frecuency?.label }}
-												</span>
-
-											</div>
-											<div>
-												<span
-													class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-													{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}
-												</span>
-											</div>
-										</div>
-
-									</q-card-section>
-								</q-card>
-							</template>
-						</q-expansion-item>
-					</div>
-					<hr class="tw-my-4" />
-					<SubtotalComponent 
+					<SummaryComponent
 						:cartState="cartState"
 					/>
-
-					<div class="tw-my-4 tw-flex-nowrap">
-						<div
-						v-if="showTaxesWarning"
-						class="tw-pt-4 tw-text-[12px] tw-font-[400] tw-text-[#818181]"
-					>
-						<p>Los precios indicados no incluyen IVA, si tu dirección de facturación está <strong>en Colombia nuestro sistema agregará el 19% del IVA.</strong></p>
-					</div>
-					</div>
-
-					<hr class="tw-my-4" />
-
-					<!--total--->
-					<div class="tw-flex tw-justify-between tw-items-center tw-my-2">
-						<span class="
-							tw-font-[600]
-							tw-text-[20px]
-							tw-my-0
-							tw-p-0
-							tw-leading-5
-						">
-							Total
-						</span>
-						<span class="
-							tw-text-[18px]
-							tw-font-[400]
-							tw-m-0
-							tw-p-0
-							tw-leading-5
-						">
-							{{ productsHelper.priceWithSymbol(subtotal, cartState.currency) }}
-						</span>
-					</div>
-
-					<!--coupon -->
-					<div v-if="false">
-						<div>
-							<q-btn label="¿Tienes código de cupón?"
-								class="q-p-0 tw-text-[14px] tw-font-[600] tw-text-[#03A9F4]" flat no-caps dense
-								@click="showCouponInput = !showCouponInput" />
-						</div>
-						<div v-if="showCouponInput || form.coupon" class="tw-py-4">
-							<q-input v-model="form.coupon" dense outlined />
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -371,10 +259,8 @@ import { useStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import productsHelper from '../helpers/products'
 import SocialAuthGoogle from '../../iauth/components/socialAuth/google.vue'
-import SubtotalComponent from '../components/cart/subtotal.vue'
-//import CurrencySelector from '../components/currencySelector'
+import SummaryComponent  from '../components/cart/summary.vue'
 import apiRoutes from '../config/apiRoutes'
-const userStore = useAuthStore()
 
 
 definePageMeta({
@@ -425,6 +311,7 @@ const products = computed(() => cartState.value.products)
 const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 
 const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
+
 //const disableButton = computed( () => refForm.value.validate() )
 
 //const disableButton = ref(true)

@@ -259,7 +259,7 @@
 
                             <q-btn
                               v-if="product.domainCheck.exactMatch.disableButton"
-                              label="Continuar con tu compra"
+                              label="Agregado, continúa con tu compra."
                               color="positive"
                               no-caps
                               unelevated
@@ -889,30 +889,52 @@ async function checkDomain(product) {
           product.domainCheck.exactMatch = response?.exactMatch || false
           if(product.domainCheck.exactMatch){
             product.domainCheck.exactMatch.disableButton = false
+
+            if(product.domainCheck?.exactMatch?.name){
+              let exist = cartState.value.products.find((item) => item?.domain?.domainName?.toLowerCase() == product.domainCheck?.exactMatch?.name.toLowerCase()) || false
+              product.domainCheck.exactMatch.disableButton = exist ? true : false
+            }
+
           }
 
-          product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true) || []
-          product.domainCheck.results.map(element => {
+          product.domainCheck.results = []
+          product.domainCheck.results = response?.results?.filter(x => x.isAvailable == true)
+          .map(element => {
             element.name = element.name.toLowerCase()
             return {...element, disableButton: false }
-          });
+          }) || [];
 
-          //product.domainCheck.suggestions = response?.suggestions || []
           /* remove in-use domains in suggestions */
+          product.domainCheck.suggestions = []
           product.domainCheck.suggestions = response?.suggestions.filter((suggestion) => {
-
-            let exist = response?.results.find((result) => result.name.toLowerCase() == suggestion.name.toLowerCase()) || false
-            if( (exist && exist?.isAvailable) || !exist ) return suggestion
+            const name  = suggestion.name.toLowerCase()
+            let exist = product.domainCheck.results.find((result) => result.name.toLowerCase() == name) || false
+            exist = product?.domainCheck?.exactMatch?.name?.toLowerCase() == name
+            if(!exist ) return suggestion
           }).map(element => {
             element.name = element.name.toLowerCase()
             return {...element, disableButton: false }
           }) || []
+
+          /* disable domains what are already in cart  */
+          product.domainCheck.suggestions = disableButtonIfIncart(product.domainCheck.suggestions)
+          product.domainCheck.results = disableButtonIfIncart(product.domainCheck.results)
+
+
 
       }).catch(e => {});
     }
 
     token.value = null
     product.domainCheck.loading = false
+}
+
+function disableButtonIfIncart(array){
+  return array.filter((item) => {
+    let exist =  cartState.value.products.find((product) => product?.domain?.domainName?.toLowerCase() == item.name.toLowerCase()) || false
+      if(exist){ item.disableButton = true }
+      return item
+    }) || []
 }
 
 
