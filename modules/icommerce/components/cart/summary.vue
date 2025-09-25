@@ -1,11 +1,11 @@
 <template>
 	<!-- subtotal no discount -->
-	 <div class="tw-my-2">
-		<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
+	 <div>
+		<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-xl">
 			{{ $t('icommerce.checkout.orderSummary') }}
 		</h2>
 	</div>
-	<div class="tw-my-2">
+	<div class="tw-my-4">
 		<q-expansion-item
 			default-opened
 			class="shadow-1 overflow-hidden"
@@ -29,7 +29,6 @@
 							<span
 								class="
 									tw-leading-normal
-									tw-font-semibold
 									tw-text-md
 									md:tw-text-base
 									xl:tw-text-lg
@@ -37,13 +36,10 @@
 									tw-break-all
 								"
 							>
-								<span
-									v-if="product?.domain?.action?.label"
-								>
+								<span v-if="product?.domain?.action?.label">
 									{{  product?.domain?.action?.label }} : <br> {{ product?.domain?.domainName }}
 								</span>
 							</span>
-
 						</div>
 
 
@@ -161,12 +157,7 @@ const props = defineProps({
 	}
 })
 
-
-
-//const cartState = useState('icommerce.cart')
-
 const subtotal = computed(() => productsHelper.getSubtotal(props.cartState.products, props.cartState.currency))
-
 const showDiscount = computed(() => calcDiscount().percent > 1)
 const products = computed(() => props.cartState.products)
 const showTaxesWarning = computed(() => props.cartState.products.some((product) => product?.domain || false ))
