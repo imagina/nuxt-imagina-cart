@@ -42,7 +42,7 @@
 						:showing="authStore.loading"
 						label="Please wait..."
 					>
-					<q-spinner-mat size="50px" color="primary"></q-spinner-mat>
+					<q-spinner size="50px" color="primary"></q-spinner>
 					</q-inner-loading>
 					<div
 						v-if="!authStore.isLogged()"
