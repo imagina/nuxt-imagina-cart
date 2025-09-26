@@ -1,72 +1,36 @@
 <template>
 	<!-- subtotal no discount -->
-	 <div class="tw-my-2">
-		<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg">
+	 <div>
+		<h2 class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-xl">
 			{{ $t('icommerce.checkout.orderSummary') }}
 		</h2>
 	</div>
-	<div class="tw-my-2">
+	<div class="tw-my-4">
 		<q-expansion-item
+			v-if="products.length >1"
 			default-opened
 			class="shadow-1 overflow-hidden"
 			style="border-radius: 8px; background-color: #eceded;"
 			:label="`${products.length} ${$t('icommerce.checkout.articles')}`"
-			header-class="tw-leading-normal tw-font-semibold tw-text-md md:tw-text-base xl:tw-text-lg tw-px-4"
+			header-class="tw-font-[600] tw-text-md md:tw-text-base xl:tw-text-md tw-px-4"
 			expand-icon-class="">
 			<template v-for="product in products" class="tw-my-4">
-				<q-card>
-					<q-card-section>
-						<!-- title -->
-						<div>
-							<span
-								class="tw-leading-normal tw-font-[800] tw-text-md md:tw-text-base xl:tw-text-lg"
-							>
-							{{ product.name }}
-							</span>
-						</div>
-						<!-- details -->
-						<div v-if="product?.domain?.domainName">
-							<span
-								class="
-									tw-leading-normal
-									tw-font-semibold
-									tw-text-md
-									md:tw-text-base
-									xl:tw-text-lg
-									tw-line-clamp-4
-									tw-break-all
-								"
-							>
-								<span
-									v-if="product?.domain?.action?.label"
-								>
-									{{  product?.domain?.action?.label }} : <br> {{ product?.domain?.domainName }}
-								</span>
-							</span>
-
-						</div>
-
-
-						<div class="tw-flex tw-justify-between">
-							<div>
-								<span v-if="productsHelper.hasFrencuency(product)"
-									class="tw-leading-normal tw-font-[500] tw-mb-1 tw-text-sm md:tw-text-md">
-									{{ product.frecuency?.label }}
-								</span>
-
-							</div>
-							<div>
-								<span
-									class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
-									{{ productsHelper.priceWithSymbol(product.price, cartState.currency) }}
-								</span>
-							</div>
-						</div>
-
-					</q-card-section>
-				</q-card>
+				<SummaryCard 
+					:product="product"
+					:padding="true"
+					:currency="cartState.currency"
+				/>
 			</template>
 		</q-expansion-item>
+		<div v-else>
+			<template v-for="product in products" class="tw-my-4">
+				<SummaryCard 
+					:product="product"
+					:padding="false"
+					:currency="cartState.currency"
+				/>
+			</template>
+		</div>
 	</div>
 	<hr class="tw-my-4" />
 	<div class="tw-flex tw-justify-between tw-items-center">
@@ -151,6 +115,8 @@
 </template>
 <script setup>
 import productsHelper from '../../helpers/products';
+import SummaryCard from './summaryCard.vue';
+
 
 const { t } = useI18n()
 
@@ -161,12 +127,7 @@ const props = defineProps({
 	}
 })
 
-
-
-//const cartState = useState('icommerce.cart')
-
 const subtotal = computed(() => productsHelper.getSubtotal(props.cartState.products, props.cartState.currency))
-
 const showDiscount = computed(() => calcDiscount().percent > 1)
 const products = computed(() => props.cartState.products)
 const showTaxesWarning = computed(() => props.cartState.products.some((product) => product?.domain || false ))

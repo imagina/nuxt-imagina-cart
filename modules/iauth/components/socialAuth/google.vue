@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import GoogleSVG from '@/assets/svg/brand/google.svg'
 
-const proxy = getCurrentInstance()!.appContext.config.globalProperties
+
+
 const store = useAuthStore()
 const emit = defineEmits(['logged'])
 
@@ -28,22 +28,31 @@ async function loadClientId() {
   setTimeout(() => {
     let clientId = clientIdGoogle.value || null
     if (!clientId) return
+    try {
+      if(google){
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: (response) => {
+            login(response)
+          },
+          scope: 'profile email openid',
+          cancel_on_tap_outside: false,
+          context: 'use',
+        })
+
+        google.accounts.id.renderButton(
+          document.getElementById("googleButton"),
+          {theme: "outline", size: "large"}
+        );
+      }
+    } catch (error) {
+      console.count('loadClientId')
+      loadClientId()
+      console.log(error)
+    }
 
     // Initialize Google Identity Services
-    google.accounts.id.initialize({
-      client_id: clientId,
-      callback: (response) => {
-        login(response)
-      },
-      scope: 'profile email openid',
-      cancel_on_tap_outside: false,
-      context: 'use',
-    })
-
-    google.accounts.id.renderButton(
-      document.getElementById("googleButton"),
-      {theme: "outline", size: "large"}
-    );
+    
     google.accounts.id.prompt(); // also display the One Tap dialog
   }, 800)
 }

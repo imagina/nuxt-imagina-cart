@@ -1,8 +1,5 @@
 
 
-
-
-
 const helper = {
 
 	/**/
@@ -98,7 +95,7 @@ const helper = {
 		return `${helper.currencyFormat(value, currency)} ${helper.getCurrency(currency).value}`
 	},
 
-	/* extr*/
+	/**/
 	extractPrice(str) {
 		  // Match digits and commas, then remove commas
 		  const match = str.match(/[\d,]+/);
@@ -111,8 +108,6 @@ const helper = {
 	getSubtotal(products, currencyValue){
 		let subtotal = Number(0);
 		products.forEach(product => {
-			//let price = helper.getPrice(product, currencyValue)
-			//if(product?.price) price = price + product.price
 			subtotal  = Number(subtotal) + Number(product.price)
 		});
 		return Number.isInteger(subtotal) ? subtotal : subtotal.toFixed(2)
@@ -160,7 +155,6 @@ const helper = {
 				currency: 'COP',
 				minimumFractionDigits: 0, //removes decimal places.
 				maximumFractionDigits: 0 //ensures no cents are shown.
-
 			}),
 
 			'EUR': Intl.NumberFormat('en-DE', {
