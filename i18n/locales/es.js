@@ -82,7 +82,7 @@ export default {
       "back": "Volver",
       "billingAddress": "Dirección de facturación",
       "orderSummary": "Resumen del pedido",
-      "articles": "articulos",
+      "articles": "artículos",
     },
     "goToStore": "Ir a Tienda"
   },
