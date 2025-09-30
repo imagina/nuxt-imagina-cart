@@ -8,7 +8,7 @@
       />
     </ClientOnly>
 
-    <div v-for="product in cartState.products" :key="product.name"
+    <div v-for="(product, index) in cartState.products" :key="product.name"
       class="
         card
         tw-shadow-xl
@@ -66,6 +66,7 @@
             </span>
         </div>
         <q-btn
+          v-if="index != 0"
           icon="fa-solid fa-trash"
           text-color="primary"
           size="sm"
@@ -89,382 +90,6 @@
           </span>
         </div>
       </div>
-
-      <!-- domain check-->
-      <div 
-        v-if="isDomainNameRequired(product) && product?.domain" 
-        class="tw-py-2"
-      >
-        <div 
-          class="
-            md:tw-flex
-            tw-justify-center
-            tw-gap-4
-          "
-        >
-          <div>
-            <q-select                
-              v-model="product.domainCheck.action"
-              @update:model-value="() => {
-                product.domain.action = product.domainCheck.action
-                product.domain.ext = null
-                product.domain.price = null
-                product.domain.domainName = null
-                product.domainCheck.domainName = null
-                updateDomainPrice(product)
-              }"
-              :options="domainActions"
-              label="Configura tu dominio"
-              option-value="value"
-              option-label="label"
-              outlined
-              class="tw-w-[240px] tw-mb-4 tw-rounded-lg"
-              input-class="tw-w-52 tw-mb-4 tw-rounded-lg"
-            />
-          </div>
-
-          <!-- input for register domain-->
-          <q-input
-            v-model="product.domainCheck.domainName"            
-            @update:model-value="(val) => {
-              product.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '') // remove invalid chars
-              updateDomainPrice(product)
-            }"
-            @keydown="(event) => checkDomainKeyDown(event, product)"
-            :placeholder="product.domainCheck.action.placeholder"
-            :rules="[
-              (val) => !!val || 'Este campo es requerido.',
-              (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
-              (val) => !/\s/.test(val) || 'El dominio no debe contener espacios',
-              (val) => isSupportedDomain(product, val)
-            ]"
-            class="tw-w-full"
-            outlined
-            autofocus
-            no-error-icon
-          >
-            <template v-slot:prepend>
-              <q-icon
-                v-if="product.domainCheck.action.value == domainActions[0].value"
-                name="search"
-              />
-            </template>
-            <template v-slot:append>
-              <q-btn
-                v-if="product.domainCheck.action.value == domainActions[0].value"
-                @click="checkDomain(product)"
-                :disable="disableCheckButton(product)"
-                label="Buscar"
-                color="amber"
-                debounce="500"
-                class="
-                  cursor-pointer
-                  md:tw-w-[140px]
-                  tw-rounded-md
-                  tw-text-base
-                "
-                rounded
-                no-caps
-                unelevated
-              />
-            </template>
-          </q-input>
-
-          <!-- transfer code -->
-          <q-input
-            v-if="product.domainCheck.action.value == domainActions[1].value"
-            v-model="product.domain.transferCode"
-            placeholder="Codigo de transferencia"
-            class="tw-w-full"
-            outlined
-            no-error-icon              
-          />
-        </div>
-        <!-- results -->
-
-        <q-dialog
-          v-if="isDomainNameRequired(product)"
-          v-model="product.domainCheck.modal"
-        >
-          <!--loading --->
-          <div
-            v-if="product.domainCheck.loading"
-            class="tw-w-[100px] tw-h-[100px] tw-bg-white"
-            style="position: relative;"
-          >
-            <q-inner-loading :showing="product.domainCheck.loading" color="primary"  />
-          </div>
-
-
-          <q-card
-            v-if="product.domainCheck.action.value == domainActions[0].value && !product.domainCheck.loading"
-            class="tw-w-[600px] md:tw-w-[900px]"
-          >
-            <q-card-section 
-              class="
-                row
-                items-center
-                q-pb-none
-                tw-sticky
-                tw-top-0
-                tw-bg-white
-                tw-z-40
-              "
-            >
-              <span class="tw-text-[20px] tw-font-[600]">
-                {{ product.name }}
-              </span>
-              <q-space />
-              <q-btn 
-                icon="close" 
-                flat
-                round
-                dense
-                v-close-popup 
-              />
-            </q-card-section>
-
-            <q-card-section>
-              <div
-                v-if="product.domainCheck?.exactMatch?.isAvailable"
-                class="
-                  tw-flex-col
-                tw-bg-[#fafbff]
-                  tw-rounded-[10px]
-                  tw-border-[1px]
-                  tw-w-full
-                  tw-h-full
-                  tw-border-[#d5dfff]
-                  tw-py-4
-                  tw-px-6
-                  my-hover-card
-                "
-              >
-                <div 
-                  class="
-                    tw-flex-col
-                    tw-items-around
-                  "
-                >
-                  <div class="tw-my-2">
-                    <span 
-                      class="
-                        tw-rounded-[10px]
-                        tw-border-[2px]
-                        tw-border-[#5cb85c]
-                        tw-bg-[#5cb85c]
-                        tw-text-white
-                        tw-font-[600]
-                        tw-p-1
-                      "
-                    >
-                      <span>COINCIDENCIA EXACTA</span><br>
-                    </span>
-                  </div>
-                  <div class="tw-my-4">
-                    <span 
-                      class="
-                        tw-text-[28px]
-                        tw-font-[700]
-                        tw-line-clamp-4
-                        tw-break-all
-                        "
-                      > {{ product.domainCheck.exactMatch.name }}
-                    </span>
-                  </div>
-                  <div class="tw-my-2">
-                    <span class="tw-text-[20px] tw-font-[600]">
-                      {{  productsHelper.priceWithSymbol(getExtPrice(product.domainCheck.exactMatch.ext).domainregister, cartState.currency) }}
-                    </span>
-                  </div>
-                  <div>
-                    <q-btn
-                      v-if="!product.domainCheck.exactMatch.disableButton"
-                      label="Compralo ya"
-                      color="amber"
-                      no-caps
-                      unelevated
-                      class="tw-font-bold tw-rounded-lg tw-w-2/4"
-                      :disable="product.domainCheck.exactMatch.disableButton"
-                      :loading="product.domainCheck?.loading || false"
-                      @click="async () => {
-                        product.domainCheck.loading = true
-                        product.domainCheck.exactMatch.disableButton =  true
-                        selectDomain(product, product.domainCheck.exactMatch)
-                        product.domainCheck.loading = false
-                      }"
-                    />
-
-                    <q-btn
-                      v-if="product.domainCheck.exactMatch.disableButton"
-                      label="Agregado, continúa con tu compra."
-                      color="positive"
-                      no-caps
-                      unelevated
-                      class="tw-font-bold tw-rounded-lg tw-w-2/4"
-                      @click="() => {
-                        product.domainCheck.modal = false
-                      }"
-                    />
-                  </div>
-                </div>
-              </div>
-            </q-card-section>
-
-            <!--results -->
-            <q-card-section>
-
-              <!-- zero results -->
-              <div
-                v-if="product?.domainCheck.results.length == 0 && !product.domainCheck?.exactMatch"
-                class="
-                  tw-flex-col
-                  tw-justify-center
-                  tw-align-middle
-                  tw-place-items-center
-                tw-bg-[#fafbff]
-                  tw-rounded-[10px]
-                  tw-border-[1px]
-                  tw-w-full
-                  tw-h-full
-                tw-border-[#d5dfff]
-                  tw-py-4
-                  tw-px-6
-                "
-              >
-                <div>
-                  <span class="tw-text-[18px] tw-font-[600] ">{{ product.domainCheck.domainName }} ya está ocupado! </span><br>
-                </div>
-                <div>
-                  <span class="tw-text-[20px] tw-font-[700] tw-line-clamp-4 tw-break-all">Pero no te preocupes, ¡hemos encontrado las mejores alternativas para ti!</span>
-                </div>
-              </div>
-
-
-              <!-- result found -->
-              <div class="tw-mb-5" v-if="product?.domainCheck.results.length != 0">
-                <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
-                <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
-              </div>
-              <div
-                v-if="product?.domainCheck.results.length"
-                class="tw-grid tw-grid-cols-2 tw-gap-4"
-                :class="product?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-2' : 'md:tw-grid-cols-3'"
-              >
-                <!--extension cards -->
-                <template v-for="result in product?.domainCheck.results">
-                  <div
-                    v-if="result.isAvailable"
-                    class="
-                    tw-rounded-[10px]
-                    tw-border-[1px]
-                    tw-w-full
-                    tw-h-full
-                    tw-border-[#d5dfff]
-                    tw-bg-[#fafbff]
-                    tw-p-4
-                    my-hover-card"
-                  >
-
-
-                  <div>
-                      <span class="tw-text-[20px] tw-font-[600]">
-                          .{{ result.ext }}
-                      </span>
-                      <br>
-                      <span class="tw-text-[16px] tw-font-[400] tw-line-clamp-4 tw-break-all">
-                          {{ result.name }}
-                      </span>
-                      <br>
-                      <span class="tw-text-[16px] tw-font-[500]">
-                          {{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
-                      </span>
-
-                  </div>
-                  <div class="tw-flex tw-justify-center tw-my-2">
-                      <q-btn
-                          :label="result?.disableButton ? 'Agregado' :selectDomainLabel(product)"
-                          text-color="white"
-                          color="amber"
-                          no-caps
-                          unelevated
-                          class="
-                              tw-w-full
-                              tw-justify-center
-                              tw-font-bold
-                              tw-rounded-lg
-                          "
-                          :disabled="result.disableButton"
-                          :loading="result.loading"
-                          @click="async () => {
-                            result.loading = true
-                            result.disableButton = await addDomainExtension(product, result)
-                            result.loading = false
-                          }"
-                      />
-                  </div>
-                </div>
-
-                </template>
-
-              </div>
-
-            </q-card-section>
-
-            <!-- suggestions -->
-            <q-card-section v-if="product?.domainCheck?.suggestions.length">
-              <div class="tw-grid tw-grid-cols  tw-px-4 tw-h-full">
-                <div>
-                  <span class="tw-text-[16px] tw-font-[600]">Más opciones:</span>
-                </div>
-
-                <div>
-                  <!--<q-scroll-area style="height: 400px; max-width: 2000px;">-->
-                    <template v-for="suggestion in product?.domainCheck.suggestions">
-                      <div class="my-hover-card tw-px-1 tw-my-4 tw-rounded-[10px]">
-                      <div class="tw-grid  md:tw-flex md:tw-justify-between tw-items-center tw-gap-2 tw-p-2 tw-border-b-2" >
-                          <span class="tw-text-[16px] tw-font-[600] tw-line-clamp-4 tw-break-all">
-                              {{ suggestion.name }}
-                          </span>
-                          <div class="tw-flex tw-items-center tw-justify-between tw-gap-4">
-                            <div>
-                              <span class="tw-text-[16px] tw-font-[500]">
-                              {{  productsHelper.priceWithSymbol(getExtPrice(suggestion.ext).domainregister, cartState.currency) }}
-                            </span>
-                            </div>
-                            <div>
-                              <q-btn
-                                :label="suggestion.disableButton ? 'Agregado' : selectDomainLabel(product)"
-                                color="amber"
-                                no-caps
-                                unelevated
-                                :outline="suggestion.disableButton"
-                                class="tw-font-bold tw-rounded-lg"
-                                :disable="suggestion.disableButton"
-                                :loading="suggestion.loading"
-                                @click="async () => {
-                                  suggestion.loading = true
-                                  suggestion.disableButton = await addDomainExtension(product, suggestion)
-                                  suggestion.loading = false
-                                }"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        </div>
-                    </template>
-                  <!--</q-scroll-area>-->
-                </div>
-
-              </div>
-            </q-card-section>
-          </q-card>
-
-        </q-dialog>
-
-
-      </div>
-
 
       <!-- domain check-->
       <div 
@@ -572,8 +197,373 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>      
     </div>
+
+
+
+
+<div
+    v-if="isDomainNameRequired(mainProduct) && mainProduct?.domain" 
+    class="
+        card
+        tw-shadow-xl
+        tw-bg-white
+        tw-rounded-[20px]
+        tw-p-2       
+        tw-my-5
+      "
+
+>
+    <!-- domain check-->
+      <div         
+        class="tw-p-4"
+      >
+      <div>
+        
+        <span class="
+          tw-text-[20px]
+          tw-font-[700]
+        "
+        >
+        <i class="fa fa-globe tw-text-primary"/> &nbsp;Todo sitio web necesita un dominio
+      </span>
+      </div>
+      <div
+        class="tw-py-2"
+      >
+        <p>Obtén tu dominio ya mismo y publica tu sitio web más rápidamente</p>
+      </div>      
+        <div 
+          class="
+            md:tw-flex
+            tw-justify-center            
+          "
+        >
+        
+          <!-- input for register domain-->
+          <q-input
+            v-model="mainProduct.domainCheck.domainName"            
+            @update:model-value="(val) => {
+              mainProduct.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '') // remove invalid chars
+              updateDomainPrice(mainProduct)
+            }"
+            @keydown="(event) => checkDomainKeyDown(event, mainProduct)"
+            :placeholder="mainProduct.domainCheck.action.placeholder"
+            :rules="[
+              (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
+              (val) => !/\s/.test(val) || 'El dominio no debe contener espacios',
+              (val) => isSupportedDomain(product, val)
+            ]"
+            class="tw-w-full"
+            outlined
+            autofocus
+            no-error-icon
+          >
+            <template v-slot:prepend>
+              <q-icon                
+                name="search"
+              />
+            </template>
+            <template v-slot:append>
+              <q-btn                
+                @click="checkDomain(product)"
+                :disable="disableSearch(product)"
+                label="Buscar"
+                color="primary"
+                debounce="500"
+                class="
+                  cursor-pointer
+                  md:tw-w-[140px]
+                  tw-rounded-md
+                  tw-text-base
+                "
+                rounded
+                no-caps
+                unelevated
+              />
+            </template>
+          </q-input>
+          
+          
+        </div>
+        <!-- results -->
+
+        <q-dialog
+          v-if="isDomainNameRequired(mainProduct)"
+          v-model="mainProduct.domainCheck.modal"
+        >
+          <!--loading --->
+          <div
+            v-if="mainProduct.domainCheck.loading"
+            class="tw-w-[100px] tw-h-[100px] tw-bg-white"
+            style="position: relative;"
+          >
+            <q-inner-loading :showing="mainProduct.domainCheck.loading" color="primary"  />
+          </div>
+
+
+          <q-card
+            v-if="mainProduct.domainCheck.action.value == domainActions[0].value && !mainProduct.domainCheck.loading"
+            class="tw-w-[600px] md:tw-w-[900px]"
+          >
+            <q-card-section 
+              class="
+                row
+                items-center
+                q-pb-none
+                tw-sticky
+                tw-top-0
+                tw-bg-white
+                tw-z-40
+              "
+            >
+              <span class="tw-text-[20px] tw-font-[600]">
+                {{ mainProduct.name }}
+              </span>
+              <q-space />
+              <q-btn 
+                icon="close" 
+                flat
+                round
+                dense
+                v-close-popup 
+              />
+            </q-card-section>
+
+            <q-card-section>
+              <div
+                v-if="mainProduct.domainCheck?.exactMatch?.isAvailable"
+                class="
+                  tw-flex-col
+                tw-bg-[#fafbff]
+                  tw-rounded-[10px]
+                  tw-border-[1px]
+                  tw-w-full
+                  tw-h-full
+                  tw-border-[#d5dfff]
+                  tw-py-4
+                  tw-px-6
+                  my-hover-card
+                "
+              >
+                <div 
+                  class="
+                    tw-flex-col
+                    tw-items-around
+                  "
+                >
+                  <div class="tw-my-2">
+                    <span 
+                      class="
+                        tw-rounded-[10px]
+                        tw-border-[2px]
+                        tw-border-[#5cb85c]
+                        tw-bg-[#5cb85c]
+                        tw-text-white
+                        tw-font-[600]
+                        tw-p-1
+                      "
+                    >
+                      <span>COINCIDENCIA EXACTA</span><br>
+                    </span>
+                  </div>
+                  <div class="tw-my-4">
+                    <span 
+                      class="
+                        tw-text-[28px]
+                        tw-font-[700]
+                        tw-line-clamp-4
+                        tw-break-all
+                        "
+                      > {{ mainProduct.domainCheck.exactMatch.name }}
+                    </span>
+                  </div>
+                  <div class="tw-my-2">
+                    <span class="tw-text-[20px] tw-font-[600]">
+                      {{  productsHelper.priceWithSymbol(getExtPrice(mainProduct.domainCheck.exactMatch.ext).domainregister, cartState.currency) }}
+                    </span>
+                  </div>
+                  <div>
+                    <q-btn
+                      v-if="!mainProduct.domainCheck.exactMatch.disableButton"
+                      label="Compralo ya"
+                      color="amber"
+                      no-caps
+                      unelevated
+                      class="tw-font-bold tw-rounded-lg tw-w-2/4"
+                      :disable="mainProduct.domainCheck.exactMatch.disableButton"
+                      :loading="mainProduct.domainCheck?.loading || false"
+                      @click="async () => {
+                        mainProduct.domainCheck.loading = true
+                        mainProduct.domainCheck.exactMatch.disableButton =  true
+                        selectDomain(mainProduct, mainProduct.domainCheck.exactMatch)
+                        mainProduct.domainCheck.loading = false
+                      }"
+                    />
+
+                    
+                  </div>
+                </div>
+              </div>
+            </q-card-section>
+
+            <!--results -->
+            <q-card-section>
+
+              <!-- zero results -->
+              <div
+                v-if="mainProduct?.domainCheck.results.length == 0 && !mainProduct.domainCheck?.exactMatch"
+                class="
+                  tw-flex-col
+                  tw-justify-center
+                  tw-align-middle
+                  tw-place-items-center
+                tw-bg-[#fafbff]
+                  tw-rounded-[10px]
+                  tw-border-[1px]
+                  tw-w-full
+                  tw-h-full
+                tw-border-[#d5dfff]
+                  tw-py-4
+                  tw-px-6
+                "
+              >
+                <div>
+                  <span class="tw-text-[18px] tw-font-[600] ">{{ mainProduct.domainCheck.domainName }} ya está ocupado! </span><br>
+                </div>
+                <div>
+                  <span class="tw-text-[20px] tw-font-[700] tw-line-clamp-4 tw-break-all">Pero no te preocupes, ¡hemos encontrado las mejores alternativas para ti!</span>
+                </div>
+              </div>
+
+
+              <!-- result found -->
+              <div class="tw-mb-5" v-if="mainProduct?.domainCheck.results.length != 0">
+                <span class="tw-text-lg tw-font-bold">Protege tu marca:&nbsp;</span>
+                <p>Proteja estas extensiones de dominio populares para mantener a los competidores alejados de su nombre</p>
+              </div>
+              <div
+                v-if="mainProduct?.domainCheck.results.length"
+                class="tw-grid tw-grid-cols-2 tw-gap-4"
+                :class="mainProduct?.domainCheck.results.length > 4 ? 'md:tw-grid-cols-2' : 'md:tw-grid-cols-3'"
+              >
+                <!--extension cards -->
+                <template v-for="result in mainProduct?.domainCheck.results">
+                  <div
+                    v-if="result.isAvailable"
+                    class="
+                    tw-rounded-[10px]
+                    tw-border-[1px]
+                    tw-w-full
+                    tw-h-full
+                    tw-border-[#d5dfff]
+                    tw-bg-[#fafbff]
+                    tw-p-4
+                    my-hover-card"
+                  >
+
+
+                  <div>
+                      <span class="tw-text-[20px] tw-font-[600]">
+                          .{{ result.ext }}
+                      </span>
+                      <br>
+                      <span class="tw-text-[16px] tw-font-[400] tw-line-clamp-4 tw-break-all">
+                          {{ result.name }}
+                      </span>
+                      <br>
+                      <span class="tw-text-[16px] tw-font-[500]">
+                          {{  productsHelper.priceWithSymbol(getExtPrice(result.ext).domainregister, cartState.currency) }}
+                      </span>
+
+                  </div>
+                  <div class="tw-flex tw-justify-center tw-my-2">
+                      <q-btn
+                          :label="result?.disableButton ? 'Agregado' :selectDomainLabel(mainProduct)"
+                          text-color="white"
+                          color="amber"
+                          no-caps
+                          unelevated
+                          class="
+                              tw-w-full
+                              tw-justify-center
+                              tw-font-bold
+                              tw-rounded-lg
+                          "
+                          :disabled="result.disableButton"
+                          :loading="result.loading"
+                          @click="async () => {
+                            result.loading = true
+                            result.disableButton = await addDomainExtension(mainProduct, result)
+                            result.loading = false
+                          }"
+                      />
+                  </div>
+                </div>
+
+                </template>
+
+              </div>
+
+            </q-card-section>
+
+            <!-- suggestions -->
+            <q-card-section v-if="mainProduct?.domainCheck?.suggestions.length && false">
+              <div class="tw-grid tw-grid-cols  tw-px-4 tw-h-full">
+                <div>
+                  <span class="tw-text-[16px] tw-font-[600]">Más opciones:</span>
+                </div>
+
+                <div>
+                  <!--<q-scroll-area style="height: 400px; max-width: 2000px;">-->
+                    <template v-for="suggestion in mainProduct?.domainCheck.suggestions">
+                      <div class="my-hover-card tw-px-1 tw-my-4 tw-rounded-[10px]">
+                      <div class="tw-grid  md:tw-flex md:tw-justify-between tw-items-center tw-gap-2 tw-p-2 tw-border-b-2" >
+                          <span class="tw-text-[16px] tw-font-[600] tw-line-clamp-4 tw-break-all">
+                              {{ suggestion.name }}
+                          </span>
+                          <div class="tw-flex tw-items-center tw-justify-between tw-gap-4">
+                            <div>
+                              <span class="tw-text-[16px] tw-font-[500]">
+                              {{  productsHelper.priceWithSymbol(getExtPrice(suggestion.ext).domainregister, cartState.currency) }}
+                            </span>
+                            </div>
+                            <div>
+                              <q-btn
+                                :label="suggestion.disableButton ? 'Agregado' : selectDomainLabel(mainProduct)"
+                                color="amber"
+                                no-caps
+                                unelevated
+                                :outline="suggestion.disableButton"
+                                class="tw-font-bold tw-rounded-lg"
+                                :disable="suggestion.disableButton"
+                                :loading="suggestion.loading"
+                                @click="async () => {
+                                  suggestion.loading = true
+                                  suggestion.disableButton = await addDomainExtension(mainProduct, suggestion)
+                                  suggestion.loading = false
+                                }"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                    </template>
+                  <!--</q-scroll-area>-->
+                </div>
+
+              </div>
+            </q-card-section>
+          </q-card>
+
+        </q-dialog>
+
+
+      </div>
+      </div>
+
+
 
   <!-- captcha -->
     <ClientOnly>
@@ -638,6 +628,9 @@ const alertParams = ref({})
 //captcha could not be validated with computed due call overflow
 const showCaptcha = ref(null)
 ///const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
+const mainProduct = computed(() =>  cartState.value?.products[0] || null) 
+
+
 
 
 const domainActions =  [
@@ -703,7 +696,7 @@ function loadCaptcha(){
   showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
 }
 
-function disableCheckButton(product){
+function disableSearch(product){
   const regex = /^[a-zA-Z0-9.-]+$/;
   const domainName = product.domainCheck.domainName
   let result = false
@@ -1047,6 +1040,7 @@ function selectDomainLabel(product){
 }
 
 async function verifySuggestion(domainName){
+  return true
   await getCaptcha()
   if(token.value){
     const lang = locale.value == 'es' ? 'esp' : 'eng'
@@ -1083,19 +1077,22 @@ async function verifySuggestion(domainName){
 
 async function addDomainExtension(product, extension){
 
+  /*
   if(!product?.domain?.domainName){
     const result = await selectDomain(product, extension)
     return result
   }
+    */
 
   const isAvailable = await verifySuggestion(extension.name)
+  
   if(isAvailable){
     const cloned = {}// _.clone(product)
     cloned.optionsPivot = _.clone(product.optionsPivot)
     cloned.frecuency = _.clone(product.frecuency)
 
     cloned.id = extension.name
-    cloned.name = 'Dominio adicional'
+    cloned.name = `Registro de dominio ${extension.ext}`
     cloned.category = null
 
 

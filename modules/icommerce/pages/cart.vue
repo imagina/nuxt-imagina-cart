@@ -1,14 +1,14 @@
 <template>
-	<BreadCrumb />
 	<div
 		class="
 			lg:tw-flex
 			tw-flex-wrap
 			tw-justify-center
 			tw-p-4
-			tw-h-full
+			tw-h-screen
+			tw-bg-[#f4f5ff]
+			
 		"
-		style="background-color:  #FAFAFA;"
 	>
 
 		<!--cart and products --->
@@ -76,7 +76,7 @@
 					tw-rounded-[20px]
 					tw-w-full
 					tw-sticky
-					tw-top-[220px]
+					
 					tw-p-6
 					"
 				>
@@ -87,8 +87,8 @@
 						<template #action>
 							<q-btn
 								:label="$t('icommerce.cart.continue')"
-								text-color="black"
-								color="amber"
+								text-color="white"
+								color="primary"
 								no-caps
 								unelevated
 								class="
@@ -118,7 +118,7 @@ import emptyCart from '../components/cart/emptyCart.vue';
 
 definePageMeta({
   middleware: 'auth',
-  layout: 'icommerce'
+  //layout: 'icommerce'
 })
 
 const { t } = useI18n()
