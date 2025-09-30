@@ -5,9 +5,10 @@
 			tw-flex-wrap
 			tw-justify-center
 			tw-p-4
-			tw-h-screen
+			tw-h-min-screen
+			tw-h-dvh
 			tw-bg-[#f4f5ff]
-			
+
 		"
 	>
 
@@ -70,13 +71,12 @@
 				"
 			>
 				<div class="
-					card
-					tw-shadow-xl
 					tw-bg-white
+					tw-border-[1px]
+					tw-border-[#d8dae0]
 					tw-rounded-[20px]
 					tw-w-full
 					tw-sticky
-					
 					tw-p-6
 					"
 				>
