@@ -20,16 +20,16 @@
       "
     >
       <!-- PRODUCT TITLE -->
-      <div 
+      <div
         class="
           tw-flex
-          tw-justify-between 
+          tw-justify-between
           tw-items-center
           tw-py-6
         "
       >
         <div>
-          <span 
+          <span
             class="
               tw-text-[18px]
               sm:tw-text-[20px]
@@ -75,7 +75,7 @@
           @click="removeProduct(product)"
         />
       </div>
-      <div 
+      <div
         v-if="product?.category"
         class="
           tw-flex
@@ -92,7 +92,7 @@
       </div>
 
       <!-- domain check-->
-      <div 
+      <div
         class="
           md:tw-flex
           md:tw-justify-between
@@ -124,12 +124,12 @@
             {{ getRenewLabel(product) }}
           </span>
           <!-- free domain -->
-          <div 
+          <div
             v-if="isDomainNameFree(product)"
-            class="tw-mt-5" 
+            class="tw-mt-5"
           >
             <i class="tw-text-[#444444] tw-text-[13px]" />
-            <div 
+            <div
               class="
                 tw-py-2.5
                 tw-px-3.5
@@ -168,12 +168,12 @@
             <span class="tw-text-[13px]">
               Tarifa de configuración:&nbsp;
             </span>
-            <span class="tw-text-lg tw-font-semibold"> 
+            <span class="tw-text-lg tw-font-semibold">
               {{ productsHelper.priceWithSymbol(0, cartState.currency) }}
             </span>
           </div>
 
-          <div 
+          <div
             class="
               tw-flex
               tw-align-middle
@@ -182,7 +182,7 @@
               tw-p-2
             "
           >
-            <div 
+            <div
               class="
                 tw-px-4
                 tw-py-1.5
@@ -197,30 +197,30 @@
             </div>
           </div>
         </div>
-      </div>      
+      </div>
     </div>
 
 
 
 
 <div
-    v-if="isDomainNameRequired(mainProduct) && mainProduct?.domain" 
+    v-if="isDomainNameRequired(mainProduct) && mainProduct?.domain"
     class="
         card
         tw-shadow-xl
         tw-bg-white
         tw-rounded-[20px]
-        tw-p-2       
+        tw-p-2
         tw-my-5
       "
 
 >
     <!-- domain check-->
-      <div         
+      <div
         class="tw-p-4"
       >
       <div>
-        
+
         <span class="
           tw-text-[20px]
           tw-font-[700]
@@ -233,25 +233,27 @@
         class="tw-py-2"
       >
         <p>Obtén tu dominio ya mismo y publica tu sitio web más rápidamente</p>
-      </div>      
-        <div 
+      </div>
+        <div
           class="
             md:tw-flex
-            tw-justify-center            
+            tw-justify-center
           "
         >
-        
+
           <!-- input for register domain-->
           <q-input
-            v-model="mainProduct.domainCheck.domainName"            
+            v-model="mainProduct.domainCheck.domainName"
             @update:model-value="(val) => {
               mainProduct.domainCheck.domainName = val.replace(/[^a-zA-Z0-9.-]/g, '') // remove invalid chars
-              updateDomainPrice(mainProduct)
+              updateDomainName(mainProduct, mainProduct.domainCheck.domainName)
             }"
-            @keydown="(event) => checkDomainKeyDown(event, mainProduct)"
+            debounce="800"
+
+
             :placeholder="mainProduct.domainCheck.action.placeholder"
             :rules="[
-              (val) => val.length >= 3 || 'El dominio debe de tener 3 o más caracteres',
+              //(val) => (val === null || val === undefined || val === '') || val.length > 2 || 'El dominio debe de tener 3 o más caracteres',
               (val) => !/\s/.test(val) || 'El dominio no debe contener espacios',
               (val) => isSupportedDomain(product, val)
             ]"
@@ -261,31 +263,13 @@
             no-error-icon
           >
             <template v-slot:prepend>
-              <q-icon                
+              <q-icon
                 name="search"
               />
             </template>
-            <template v-slot:append>
-              <q-btn                
-                @click="checkDomain(product)"
-                :disable="disableSearch(product)"
-                label="Buscar"
-                color="primary"
-                debounce="500"
-                class="
-                  cursor-pointer
-                  md:tw-w-[140px]
-                  tw-rounded-md
-                  tw-text-base
-                "
-                rounded
-                no-caps
-                unelevated
-              />
-            </template>
           </q-input>
-          
-          
+
+
         </div>
         <!-- results -->
 
@@ -307,7 +291,7 @@
             v-if="mainProduct.domainCheck.action.value == domainActions[0].value && !mainProduct.domainCheck.loading"
             class="tw-w-[600px] md:tw-w-[900px]"
           >
-            <q-card-section 
+            <q-card-section
               class="
                 row
                 items-center
@@ -322,12 +306,12 @@
                 {{ mainProduct.name }}
               </span>
               <q-space />
-              <q-btn 
-                icon="close" 
+              <q-btn
+                icon="close"
                 flat
                 round
                 dense
-                v-close-popup 
+                v-close-popup
               />
             </q-card-section>
 
@@ -347,14 +331,14 @@
                   my-hover-card
                 "
               >
-                <div 
+                <div
                   class="
                     tw-flex-col
                     tw-items-around
                   "
                 >
                   <div class="tw-my-2">
-                    <span 
+                    <span
                       class="
                         tw-rounded-[10px]
                         tw-border-[2px]
@@ -369,7 +353,7 @@
                     </span>
                   </div>
                   <div class="tw-my-4">
-                    <span 
+                    <span
                       class="
                         tw-text-[28px]
                         tw-font-[700]
@@ -402,7 +386,7 @@
                       }"
                     />
 
-                    
+
                   </div>
                 </div>
               </div>
@@ -628,9 +612,10 @@ const alertParams = ref({})
 //captcha could not be validated with computed due call overflow
 const showCaptcha = ref(null)
 ///const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
-const mainProduct = computed(() =>  cartState.value?.products[0] || null) 
+const mainProduct = computed(() =>  cartState.value?.products[0] || null)
 
-
+const results = ref([])
+const suggestions = ref([])
 
 
 const domainActions =  [
@@ -710,13 +695,15 @@ function disableSearch(product){
 }
 
 function isSupportedDomain(product, value){
-  if(!value.includes('.')) return true
+  if(!value) return
+  if(!value?.includes('.')) return true
   const domains = props.domainPricing.map((domain) => domain.ext )
   const result = domains.some(ext => value.endsWith(ext));
 
   if(product.domainCheck.action.value != domainActions[0].value){
     product.domain.domainName = result ? value : null
   }
+  console.log(result || 'dominio no soportado')
   return result || 'dominio no soportado'
 }
 
@@ -737,7 +724,7 @@ function configProducts() {
         product.frecuency = options[0]
       }
     }
-    
+
     if (isDomainNameRequired(product)) {
       if(!product?.domain?.domainName) {
         product.domain = {
@@ -765,7 +752,7 @@ function configProducts() {
     updateDomainPrice(product)
   })
 
-    
+
   } catch (error){
     cartState.value.products = []
     console.error(error)
@@ -880,12 +867,19 @@ function isDomainNameFree(product) {
   return domainCategories.includes(product?.category?.id) || false
 }
 
-function checkDomainKeyDown(event, product){
+function updateDomainName(product, val ){
 
-  if(!product.domainCheck.domainName) return
-  if(product.domainCheck.action.value == domainActions[0].value) {
-    if(event.key == 'Enter'){
+  //let newValue = val.replace(/[^a-zA-Z0-9.-]/g, '') // remove invalid chars
+  let newValue = val.replace(/\s+/g, "")
+
+  if(!newValue) return
+
+  console.log(newValue)
+  if(newValue.length > 3){
+    if(!disableSearch(product)){
+      product.domainCheck.domainName = newValue
       checkDomain(product)
+      updateDomainPrice(product)
     }
   }
 }
@@ -897,7 +891,7 @@ async function checkDomain(product) {
   product.domainCheck.suggestions = []
 
   await getCaptcha()
-  
+
   if(token.value && product.domainCheck.domainName ){
     product.domainCheck.modal = true
     const lang = locale.value == 'es' ? 'esp' : 'eng'
@@ -915,7 +909,7 @@ async function checkDomain(product) {
       body
     }).then(response => {
       product.domainCheck.exactMatch = response?.exactMatch || false
-      
+
       if(product.domainCheck.exactMatch){
         product.domainCheck.exactMatch.disableButton = false
 
@@ -1008,7 +1002,7 @@ function getDiscount(product){
     percent,
     priceByMonths,
     value
-  }  
+  }
   return product.discount
 }
 
@@ -1085,7 +1079,7 @@ async function addDomainExtension(product, extension){
     */
 
   const isAvailable = await verifySuggestion(extension.name)
-  
+
   if(isAvailable){
     const cloned = {}// _.clone(product)
     cloned.optionsPivot = _.clone(product.optionsPivot)
