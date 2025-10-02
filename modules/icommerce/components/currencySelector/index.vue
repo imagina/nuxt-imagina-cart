@@ -1,7 +1,7 @@
 <template>      
-<client-only>
+
     <q-select
-          v-if="showCurrencies()"
+         v-if="showCurrencies()"
           :label="$t('icommerce.cart.currency')"        
           class="md:tw-w-[240px] tw-bg-white tw-bg-white
         tw-border-[1px]
@@ -15,7 +15,7 @@
           outlined
           dense								
       />     
-      </client-only> 
+
 </template>
 <script setup>
 import productsHelper from '../../helpers/products'

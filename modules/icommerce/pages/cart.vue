@@ -1,21 +1,18 @@
 <template>
 	<div
 		class="
-			lg:tw-flex
-			tw-flex-wrap
+			lg:tw-flex			
 			tw-justify-center
-			tw-p-4
-			tw-h-min-screen
-			tw-h-dvh
+			tw-p-4		
+			tw-h-fit
 			tw-bg-[#f4f5ff]
-
 		"
 	>
 
 		<!--cart and products --->
 		<div
 			class="
-				tw-w-full
+				
 				lg:tw-w-[800px]
 				lg:tw-mb-4
 				tw-flex
@@ -26,7 +23,7 @@
 
 				>
 					<!--title -->
-					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
+					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
 						<div>
 							<h1
 								class="
@@ -113,13 +110,8 @@ import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
 import SummaryComponent from '../components/cart/summary.vue'
 import CurrencySelector from '../components/currencySelector'
-import BreadCrumb from '../components/breadcrumb';
 import emptyCart from '../components/cart/emptyCart.vue';
 
-definePageMeta({
-  middleware: 'auth',
-  //layout: 'icommerce'
-})
 
 const { t } = useI18n()
 const router = useRouter()
@@ -156,7 +148,7 @@ const productData = await useAsyncData( 'product',
 )
 product.value = productData.data.value
 
-const showCart = computed(() => cartState.value.products.length )
+const showCart = computed(() => cartState?.value?.products?.length || false )
 
 const disableContinue = computed(() => {
 	if(!showCart.value) return false

@@ -1,14 +1,10 @@
 <template>  
-  <div
-    class="
-        tw-bg-[#101923] 
-        tw-text-white
-        tw-bg-white
-    "
-  >
+  <div>
     <div class="
-        tw-min-h-[60px] 2xl:tw-px-20 xl:tw-px-4 sm:tw-px-2
-        tw-px-4 tw-flex tw-items-center tw-justify-between relative
+        tw-min-h-[60px] 
+        tw-px-10
+        tw-py-4
+        tw-flex tw-items-center tw-justify-between relative
       ">
 
       <!-- LOGO -->
