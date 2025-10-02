@@ -109,7 +109,7 @@
 
           <span
             v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
-            class="
+            class="            
               tw-text-xs
               tw-text-[#818181]
             "
@@ -341,6 +341,7 @@
                 tw-border-[#d5dfff]
                 tw-bg-white
                 tw-p-4
+                tw-cursor-pointer
                 my-hover-card              
               "
             >
@@ -385,7 +386,7 @@ import productsHelper from '../../helpers/products';
 import apiRoutes from '../../config/apiRoutes.js';
 import constants from '../../config/constants.js';
 import moment from 'moment';
-import _, { result } from 'lodash';
+import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
 
 const route = useRoute()
@@ -423,8 +424,6 @@ const cartStateStorage = useStorage('icommerce.cart', {
 const emits = defineEmits(['subtotal', 'discount', 'emptyCart'])
 
 const domainPricing = ref(props.domainPricing)
-const alertRef = ref('alertRef')
-const alertParams = ref({})
 //captcha could not be validated with computed due call overflow
 const showCaptcha = ref(false)
 ///const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
@@ -435,11 +434,8 @@ const bkResults = ref([])
 const showResults = ref(false)
 const showDomainSearch = ref(true)
 const domainSearchLoading = ref(false)
-
-
 const suggestions = ref([])
 const showSuggestions = ref(false)
-
 
 const domainActions =  [
 	{
@@ -462,10 +458,10 @@ const domainActions =  [
 ]
 
 const urlOptions =  {
-		action: route?.query?.a || null,
-		pid: route?.query?.pid || null,
-		billingcycle: route?.query?.billingcycle || null,
-		promocode: route?.query?.promocode || null
+  action: route?.query?.a || null,
+  pid: route?.query?.pid || null,
+  billingcycle: route?.query?.billingcycle || null,
+  promocode: route?.query?.promocode || null
 }
 
 init()
@@ -521,15 +517,13 @@ function isSupportedDomain(product, value){
   if(!value) return
   if(!value?.includes('.')) return true
   const domains = props.domainPricing.map((domain) => domain.ext )
-  const result = domains.some(ext => value.endsWith(ext));
-
-  console.log(result || 'dominio no soportado')
+  const result = domains.some(ext => value.endsWith(ext));  
   return result || 'dominio no soportado'
 }
 
 /*keys: ext , domainregister , domaintransfer, domainrenew */
 function getExtPrice(ext){
-    return domainPricing?.value.find(x => x.ext ==  `.${ext}`) || 0
+  return domainPricing?.value.find(x => x.ext ==  `.${ext}`) || 0
 }
 
 function configProducts() {
@@ -559,11 +553,7 @@ function configProducts() {
       product.domainCheck = {
         action:  product.domain.action ||  domainActions[0], // register, trasfer
         domainName: product.domain.domainName,
-        exactMatch: null,
         
-        
-        loading: false,
-				modal: false,
       }
 
       product.domain.action = product.domainCheck.action
@@ -678,8 +668,6 @@ function isDomainNameFree(product) {
 }
 
 function updateDomainName(product, val ){
-
-  //let newValue = val.replace(/[^a-zA-Z0-9.-]/g, '') // remove invalid chars
   let newValue = val.replace(/\s+/g, "")
 
   if(!newValue){
@@ -687,9 +675,6 @@ function updateDomainName(product, val ){
     return
   }
   
-  
-
-  console.log(newValue)
   if(newValue.length > 3){
     if(!disableSearch(product)){
       product.domainCheck.domainName = newValue
@@ -700,14 +685,14 @@ function updateDomainName(product, val ){
 }
 
 async function checkDomain(product) {  
-  product.domainCheck.exactMatch = false
+  
   results.value = []
   suggestions.value = []
 
   await getCaptcha()
 
   if(token.value && product.domainCheck.domainName ){
-    product.domainCheck.modal = true
+    
     domainSearchLoading.value = true
     const lang = locale.value == 'es' ? 'esp' : 'eng'
     const domain = product.domainCheck.domainName.trim()
@@ -724,17 +709,7 @@ async function checkDomain(product) {
       method: 'POST',
       body
     }).then(response => {
-      domainSearchLoading.value = false
-      product.domainCheck.exactMatch = response?.exactMatch || false
-
-      if(product.domainCheck.exactMatch){
-        product.domainCheck.exactMatch.disableButton = false
-
-        if(product.domainCheck?.exactMatch?.name){
-          let exist = cartState.value.products.find((item) => item?.domain?.domainName?.toLowerCase() == product.domainCheck?.exactMatch?.name.toLowerCase()) || false
-          product.domainCheck.exactMatch.disableButton = exist ? true : false
-        }
-      }
+      domainSearchLoading.value = false      
 
       results.value = []
       results.value = response?.results?.filter(x => x.isAvailable == true)
@@ -745,36 +720,9 @@ async function checkDomain(product) {
 
       bkResults.value = results.value
 
-      /* remove in-use domains in suggestions */
-      /*
-      suggestions.value = []
-      suggestions.value = response?.suggestions.filter((suggestion) => {
-        const name  = suggestion.name.toLowerCase()
-        let exist = results.value.find((result) => result.name.toLowerCase() == name) || false
-        exist = product?.domainCheck?.exactMatch?.name?.toLowerCase() == name
-        if(!exist ) return suggestion
-      }).map(element => {
-        element.name = element.name.toLowerCase()
-        return {...element, disableButton: false }
-      }) || []
-       */
-
-      /* disable domains what are already in cart  */
-      //suggestions.value = disableButtonIfIncart(suggestions.value)
-      //results.value = disableButtonIfIncart(results.value)
-      
-
     }).catch(e => {});
   }
   token.value = null
-}
-
-function disableButtonIfIncart(array){
-  return array.filter((item) => {
-    let exist =  cartState.value.products.find((product) => product?.domain?.domainName?.toLowerCase() == item.name.toLowerCase()) || false
-      if(exist){ item.disableButton = true }
-      return item
-  }) || []
 }
 
 function getFrecuencyOptions(product){
@@ -827,35 +775,6 @@ function getDiscount(product){
   return product.discount
 }
 
-async function selectDomain(product, selectedDomain){
-  const isAvailable = await verifySuggestion(selectedDomain.name)
-  if(isAvailable){
-
-    product.domain.domainName = selectedDomain.name
-    product.domain.ext = selectedDomain.ext
-
-    const domainPrice = getExtPrice(selectedDomain.ext)?.domainregister || 0
-
-    if(domainPrice) product.domain.price = domainPrice
-    updateDomainPrice(product)
-
-    /*
-    Notify.create({
-			message: `Seleccionaste ${selectedDomain.name} `,
-			type: 'positive',
-      timeout: 2000
-		})
-      */
-
-    return true //disables button
-  }
-  return false
-}
-
-function selectDomainLabel(product){
-  return product?.domain?.domainName ? 'Agregar' : 'Seleccionar'
-}
-
 async function verifySuggestion(domainName){
   return true
   await getCaptcha()
@@ -882,13 +801,6 @@ async function verifySuggestion(domainName){
         suggestions.value = suggestions.value.filter(x => x.name != domainName)
       });
 
-      /*
-      Notify.create({
-        message: `${domainName} Ya está en uso, por favor selecciona otra opción.`,
-        type: 'negative',
-        timeout: 2000
-      })
-        */
     }
     return response
   }
@@ -902,7 +814,7 @@ async function addDomainExtension(extension){
     return result
   }
     */
-
+  
   const isAvailable = await verifySuggestion(extension.name)
 
   if(isAvailable){
@@ -925,10 +837,7 @@ async function addDomainExtension(extension){
 
     cloned.domainCheck = {
       action:  domainActions[0], // register,
-      domainName: null,
-      exactMatch: null,
-      loading: false,
-      modal: false
+      domainName: null      
     }
 
     cloned.domain.domainName = `${extension.name}`
@@ -943,8 +852,8 @@ async function addDomainExtension(extension){
       const frecuency = getFrecuencyFromLabel(element.label)
       let renewPrice = 0
       if(frecuency > 12){
-          const years = ( frecuency / 12) - 1 //renovation per year - first year
-          renewPrice = getExtPrice(extension.ext)?.domainrenew * years
+        const years = ( frecuency / 12) - 1 //renovation per year - first year
+        renewPrice = getExtPrice(extension.ext)?.domainrenew * years
       }
       return {
         enable: (frecuency >= 12),
@@ -962,27 +871,12 @@ async function addDomainExtension(extension){
     cloned.price = selectedFrecuency.value
     getDiscount(cloned)
 
-    cartState.value.products.push(cloned)
-
-    /*
-    Notify.create({
-			message: `Agregaste ${extension.name} al carrito!`,
-			type: 'positive',
-		})
-      */
-
-    //v2 
+    cartState.value.products.push(cloned)    
     
     showSuggestions.value = true
 
     results.value = results.value.filter(x => x.name != extension.name)
-    suggestions.value = suggestions.value.filter(x => x.name != extension.name)
-    //showResults.value = false 
-    
-
-
-
-
+    //showResults.value = false
     return true
   }
 
@@ -1010,7 +904,6 @@ function getRenewLabel(product){
 
   const price = prices[product.id] || product.price
   return `Renuevas a ${productsHelper.valueWithSymbol(price, cartState.currency)} el  ${ calcRenovationDate(product.frecuency.label) } ¡Cancela cuando quieras!`
-
 }
 
 </script>
