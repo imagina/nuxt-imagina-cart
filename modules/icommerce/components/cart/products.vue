@@ -428,6 +428,8 @@ const domainPricing = ref(props.domainPricing)
 const showCaptcha = ref(false)
 ///const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 const mainProduct = computed(() =>  cartState.value?.products[0] || null)
+const isDomainFree = computed(() => cartState.value?.products[1] || null)
+
 
 const results = ref([])
 const bkResults = ref([])
@@ -634,8 +636,9 @@ function updateDomainPrice(product){
       const frecuency = getFrecuencyFromLabel(product.frecuency.label)
 
       //free domain afther 12 months
-      if(frecuency >= 12 && isDomainNameFree(product)){
-        product.price = product.frecuency.value
+      if(frecuency >= 12 && isDomainNameFree(mainProduct) ){
+        console.log('free')
+        product.price = product?.isDomainFree ? 0 : product.frecuency.value
       } else {
         let renewPrice = 0
         //aplly renew
@@ -696,13 +699,13 @@ async function checkDomain(product) {
     domainSearchLoading.value = true
     const lang = locale.value == 'es' ? 'esp' : 'eng'
     const domain = product.domainCheck.domainName.trim()
-    const ext = extractDomainExtension(domain) || 'com'
+    
 
     const body = {
       token: token.value.token,
       domain,
       lang,
-      ext
+      ext: ''
     }
 
     await $fetch(apiRoutes.domainCheck, {
@@ -711,12 +714,22 @@ async function checkDomain(product) {
     }).then(response => {
       domainSearchLoading.value = false      
 
-      results.value = []
-      results.value = response?.results?.filter(x => x.isAvailable == true)
+      let tempResults = []      
+      if(response?.exactMatch){
+        tempResults.push(response.exactMatch)
+      }
+
+      tempResults = [...tempResults, ...response?.results]
+
+      results.value = []      
+      results.value = tempResults.filter(x => x.isAvailable == true)
       .map(element => {
         element.name = element.name.toLowerCase()
-        return {...element, disableButton: false }
+        return element
       }) || [];
+
+      
+
 
       bkResults.value = results.value
 
@@ -826,6 +839,9 @@ async function addDomainExtension(extension){
     cloned.name = `Registro de dominio ${extension.ext}`
     cloned.category = null
 
+    if(isDomainNameFree(mainProduct) && !isDomainFree.value){
+      cloned.isDomainFree = true
+    }
 
     cloned.domain = {
       domainName: null,
