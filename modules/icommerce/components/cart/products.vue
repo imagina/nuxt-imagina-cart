@@ -696,13 +696,13 @@ async function checkDomain(product) {
     domainSearchLoading.value = true
     const lang = locale.value == 'es' ? 'esp' : 'eng'
     const domain = product.domainCheck.domainName.trim()
-    const ext = extractDomainExtension(domain) || 'com'
+    //const ext = extractDomainExtension(domain) || 'com'
 
     const body = {
       token: token.value.token,
       domain,
       lang,
-      ext
+      ext: ''
     }
 
     await $fetch(apiRoutes.domainCheck, {

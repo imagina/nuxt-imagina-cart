@@ -3,7 +3,7 @@ import { verifyCaptcha } from '../../utils/verify-captcha';
 export default defineEventHandler(async (event) => {
   try {
     // Verifica el token de reCAPTCHA
-    await verifyCaptcha(event);
+    ///await verifyCaptcha(event);
     // Lee el cuerpo del request
     const body = await readBody<Record<string, any>>(event);
 

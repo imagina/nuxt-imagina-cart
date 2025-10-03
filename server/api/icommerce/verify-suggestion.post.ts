@@ -3,7 +3,7 @@
 export default defineEventHandler(async (event) => {
   try {
     // Verifica el token de reCAPTCHA
-    await verifyCaptcha(event);
+    //await verifyCaptcha(event);
     // Lee el cuerpo del request
     const body = await readBody<Record<string, any>>(event);
     const baseUrl = process.env.N8N_BASE_URL ?? '';
