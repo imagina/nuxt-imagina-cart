@@ -514,17 +514,19 @@
                 tw-text-[13px]
               "
             >
-              <span 
-                v-if="isFreeExtension(product)"
+              <span               
                 class="tw-text-[#444444]"
               >
-                ¡Buenas noticias! Obtienes un dominio gratis con este pedido.
-              </span>
-              <span 
-                v-else
-                class="tw-text-[#444444]"
-              >
-                Contrata 12 meses o más y obtén dominio y renovación gratis.
+              {{ isFreeExtension(product) ? '¡Buenas noticias! Obtienes un dominio gratis.' : 'Contrata 12 meses o más y obtén dominio gratis.' }}
+
+              <i class="fa-regular fa-circle-question tw-text-[16px]">
+                <q-tooltip class="bg-red" :offset="[10, 10]">
+                    <div class="tw-w-[240px] tw-text-[14px] tw-p-[2px]">
+                      Obtén un dominio gratis por 1 año al contratar un plan de 1 año o más. Elige entre .{{ constants.freeExtensions.join(', .') }}.
+                      Después del primer año, tu dominio se renovará totalmente gratis.
+                    </div>
+                  </q-tooltip>
+              </i>
               </span>
             </div>
           </div>
