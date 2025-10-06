@@ -514,8 +514,17 @@
                 tw-text-[13px]
               "
             >
-              <span class="tw-text-[#444444]">
-                Adquiere el dominio gratis por planes mayores a 12 meses
+              <span 
+                v-if="isFreeExtension(product)"
+                class="tw-text-[#444444]"
+              >
+                ¡Buenas noticias! Obtienes un dominio gratis con este pedido.
+              </span>
+              <span 
+                v-else
+                class="tw-text-[#444444]"
+              >
+                Contrata 12 meses o más y obtén dominio y renovación gratis.
               </span>
             </div>
           </div>
@@ -854,7 +863,7 @@ function updateDomainPrice(product){
       const frecuency = getFrecuencyFromLabel(product.frecuency.label)
 
       //free domain afther 12 months
-      if(frecuency >= 12 && isDomainNameFree(product)){
+      if(isDomainNameFree(product) && isFreeExtension(product) ){
         product.price = product.frecuency.value
       } else {
         let renewPrice = 0
@@ -885,6 +894,11 @@ function isDomainNameRequired(product) {
 function isDomainNameFree(product) {
   const domainCategories = constants.categories.dominNameFree
   return domainCategories.includes(product?.category?.id) || false
+}
+
+function isFreeExtension(product){
+  const frecuency = getFrecuencyFromLabel(product.frecuency.label) >= 12 || false  
+  return constants.freeExtensions.includes(product.domain.ext) && frecuency || false
 }
 
 function checkDomainKeyDown(event, product){
