@@ -133,7 +133,15 @@
               "
             >
               <span class="tw-text-[#444444]">
-                Adquiere el dominio gratis por planes mayores a 12 meses
+                {{ isFreeExtension(product) ? '¡Buenas noticias! Obtienes un dominio gratis.' : 'Contrata 12 meses o más y obtén dominio gratis.' }}
+                 <i class="fa-regular fa-circle-question tw-text-[16px]">
+                <q-tooltip class="bg-red" :offset="[10, 10]">
+                    <div class="tw-w-[240px] tw-text-[14px] tw-p-[2px]">
+                      Obtén un dominio gratis por 1 año al contratar un plan de 1 año o más. Elige entre .{{ constants.freeExtensions.join(', .') }}.
+                      Después del primer año, tu dominio se renovará totalmente gratis.
+                    </div>
+                  </q-tooltip>
+              </i>
               </span>
             </div>
           </div>
@@ -636,7 +644,7 @@ function updateDomainPrice(product){
       const frecuency = getFrecuencyFromLabel(product.frecuency.label)
 
       //free domain afther 12 months
-      if(frecuency >= 12 && isDomainNameFree(mainProduct) ){
+      if(isDomainNameFree(mainProduct) && isFreeExtension(product) ){
         console.log('free')
         product.price = product?.isDomainFree ? 0 : product.frecuency.value
       } else {
@@ -668,6 +676,11 @@ function isDomainNameRequired(product) {
 function isDomainNameFree(product) {
   const domainCategories = constants.categories.dominNameFree
   return domainCategories.includes(product?.category?.id) || false
+}
+
+function isFreeExtension(product){
+  const frecuency = getFrecuencyFromLabel(product.frecuency.label) >= 12 || false  
+  return constants.freeExtensions.includes(product.domain.ext) && frecuency || false
 }
 
 function updateDomainName(product, val ){
