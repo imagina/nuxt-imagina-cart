@@ -20,7 +20,7 @@
             <q-item-section>
               <q-item-label>
                 <NuxtLink
-                    :to="{ path: getPath('iauth.logout'), query: { redirectTo: 'icommerce.products' } }"
+                    :to="{ path: getPath('iauth.logout'), query: { redirectTo: 'icommerce.cart' } }"
                     class="dropdown-sign-in tw-text-[15px] "
                 >
                   Cerrar sesión
@@ -36,7 +36,7 @@
         unelevated
         color="primary"
         no-caps          
-        :to="{ path: getPath('iauth.login'), query: { redirectTo: 'icommerce.products' } }"
+        :to="{ path: getPath('iauth.login'), query: { redirectTo: 'icommerce.cart' } }"
         class="dropdown-sign-in tw-text-[15px] tw-duration-200 tw-rounded-full xl:tw-px-8"
       >
         <span class="tw-block lg:tw-hidden xl:tw-block">{{ $t('iauth.login.title') }}</span>

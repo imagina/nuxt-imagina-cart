@@ -23,7 +23,7 @@
             <q-item-section>
               <q-item-label>
                 <NuxtLink
-                    :to="{ path: getPath('iauth.logout'), query: { redirectTo: 'icommerce.products' } }"
+                    :to="{ path: getPath('iauth.logout'), query: { redirectTo: 'icommerce.cart' } }"
                     class="dropdown-sign-in tw-text-[15px] "
                 >
                   Cerrar sesión

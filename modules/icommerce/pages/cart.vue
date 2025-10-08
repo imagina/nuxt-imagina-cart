@@ -116,6 +116,7 @@ import emptyCart from '../components/cart/emptyCart.vue';
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 
 const cartState = useState('icommerce.cart', () => {
 	return {
@@ -129,7 +130,7 @@ const cartStateStorage = useStorage('icommerce.cart', {
 	currency: 'COP'
 })
 
-const route = useRoute()
+
 
 const urlOptions =  {
 	action: route?.query?.a || null,
@@ -179,7 +180,8 @@ function restoreFromCheckout(){
 function redirectCheckout() {
 	cartStateStorage.value.products = cartState.value.products
 	router.push({
-		path: checkoutPath
+		path: checkoutPath, 
+		query: route.query
 	})
 }
 

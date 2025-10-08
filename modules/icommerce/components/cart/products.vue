@@ -2,7 +2,7 @@
   <div
     class="
       xl:tw-w-[800px]
-      lg:tw-w-[700px]
+      lg:tw-w-[600px]
       lg:tw-mx-4
       tw-w-auto
       lg:tw-min-h-[80vh]
@@ -197,8 +197,8 @@
                 tw-py-1.5
                 tw-rounded-full
                 tw-border
-                tw-border-[#00000033]
               "
+              :class="isMainDomainFree(index) ? 'tw-border-green-400' : 'tw-border-[#00000033]'"
             >
               <span
                 v-if="isMainDomainFree(index) && getFrecuencyFromLabel(mainProduct?.frecuency.label) == 12"
@@ -658,11 +658,11 @@ function removeProduct(product) {
 function updateDomainPrice(){
 
   cartState.value.products.forEach((product) => {
-    if(isFreeExtension()) {
+    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {
       mainDomain.value.price = 0
-      mainDomain.value.frecuency = mainProduct.value.frecuency
+      //mainDomain.value.frecuency = mainProduct.value.frecuency
       if(product.domain.domainName == mainDomain.value.domain.domainName){
-        return
+        return false
       }
     }
 
@@ -674,9 +674,9 @@ function updateDomainPrice(){
       domaintransfer: 0
     }
 
-    if(isDomainNameRequired(product)){
+    if(isDomainNameRequired(mainProduct.value)){
       //register
-      if(product.domainCheck.action.value == domainActions[0].value){
+      if(mainProduct.value.domainCheck.action.value == domainActions[0].value){
         if(product.domain.ext) domainPrice = getExtPrice(product.domain.ext) //get price from selected domain
       } else {
         if(product.domainCheck.domainName){
@@ -684,10 +684,12 @@ function updateDomainPrice(){
         }
       }
 
+      console.log(domainPrice)
+
       //default configuracion price is $0
       let actionPrice = 0
-      if(product.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price
-      if(product.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price
+      if(mainProduct.value.domainCheck.action.value == domainActions[0].value && domainPrice) actionPrice = domainPrice.domainregister //register price
+      if(mainProduct.value.domainCheck.action.value == domainActions[1].value && domainPrice) actionPrice = domainPrice.domaintransfer  //transfer price
 
 
       if(isDomainNameRequired(product)){
@@ -730,6 +732,8 @@ function isDomainNameFree(product) {
 
 
 function isFreeExtension(){
+
+  if(!isDomainNameFree(mainProduct.value))  return false
   if(!mainProduct.value?.frecuency) return false
   const frecuency = getFrecuencyFromLabel(mainProduct.value?.frecuency.label) >= 12 || false
   return constants.freeExtensions.includes(mainDomain.value?.domain.ext) && frecuency || false

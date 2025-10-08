@@ -298,6 +298,7 @@ const form = useStorage('icommerce.CheckoutForm', {
 	zipCode: null
 })
 const router = useRouter()
+const route = useRoute()
 
 const refForm = ref(null)
 const showCouponInput = ref(false)
@@ -437,7 +438,9 @@ function calcDiscount(){
 
 function redirectToCart() {
 	router.push({
-		path: getPath('icommerce.cart')
+		path: getPath('icommerce.cart'), 
+		query: route.query,
+
 	})
 }
 
@@ -459,6 +462,7 @@ function addRedirect() {
 	router.push({
 		path,
 		query: {
+			...route.query,
 			redirectTo: 'icommerce.checkout',
 		}
 	})
