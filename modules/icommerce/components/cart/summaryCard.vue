@@ -1,11 +1,11 @@
 <template>
-	
+
 	<q-card
-	
+
 	 flat>
 		<div
 			:class="padding ? 'tw-p-[12px]' : '' "
-			
+
 		>
 			<!-- title -->
 			<div class="tw-mb-2">
@@ -14,10 +14,10 @@
 				</span>
 			</div>
 			<!-- details -->
-			<div 
+			<div
 				v-if="product?.domain?.domainName"
 				class="tw-my--2"
-				
+
 			>
 				<span class="
 						tw-leading-normal
@@ -43,7 +43,16 @@
 
 				</div>
 				<div>
-					<span class="tw-leading-normal tw-font-light tw-text-sm md:tw-text-md !text-[#333]">
+					<span
+						class="
+							tw-leading-normal
+							tw-font-light
+							tw-text-sm
+							md:tw-text-md
+							!text-[#333]
+							"
+						:class="product.price == 0 ? 'tw-line-through tw-text-primary' : ''"
+						>
 						{{ productsHelper.priceWithSymbol(product.price, currency) }}
 					</span>
 				</div>
@@ -64,9 +73,9 @@ const props = defineProps({
 	currency: {
 		type: String,
 		required: true
-	}, 
+	},
 	padding: {
-		type: Boolean, 
+		type: Boolean,
 		required: false
 	}
 })

@@ -1,9 +1,9 @@
 <template>
 	<div
 		class="
-			lg:tw-flex			
+			lg:tw-flex
 			tw-justify-center
-			tw-p-4		
+			tw-p-4
 			tw-h-fit
 			tw-bg-[#f4f5ff]
 		"
@@ -12,19 +12,23 @@
 		<!--cart and products --->
 		<div
 			class="
-				
-				lg:tw-w-[800px]
 				lg:tw-mb-4
-				tw-flex
+				lg:tw-flex
 				tw-align-middle
 			">
+
 				<div
 					class="tw-mb-[40px]"
-
 				>
-					<!--title -->
-					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
-						<div>
+				<emptyCart
+					v-if="(!product && !showCart)"
+				/>
+
+				<!--title -->
+				<div
+					v-if="product || showCart"
+					class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
+						<div >
 							<h1
 								class="
 									tw-text-[20px]
@@ -49,10 +53,7 @@
 					/>
 
 				</div>
-					<emptyCart
-						v-if="!showCart"
-					/>
-				</div>
+			</div>
 
 			<!-- cart-->
 			<div
@@ -61,7 +62,7 @@
 				tw-w-full
 				md:tw-my-[20px]
 				lg:tw-w-[800px]
-				lg:tw-mt-0
+				lg:tw-mt-[114px]
 				xl:tw-w-[400px]
 				xl:tw-mt-[114px]
 				xl:tw-ml-8

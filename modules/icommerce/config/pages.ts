@@ -17,7 +17,7 @@ const pages = [
   },  
   */
 
-  
+  /*
   {
     name: 'icommerce.products',
     path: '/products/:slug?',
@@ -33,7 +33,22 @@ const pages = [
       breadcrumb: 'Productos'
     },
   },
+  */
   
+  {
+    name: 'icommerce.index',
+    path: '/',
+    paths:{
+      es: '/carrito',
+      en: '/cart',
+    },
+    page: 'pages/cart.vue',
+    meta: {
+      layout: cart,
+      title: 'icommerce.cms.sidebar.cart',
+      breadcrumb: 'Carrito'
+    }
+  },
   
 
   {

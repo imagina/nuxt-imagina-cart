@@ -23,12 +23,13 @@
                 tw-mt-4
                 tw-my-8
             "
-            @click="() => { router.push({ path: getPath('icommerce.products') })}"
+            :href="imaginaUrl"
         />
     </div>
 </template>
 <script setup>
 const { t } = useI18n()
 const router = useRouter()
+const imaginaUrl = 'https://www.imaginacolombia.com'
 
 </script>
