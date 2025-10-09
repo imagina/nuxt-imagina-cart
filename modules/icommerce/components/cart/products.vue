@@ -100,7 +100,9 @@
 
           <q-select
             v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
+            v-show="index != 1"
             v-model="product.frecuency"
+            :disable="index == 1"
             :options="getFrecuencyOptions(product)"
             @update:model-value="updateDomainPrice()"
             option-value="value"
@@ -372,7 +374,14 @@
           tw-w-auto          
         "
       >
-        <div class="tw-flex tw-gap-x-4 tw-justify-center tw-items-center">
+        <div 
+          class="
+            tw-flex 
+            tw-gap-x-4
+            tw-justify-center
+            tw-items-center
+            "
+          >
           <template v-for="result in results">
             <div
               v-if="result.isAvailable"
@@ -655,10 +664,11 @@ function removeProduct(product) {
 
 async function updateDomainPrice(){
 
-  cartState.value.products.forEach((product) => {
-    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {
+  cartState.value.products.forEach((product) => {    
+
+    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {      
+      
       mainDomain.value.price = 0
-      //mainDomain.value.frecuency = mainProduct.value.frecuency
       if(product.domain.domainName == mainDomain.value.domain.domainName){
         return false
       }
@@ -769,6 +779,10 @@ async function checkDomain(product) {
     domainSearchLoading.value = true
     const lang = locale.value == 'es' ? 'esp' : 'eng'
     const domain = product.domainCheck.domainName.trim()
+
+    gtag('event', 'view_search_results', {
+      search_term: domain
+    });
 
 
     const body = {
@@ -887,13 +901,16 @@ async function verifySuggestion(domainName){
 }
 
 async function addDomainExtension(extension){
+  
 
-  /*
-  if(!product?.domain?.domainName){
-    const result = await selectDomain(product, extension)
-    return result
-  }
-    */
+  gtag('event', 'add_to_cart', {
+    name: `Registro de dominio ${extension.ext}`,     
+    domain: `.${extension.name}`,
+    ext: extension.ext,
+    frecuency: mainProduct.value.frecuency.label,
+    product: mainProduct.value.name,
+    category: mainProduct.value.category.title    
+  });
 
   const isAvailable = await verifySuggestion(extension.name)
 

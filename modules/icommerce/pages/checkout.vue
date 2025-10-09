@@ -502,13 +502,13 @@ async function goToPayment() {
 		})
 	}
 
-	/*
+	
 	if(order.products.length > 1){
 		//setup the main domain o main product
 		order.products[0].domain = order.products[1].domain
 		order.products = order.products.filter((_, index) => index !== 1);
 	}
-	*/
+	
 
 	const user = { ...form.value }
 	user.city = user.city.name
