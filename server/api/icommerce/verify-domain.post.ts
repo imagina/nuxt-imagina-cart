@@ -18,23 +18,25 @@ export default defineEventHandler(async (event) => {
       },
     };
 
-    const [suggestionsResult, checkResult] = await Promise.allSettled([
-      $fetch(`${baseUrl}domain/suggestions`, params),
+    const [checkResult] = await Promise.allSettled([
+      //$fetch(`${baseUrl}domain/suggestions`, params),
       $fetch(`${baseUrl}domain/search`, params)
     ]);
     
-    const suggestions: any = suggestionsResult.status === 'fulfilled' ? suggestionsResult.value : {};
+    //const suggestions: any = suggestionsResult.status === 'fulfilled' ? suggestionsResult.value : {};
     const check: any = checkResult.status === 'fulfilled' ? checkResult.value : {};
     
     // Opcional: podrías registrar errores
+    /*
     if (suggestionsResult.status === 'rejected') {
       console.error('Error en suggestions:', suggestionsResult.reason);
     }
+      */
     if (checkResult.status === 'rejected') {
       console.error('Error en check:', checkResult.reason);
     }
     
-    return { ...suggestions, ...check };
+    return {...check };
   } catch (error: any) {
     // Captura errores y lanza un error con contexto
     throw createError({

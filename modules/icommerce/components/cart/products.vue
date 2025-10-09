@@ -5,7 +5,7 @@
       lg:tw-w-[600px]
       lg:tw-mx-4
       tw-w-auto
-      lg:tw-min-h-[80vh]
+      lg:tw-min-h-[70vh]
     "
   >
     <div v-for="(product, index) in cartState.products" :key="product.name"
@@ -337,17 +337,14 @@
           </q-virtual-scroll>
         </div>
       </div>
-      <!-- captcha -->
-    <ClientOnly>
-      <div
-        v-if="showCaptcha"
+      <!-- captcha -->    
+      <div        
         class="tw-my-2 tw-px-4"
       >
         <captchaComponent
           ref="captchaRef"
         />
-      </div>
-    </ClientOnly>
+      </div>    
     </div>
 
 
@@ -359,7 +356,9 @@
       class="
         tw-my-8
         tw-w-full
-        md:tw-w-[800px]
+        xl:tw-w-[800px]
+        lg:tw-w-[600px]
+        md:tw-w-full
       "
     >
       <span class="tw-text-[20px] tw-font-bold">Protege tu marca:&nbsp;</span>
@@ -367,10 +366,13 @@
 
       <q-scroll-area
         visible
-        class="tw-my-4"
-        style="height: 160px; max-width: 820px;"
+        class="
+          tw-my-4 
+          tw-h-[160px]
+          tw-w-auto          
+        "
       >
-        <div class="tw-flex tw-gap-x-4">
+        <div class="tw-flex tw-gap-x-4 tw-justify-center tw-items-center">
           <template v-for="result in results">
             <div
               v-if="result.isAvailable"
@@ -464,13 +466,8 @@ const cartStateStorage = useStorage('icommerce.cart', {
 const emits = defineEmits(['subtotal', 'discount', 'emptyCart'])
 
 const domainPricing = ref(props.domainPricing)
-//captcha could not be validated with computed due call overflow
-const showCaptcha = ref(false)
-///const someIsDomainNameRequired = computed(() => cartState.value.products.some((product) => isDomainNameRequired(product)) || false )
 const mainProduct = computed(() =>  cartState.value?.products[0] || null)
 const mainDomain = computed(() =>  cartState.value?.products[1] || null)
-
-
 
 
 const results = ref([])
@@ -510,8 +507,9 @@ const urlOptions =  {
 
 init()
 
-onMounted(() => {
-  loadCaptcha()
+
+onMounted(() => {  
+
 })
 
 async function init() {
@@ -536,12 +534,18 @@ async function init() {
     }
     cartState.value.products = []
     cartState.value.products.push(product)
-  }
+  }  
   await configProducts()
 }
 
-function loadCaptcha(){
-  showCaptcha.value = cartState.value.products.length ? (cartState.value.products.some((product) => isDomainNameRequired(product)) || false ) : false
+async function loadDomainSearch(){
+  if(mainDomain.value){    
+    if(mainDomain.value.domain.domainName){      
+      showDomainSearch.value = false      
+    }
+  } else {
+    showDomainSearch.value = true
+  }
 }
 
 function disableSearch(product){
@@ -600,18 +604,12 @@ async function configProducts() {
 
         }
 
-        product.domain.action = product.domainCheck.action
-        showDomainSearch.value = true
-
-        if(mainDomain.value){
-          if(mainDomain.value.domain.domainName){
-            showDomainSearch.value = false
-          }
-        }
+        product.domain.action = product.domainCheck.action        
       }
       getDiscount(product)
     })
-    updateDomainPrice()
+    await loadDomainSearch()    
+    await updateDomainPrice()
   } catch (error){
     cartState.value.products = []
     console.error(error)
@@ -637,7 +635,7 @@ function removeProduct(product) {
     products = cartState.value.products.filter(obj => obj.id != product.id);
     const itemToRestore = bkResults.value.find(x =>  x.name == product.domain.domainName) || false
     if(itemToRestore){
-      results.value.push(itemToRestore)
+      results.value.unshift(itemToRestore)
     }
 
     resetDomainSearch(products)
@@ -646,7 +644,7 @@ function removeProduct(product) {
     cartStateStorage.value.products = cartState.value.products
 
     if (cartState.value.products.length == 0) {
-      loadCaptcha()
+      loadDomainSearch()
       emits('emptyCart', null)
       // router.push({ path: getPath('icommerce.products') })
     }
@@ -655,7 +653,7 @@ function removeProduct(product) {
 }
 
 
-function updateDomainPrice(){
+async function updateDomainPrice(){
 
   cartState.value.products.forEach((product) => {
     if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {
@@ -683,8 +681,6 @@ function updateDomainPrice(){
           if(product.domainCheck.domainName.includes('.')) domainPrice = getExtPrice(extractDomainExtension(product.domainCheck.domainName)) //get ext price  from transfer input
         }
       }
-
-      console.log(domainPrice)
 
       //default configuracion price is $0
       let actionPrice = 0
@@ -801,10 +797,7 @@ async function checkDomain(product) {
         element.name = element.name.toLowerCase()
         return element
       }) || [];
-
-
-
-
+      
       bkResults.value = results.value
 
     }).catch(e => {});

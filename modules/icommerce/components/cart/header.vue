@@ -5,6 +5,7 @@
         tw-px-10
         tw-py-4
         tw-flex tw-items-center tw-justify-between relative
+        tw-bg-[#f4f5ff]
       ">
 
       <!-- LOGO -->

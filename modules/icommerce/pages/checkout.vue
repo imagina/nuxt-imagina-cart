@@ -345,7 +345,7 @@ onMounted(() => {
 async function init() {
 	await setFormData()
 	await getCountries().then( async () => {
-		if(cartState.value.products.length) addRedirect()
+		//if(cartState.value.products.length) addRedirect()
 	})
 
 }
@@ -439,7 +439,7 @@ function calcDiscount(){
 function redirectToCart() {
 	router.push({
 		path: getPath('icommerce.cart'), 
-		query: route.query,
+		//query: route.query,
 
 	})
 }
@@ -501,6 +501,14 @@ async function goToPayment() {
 			}
 		})
 	}
+
+	/*
+	if(order.products.length > 1){
+		//setup the main domain o main product
+		order.products[0].domain = order.products[1].domain
+		order.products = order.products.filter((_, index) => index !== 1);
+	}
+	*/
 
 	const user = { ...form.value }
 	user.city = user.city.name
