@@ -40,7 +40,7 @@ const helper = {
 	/**/
 	getPrice: (product, currencyValue = 'COP') => {
 		const frecuencies = helper.getFrecuencyOptions(product)
-		//get the lowest value 
+		//get the lowest value
 		const defaultFrecuency = frecuencies?.length ? (frecuencies.reduce((min, obj) => obj.value < min.value ? obj : min).value || 0) : (product?.price || 0)
 		let price = product?.frecuency ? product.frecuency.value : defaultFrecuency
 

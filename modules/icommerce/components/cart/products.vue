@@ -99,8 +99,7 @@
         <div>
 
           <q-select
-            v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
-            v-show="index != 1"
+            v-if="productsHelper.hasFrencuency(product) || product?.frecuency"            
             v-model="product.frecuency"
             :disable="index == 1"
             :options="getFrecuencyOptions(product)"
@@ -379,6 +378,7 @@
             tw-flex 
             tw-gap-x-4
             tw-justify-center
+            lg:tw-justify-start
             tw-items-center
             "
           >
@@ -517,8 +517,7 @@ const urlOptions =  {
 init()
 
 
-onMounted(() => {  
-
+onMounted(() => {
 })
 
 async function init() {
@@ -543,6 +542,7 @@ async function init() {
     }
     cartState.value.products = []
     cartState.value.products.push(product)
+    
   }  
   await configProducts()
 }
@@ -666,8 +666,18 @@ async function updateDomainPrice(){
 
   cartState.value.products.forEach((product) => {    
 
-    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {      
-      
+    if(mainDomain.value){
+      const tempfrecuency = getFrecuencyOptions(mainDomain.value).find(x => x.frecuency == mainProduct.value.frecuency.frecuency) || false      
+      if(tempfrecuency){
+        if(getFrecuencyFromLabel(tempfrecuency.label) >= 12 ){
+          mainDomain.value.frecuency = tempfrecuency
+        } 
+      } else {       
+        mainDomain.value.frecuency = getFrecuencyOptions(mainDomain.value)[0]       
+      }
+    }
+    
+    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {                  
       mainDomain.value.price = 0
       if(product.domain.domainName == mainDomain.value.domain.domainName){
         return false
@@ -901,16 +911,6 @@ async function verifySuggestion(domainName){
 }
 
 async function addDomainExtension(extension){
-  
-
-  gtag('event', 'add_to_cart', {
-    name: `Registro de dominio ${extension.ext}`,     
-    domain: `.${extension.name}`,
-    ext: extension.ext,
-    frecuency: mainProduct.value.frecuency.label,
-    product: mainProduct.value.name,
-    category: mainProduct.value.category.title    
-  });
 
   const isAvailable = await verifySuggestion(extension.name)
 
@@ -972,6 +972,30 @@ async function addDomainExtension(extension){
     showSuggestions.value = true
 
     results.value = results.value.filter(x => x.name != extension.name)
+
+    const items = [{ 
+      item_id: `${mainProduct.value.id}`,
+      
+      item_name: `Registro de dominio ${extension.ext}`,     
+      /*
+      item_category: mainProduct.value.category.title,          
+      item_brand: mainProduct.value.name,
+      domain: `.${extension.name}`,
+      ext: extension.ext,
+      frecuency: mainProduct.value.frecuency.label,
+      */
+      price: cloned.price,
+      quantity: 1
+    }]
+    console.log(items)
+    
+    gtag('event', 'add_to_cart', { 
+      currency: cartState.value.currency,
+      value: cloned.price,
+      items: items
+    })
+      
+
     await updateDomainPrice()
     //showResults.value = false
     return true
