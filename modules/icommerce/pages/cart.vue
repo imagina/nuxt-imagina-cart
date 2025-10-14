@@ -24,28 +24,30 @@
 					v-if="(!product && !showCart)"
 				/>
 
-				<!--title -->
+				
 				<div
 					v-if="product || showCart"
-					class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
-						<div >
-							<h1
-								class="
-									tw-text-[20px]
-									sm:tw-text-[24px]
-									md:tw-text-[35px]
-									tw-font-[700]
-								"
-							>
-								{{ $t('icommerce.cart.yourCart') }}
-							</h1>
-						</div>
-
-						<!-- currency -->
-						<div>
-							<CurrencySelector />
-						</div>
+					class="tw-flex tw-justify-between  tw-align-middle tw-items-center tw-px-4"
+				>
+					<!-- title -->
+					<div>
+						<h1
+							class="
+								tw-text-[20px]
+								sm:tw-text-[24px]
+								md:tw-text-[35px]
+								tw-font-[700]
+							"
+						>
+							{{ $t('icommerce.cart.yourCart') }}
+						</h1>
 					</div>
+
+					<!-- currency -->
+					<div>
+						<CurrencySelector />
+					</div>
+				</div>
 					<!-- products -->
 					<ProductsComponent
 						:product="product"

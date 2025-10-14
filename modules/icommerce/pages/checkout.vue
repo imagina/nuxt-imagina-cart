@@ -339,7 +339,7 @@ onBeforeMount(() => {
 onMounted(async () => {
 	await init()
 	if (import.meta.client){
-		//GA_beginCheckout()
+		GA_beginCheckout()
 	}
 
 })
@@ -358,7 +358,7 @@ function GA_beginCheckout(){
 
 	const items = cartState.value.products.map((product) => {
 		return {
-			item_id: mainProduct.value.name,
+			item_id: mainProduct.value.id,
 			item_name: `Registro de dominio ${product.domain.ext}`,
 			item_category: mainProduct.value.category.title,
 			item_brand: mainProduct.value.name,

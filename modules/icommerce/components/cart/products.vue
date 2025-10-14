@@ -121,35 +121,7 @@
           >
             {{ getRenewLabel(product) }}
           </span>
-          <!-- free domain -->
-          <div
-            v-if="isDomainNameFree(product)"
-            class="tw-mt-5"
-          >
-            <i class="tw-text-[#444444] tw-text-[13px]" />
-            <div
-              class="
-                tw-py-2.5
-                tw-px-3.5
-                tw-rounded-md
-                tw-bg-[#FFAB404D]
-                tw-w-fit
-                tw-text-[13px]
-              "
-            >
-              <span class="tw-text-[#444444]">
-                {{ isFreeExtension() ? '¡Buenas noticias! Obtienes un dominio gratis.' : 'Contrata 12 meses o más y obtén dominio gratis.' }}
-                <i class="fa-regular fa-circle-question tw-text-[16px]">
-                  <q-tooltip class="bg-red" :offset="[10, 10]">
-                    <div class="tw-w-[240px] tw-text-[14px] tw-p-[2px]">
-                      Obtén un dominio gratis al contratar un plan de 1 año o más. Elige entre .{{ constants.freeExtensions.join(', .') }}.
-                      Después del primer año, tu dominio se renovará totalmente gratis mientras mantengas activo el plan de hosting.
-                    </div>
-                  </q-tooltip>
-                </i>
-              </span>
-            </div>
-          </div>
+          
         </div>
         <div
           class="
@@ -231,7 +203,37 @@
             </div>
           </div>
         </div>
+        
       </div>
+      <!-- free domain -->
+      <div
+        v-if="isDomainNameFree(product)"
+        class="tw-mt-5"
+      >
+        <i class="tw-text-[#444444] tw-text-[13px]" />
+        <div
+          class="
+            tw-py-2.5
+            tw-px-3.5
+            tw-rounded-md
+            tw-bg-[#FFAB404D]
+            tw-w-full
+            tw-text-[13px]
+          "
+        >
+          <span class="tw-text-[#444444]">
+            {{ isFreeExtension() ? '¡Buenas noticias! Obtienes un dominio gratis.' : 'Contrata 12 meses o más y obtén dominio gratis.' }}
+            <i class="fa-regular fa-circle-question tw-text-[16px]">
+              <q-tooltip class="bg-red" :offset="[10, 10]">
+                <div class="tw-w-[240px] tw-text-[14px] tw-p-[2px]">
+                  Obtén un dominio gratis al contratar un plan de 1 año o más. Elige entre .{{ constants.freeExtensions.join(', .') }}.
+                  Después del primer año, tu dominio se renovará totalmente gratis mientras mantengas activo el plan de hosting.
+                </div>
+              </q-tooltip>
+            </i>
+          </span>
+        </div>
+      </div>      
     </div>
 
     <!-- domain check -->
@@ -976,14 +978,13 @@ async function addDomainExtension(extension){
     const items = [{ 
       item_id: `${mainProduct.value.id}`,
       
-      item_name: `Registro de dominio ${extension.ext}`,     
-      /*
+      item_name: `Registro de dominio ${extension.ext}`,
       item_category: mainProduct.value.category.title,          
       item_brand: mainProduct.value.name,
       domain: `.${extension.name}`,
       ext: extension.ext,
       frecuency: mainProduct.value.frecuency.label,
-      */
+      
       price: cloned.price,
       quantity: 1
     }]    
