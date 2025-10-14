@@ -1,29 +1,31 @@
-<template>
+<template>	
 </template>
 <script setup>
-const src = 'https://www.googletagmanager.com/gtag/js';
-const id = 'G-8SKBC7T5PP';
 
-function addScript(w,d,u){
-	let s=d.createElement('script');s.async=true;s.src=u;
-	d.body.appendChild(s);
-	let s2 = d.createElement('script')
-	s2.innerHTML = `
-	function runGtag(){
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-		gtag('config', '${id}')
-	}
-	runGtag()`
-	d.body.appendChild(s2);
+const id = import.meta.env.PROD ? 'G-8SKBC7T5PP' : 'G-BVFN8DF2P7' ;
+
+function addScript(){
+	const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    script.onload = () => {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', id);     
+    };
+    document.body.appendChild(script);
 }
 
 onMounted(() => {
-	//if (import.meta.env.PROD) {
-    addScript(window, document,  `${src}?id=${id}`);
-	//}
+	addScript()
 })
+
+
+function sendEvent(type = 'event', name, data = {} ) {
+    gtag(type, name, data);
+}
+	
 
 </script>
 

@@ -14,6 +14,11 @@ export default defineNuxtModule({
       src: resolver.resolve('layouts/icommerce.vue'), 
       filename: 'icommerce.vue'
     }, 'icommerce')
+
+    addLayout({
+      src: resolver.resolve('layouts/cart.vue'), 
+      filename: 'cart.vue'
+    }, 'cart')
     
     extendPages((pages) => {      
       pagesConfig.forEach((page) => {        

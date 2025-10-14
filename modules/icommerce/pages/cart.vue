@@ -1,32 +1,34 @@
 <template>
-	<BreadCrumb />
 	<div
 		class="
 			lg:tw-flex
-			tw-flex-wrap
 			tw-justify-center
 			tw-p-4
-			tw-h-full
+			tw-h-fit
+			tw-bg-[#f4f5ff]
 		"
-		style="background-color:  #FAFAFA;"
 	>
 
 		<!--cart and products --->
 		<div
 			class="
-				tw-w-full
-				lg:tw-w-[800px]
 				lg:tw-mb-4
-				tw-flex
+				lg:tw-flex
 				tw-align-middle
 			">
+
 				<div
 					class="tw-mb-[40px]"
-
 				>
-					<!--title -->
-					<div class="tw-flex tw-justify-between  tw-align-middle tw-items-center" v-if="showCart">
-						<div>
+				<emptyCart
+					v-if="(!product && !showCart)"
+				/>
+
+				<!--title -->
+				<div
+					v-if="product || showCart"
+					class="tw-flex tw-justify-between  tw-align-middle tw-items-center">
+						<div >
 							<h1
 								class="
 									tw-text-[20px]
@@ -51,10 +53,7 @@
 					/>
 
 				</div>
-					<emptyCart
-						v-if="!showCart"
-					/>
-				</div>
+			</div>
 
 			<!-- cart-->
 			<div
@@ -63,20 +62,19 @@
 				tw-w-full
 				md:tw-my-[20px]
 				lg:tw-w-[800px]
-				lg:tw-mt-0
+				lg:tw-mt-[114px]
 				xl:tw-w-[400px]
 				xl:tw-mt-[114px]
 				xl:tw-ml-8
 				"
 			>
 				<div class="
-					card
-					tw-shadow-xl
 					tw-bg-white
+					tw-border-[1px]
+					tw-border-[#d8dae0]
 					tw-rounded-[20px]
 					tw-w-full
 					tw-sticky
-					tw-top-[220px]
 					tw-p-6
 					"
 				>
@@ -87,8 +85,8 @@
 						<template #action>
 							<q-btn
 								:label="$t('icommerce.cart.continue')"
-								text-color="black"
-								color="amber"
+								text-color="white"
+								color="primary"
 								no-caps
 								unelevated
 								class="
@@ -113,16 +111,12 @@ import { useStorage } from '@vueuse/core'
 import ProductsComponent from '../components/cart/products.vue'
 import SummaryComponent from '../components/cart/summary.vue'
 import CurrencySelector from '../components/currencySelector'
-import BreadCrumb from '../components/breadcrumb';
 import emptyCart from '../components/cart/emptyCart.vue';
 
-definePageMeta({
-  middleware: 'auth',
-  layout: 'icommerce'
-})
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 
 const cartState = useState('icommerce.cart', () => {
 	return {
@@ -136,7 +130,7 @@ const cartStateStorage = useStorage('icommerce.cart', {
 	currency: 'COP'
 })
 
-const route = useRoute()
+
 
 const urlOptions =  {
 	action: route?.query?.a || null,
@@ -156,7 +150,7 @@ const productData = await useAsyncData( 'product',
 )
 product.value = productData.data.value
 
-const showCart = computed(() => cartState.value.products.length )
+const showCart = computed(() => cartState?.value?.products?.length || false )
 
 const disableContinue = computed(() => {
 	if(!showCart.value) return false
@@ -186,7 +180,8 @@ function restoreFromCheckout(){
 function redirectCheckout() {
 	cartStateStorage.value.products = cartState.value.products
 	router.push({
-		path: checkoutPath
+		path: checkoutPath, 
+		query: route.query
 	})
 }
 
