@@ -7,8 +7,9 @@
 				tw-flex-wrap
 				md:tw-justify-center
 				tw-p-4
+				tw-bg-[#f4f5ff]
 		"
-		style="background-color:  #FAFAFA;"
+
 		>
 			<div class="
 				tw-w-full
@@ -214,8 +215,8 @@
 							<q-btn
 								label="Continuar"
 								type="submit"
-								text-color="black"
-								color="amber"
+
+								color="primary"
 								class="
 									tw-font-bold
 									tw-rounded-lg
@@ -298,6 +299,7 @@ const form = useStorage('icommerce.CheckoutForm', {
 	zipCode: null
 })
 const router = useRouter()
+const route = useRoute()
 
 const refForm = ref(null)
 const showCouponInput = ref(false)
@@ -310,11 +312,8 @@ const products = computed(() => cartState.value.products)
 
 const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 
-const showTaxesWarning = computed(() => cartState.value.products.some((product) => product?.domain || false ))
-
-//const disableButton = computed( () => refForm.value.validate() )
-
-//const disableButton = ref(true)
+const mainProduct = computed(() =>  cartState.value?.products[0] || null)
+const mainDomain = computed(() =>  cartState.value?.products[1] || null)
 
 const showCompanyname = computed(() => (form.value.identificationType?.value == identificationTypeOptions[1].value) || (form.value.identificationType?.value == identificationTypeOptions[5].value) || false)
 
@@ -337,17 +336,50 @@ onBeforeMount(() => {
 })
 
 
-onMounted(() => {
-	init()
+onMounted(async () => {
+	await init()
+	if (import.meta.client){
+		//GA_beginCheckout()
+	}
+
 })
 
 async function init() {
 	await setFormData()
 	await getCountries().then( async () => {
-		if(cartState.value.products.length) addRedirect()
+		//if(cartState.value.products.length) addRedirect()
 	})
 
 }
+
+function GA_beginCheckout(){
+
+	const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
+
+	const items = cartState.value.products.map((product) => {
+		return {
+			item_id: mainProduct.value.name,
+			item_name: `Registro de dominio ${product.domain.ext}`,
+			item_category: mainProduct.value.category.title,
+			item_brand: mainProduct.value.name,
+			domain: `.${product.domain.name}`,
+			ext: product.domain.ext,
+			frecuency: mainProduct.value.frecuency.label,
+			price: product.price,
+			quantity: 1
+		}
+
+	})
+
+    gtag('event', 'begin_checkout', {
+      currency: cartState.value.currency,
+      value: subtotal,
+      items
+    })
+
+}
+
+
 
 async function getCountries(){
 	countries.value = []
@@ -437,7 +469,9 @@ function calcDiscount(){
 
 function redirectToCart() {
 	router.push({
-		path: getPath('icommerce.cart')
+		path: getPath('icommerce.cart'),
+		//query: route.query,
+
 	})
 }
 
@@ -459,6 +493,7 @@ function addRedirect() {
 	router.push({
 		path,
 		query: {
+			...route.query,
 			redirectTo: 'icommerce.checkout',
 		}
 	})
@@ -497,6 +532,14 @@ async function goToPayment() {
 			}
 		})
 	}
+
+
+	if(order.products.length > 1){
+		//setup the main domain o main product
+		order.products[0].domain = order.products[1].domain
+		order.products = order.products.filter((_, index) => index !== 1);
+	}
+
 
 	const user = { ...form.value }
 	user.city = user.city.name

@@ -8,14 +8,16 @@
 	<div class="tw-my-4">
 		<q-expansion-item
 			v-if="products.length >1"
-			default-opened
-			class="shadow-1 overflow-hidden"
+			default-opened			
+			bordered
+			class="overflow-hidden"
 			style="border-radius: 8px; background-color: #eceded;"
 			:label="`${products.length} ${$t('icommerce.checkout.articles')}`"
-			header-class="tw-font-[600] tw-text-md md:tw-text-base xl:tw-text-md tw-px-4"
+			header-class="tw-font-[600] tw-text-md md:tw-text-base xl:tw-text-md tw-px-4 tw-bg-[#f4f5ff]"
 			expand-icon-class="">
 			<template v-for="product in products" class="tw-my-4">
 				<SummaryCard 
+					class="tw-bg-[#f4f5ff]"
 					:product="product"
 					:padding="true"
 					:currency="cartState.currency"

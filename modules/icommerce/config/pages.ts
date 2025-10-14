@@ -1,4 +1,5 @@
 const layout = 'icommerce'
+const cart = 'cart'
 //mport page from '../pages/products/[[slug]]/index.vue'
 const pages = [
 /*
@@ -16,7 +17,7 @@ const pages = [
   },  
   */
 
-  
+  /*
   {
     name: 'icommerce.products',
     path: '/products/:slug?',
@@ -31,7 +32,23 @@ const pages = [
       title: 'icommerce.cms.sidebar.adminProducts',
       breadcrumb: 'Productos'
     },
-  },  
+  },
+  */
+  
+  {
+    name: 'icommerce.index',
+    path: '/',
+    paths:{
+      es: '/carrito',
+      en: '/cart',
+    },
+    page: 'pages/cart.vue',
+    meta: {
+      layout: cart,
+      title: 'icommerce.cms.sidebar.cart',
+      breadcrumb: 'Carrito'
+    }
+  },
   
 
   {
@@ -43,7 +60,7 @@ const pages = [
     },
     page: 'pages/cart.vue',
     meta: {
-      layout,
+      layout: cart,
       title: 'icommerce.cms.sidebar.cart',
       breadcrumb: 'Carrito'
     }
@@ -55,7 +72,7 @@ const pages = [
     path: '/checkout',
     page: 'pages/checkout.vue',
     meta: {
-      layout,
+      layout: cart,
       title: 'icommerce.cms.sidebar.checkout',
       breadcrumb: 'Pago'
     }
