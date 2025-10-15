@@ -10,9 +10,8 @@
             </p>
         </div>
         <q-btn
-            :label="$t('icommerce.goToStore')"
-            text-color="black"
-            color="amber"
+            :label="$t('icommerce.goToStore')"            
+            color="primary"
             no-caps
             unelevated
             class="

@@ -17,10 +17,13 @@ onMounted(() => {
 const clientIdGoogle = computed(() => getSetting('isite::googleClientId'))
 
 async function addCDN() {
-  let cdn = document.createElement('script') //create CDN google recaptcha
-  cdn.setAttribute('src', 'https://accounts.google.com/gsi/client')
-  cdn.onload = loadClientId() //callback when loaded cdn
-  document.head.appendChild(cdn) //add to head
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.onload = () => {
+    loadClientId()
+  }; 
+  document.body.appendChild(script);
 }
 
 //Load Client ID
@@ -44,16 +47,14 @@ async function loadClientId() {
           document.getElementById("googleButton"),
           {theme: "outline", size: "large"}
         );
+        // Initialize Google Identity Services    
+        google.accounts.id.prompt(); // also display the One Tap dialog
       }
     } catch (error) {
       console.count('loadClientId')
       loadClientId()
       console.log(error)
-    }
-
-    // Initialize Google Identity Services
-    
-    google.accounts.id.prompt(); // also display the One Tap dialog
+    }    
   }, 800)
 }
 
