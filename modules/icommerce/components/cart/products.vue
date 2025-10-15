@@ -107,7 +107,7 @@
             option-value="value"
             option-label="label"
             outlined
-            class="tw-w-52 tw-mb-1 tw-rounded-lg"
+            class="tw-w-52 tw-mb- tw-rounded-lg"
             input-class="tw-w-52 tw-mb-1 tw-rounded-lg"
             label="Periodo"
           />
@@ -215,14 +215,14 @@
           class="
             tw-py-2.5
             tw-px-3.5
-            tw-rounded-md
-            tw-bg-[#FFAB404D]
+            tw-rounded-md            
             tw-w-full
             tw-text-[13px]
           "
+          :class="isTweelveMonths() ? 'tw-bg-[#def4f0]' : 'tw-bg-[#FFAB404D]' "
         >
           <span class="tw-text-[#444444]">
-            {{ isFreeExtension() ? '¡Buenas noticias! Obtienes un dominio gratis.' : 'Contrata 12 meses o más y obtén dominio gratis.' }}
+            {{ isTweelveMonths() ? 'Buenas noticias. Obtén un dominio GRATIS con este pedido' : '¿Quieres un dominio gratis? Elige un plan de 12 meses o más.' }}
             <i class="fa-regular fa-circle-question tw-text-[16px]">
               <q-tooltip class="bg-red" :offset="[10, 10]">
                 <div class="tw-w-[240px] tw-text-[14px] tw-p-[2px]">
@@ -312,9 +312,10 @@
             class="scrollable"
 
           >
-
+            <!--- isAvailable --->  
             <q-item
-              :key="index"
+              v-if="item.isAvailable"
+              :key="index.ext"
               clickable
               v-ripple
               @click="() => {
@@ -325,13 +326,48 @@
               <q-item-section>
                 <div class="tw-flex tw-justify-between">
                   <div>
-                    <span class="tw-text-[16px] tw-font-[400]">
+                    <span class="tw-text-[17px] tw-font-[600]">
+                        {{ item.name }}
+                    </span>
+                  </div>
+                  <div v-if="isAfreeResult(item.ext)">
+                    <span class="tw-bg-[#def4f0] tw-">
+                      &nbsp;Gratis&nbsp;
+                    </span>
+                    <span class="tw-text-[17px] tw-font-[500] tw-mx-1">
+                      {{ productsHelper.priceWithSymbol(0, cartState.currency) }}/primer año
+                    </span>
+                    &nbsp;
+                    <span class="tw-line-through tw-text-[15px] tw-font-[400] tw-text-[#818181]">
+                      {{  productsHelper.priceWithSymbol(getExtPrice(item.ext).domainregister, cartState.currency) }}
+                    </span>                    
+                    
+                  </div>
+                  <div
+                    v-else
+                  > 
+                    <span class="tw-text-[17px] tw-font-[500]">
+                        {{  productsHelper.priceWithSymbol(getExtPrice(item.ext).domainregister, cartState.currency) }}/primer año
+                    </span>                  
+                  </div>
+                </div>
+              </q-item-section>
+            </q-item>
+
+            <q-item
+              v-else
+              :key="index.name"              
+            >
+              <q-item-section>
+                <div class="tw-flex tw-justify-between">
+                  <div>
+                    <span class="tw-text-[18px] tw-font-[400] tw-text-[#818181]">
                         {{ item.name }}
                     </span>
                   </div>
                   <div>
-                    <span class="tw-text-[16px] tw-font-[500]">
-                        {{  productsHelper.priceWithSymbol(getExtPrice(item.ext).domainregister, cartState.currency) }}
+                    <span class="tw-text-[16px] tw-font-[600] tw-text-[#818181]">
+                        NO DISPONIBLE
                     </span>
                   </div>
                 </div>
@@ -761,6 +797,15 @@ function isMainDomainFree(idx){
   return idx == 1 && isFreeExtension()
 }
 
+function isTweelveMonths(){
+  if(!mainProduct.value?.frecuency) return false
+  return getFrecuencyFromLabel(mainProduct.value?.frecuency.label) >= 12 || false
+}
+
+function isAfreeResult(ext){
+  return (constants.freeExtensions.includes(ext) && isTweelveMonths() )|| false 
+}
+
 
 function updateDomainName(product, val ){
   let newValue = val.replace(/\s+/g, "")
@@ -818,10 +863,10 @@ async function checkDomain(product) {
       tempResults = [...tempResults, ...response?.results]
 
       results.value = []
-      results.value = tempResults.filter(x => x.isAvailable == true)
-      .map(element => {
-        element.name = element.name.toLowerCase()
-        return element
+      //results.value = tempResults.filter(x => x.isAvailable == true)
+      results.value = tempResults.map(element => {
+            element.name = element.name.toLowerCase()
+            return element
       }) || [];
       
       bkResults.value = results.value
