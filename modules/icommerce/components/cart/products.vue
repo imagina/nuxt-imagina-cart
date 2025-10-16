@@ -99,7 +99,7 @@
         <div>
 
           <q-select
-            v-if="productsHelper.hasFrencuency(product) || product?.frecuency"            
+            v-if="productsHelper.hasFrencuency(product) || product?.frecuency"
             v-model="product.frecuency"
             :disable="index == 1"
             :options="getFrecuencyOptions(product)"
@@ -107,7 +107,7 @@
             option-value="value"
             option-label="label"
             outlined
-            class="tw-w-52 tw-mb- tw-rounded-lg"
+            class="tw-w-52 tw-mb-2 tw-rounded-lg"
             input-class="tw-w-52 tw-mb-1 tw-rounded-lg"
             label="Periodo"
           />
@@ -121,7 +121,7 @@
           >
             {{ getRenewLabel(product) }}
           </span>
-          
+
         </div>
         <div
           class="
@@ -203,26 +203,25 @@
             </div>
           </div>
         </div>
-        
+
       </div>
       <!-- free domain -->
       <div
         v-if="isDomainNameFree(product)"
         class="tw-mt-5"
-      >
-        <i class="tw-text-[#444444] tw-text-[13px]" />
+      >        
         <div
           class="
             tw-py-2.5
             tw-px-3.5
-            tw-rounded-md            
+            tw-rounded-md
             tw-w-full
             tw-text-[13px]
           "
           :class="isTweelveMonths() ? 'tw-bg-[#def4f0]' : 'tw-bg-[#FFAB404D]' "
         >
-          <span class="tw-text-[#444444]">
-            {{ isTweelveMonths() ? 'Buenas noticias. Obtén un dominio GRATIS con este pedido' : '¿Quieres un dominio gratis? Elige un plan de 12 meses o más.' }}
+          <span class="tw-text-[#444444] tw-font-[700]">
+            {{ freeDomainLabel(index) }}
             <i class="fa-regular fa-circle-question tw-text-[16px]">
               <q-tooltip class="bg-red" :offset="[10, 10]">
                 <div class="tw-w-[240px] tw-text-[14px] tw-p-[2px]">
@@ -233,7 +232,7 @@
             </i>
           </span>
         </div>
-      </div>      
+      </div>
     </div>
 
     <!-- domain check -->
@@ -310,45 +309,52 @@
             :items="results"
             v-slot="{ item, index }"
             class="scrollable"
-
           >
-            <!--- isAvailable --->  
+            <!--- isAvailable --->
             <q-item
               v-if="item.isAvailable"
               :key="index.ext"
               clickable
               v-ripple
+              class="hover:tw-bg-sky-100 tw-transition-colors tw-duration-200"
               @click="() => {
                 showDomainSearch = false
                 addDomainExtension(item)
               }"
             >
               <q-item-section>
-                <div class="tw-flex tw-justify-between">
-                  <div>
-                    <span class="tw-text-[17px] tw-font-[600]">
-                        {{ item.name }}
+                <div class="tw-justify-between tw-w-full"
+                  :class="mainProduct.domainCheck.domainName.length >= 15 ? 'tw-flex-col-1' : 'md:tw-flex'"
+                >
+                  <div class="tw-break-words">
+                    <span class="tw-text-[17px] tw-font-[500]">
+                      {{ item.name }} 
                     </span>
                   </div>
-                  <div v-if="isAfreeResult(item.ext)">
-                    <span class="tw-bg-[#def4f0] tw-">
-                      &nbsp;Gratis&nbsp;
-                    </span>
-                    <span class="tw-text-[17px] tw-font-[500] tw-mx-1">
-                      {{ productsHelper.priceWithSymbol(0, cartState.currency) }}/primer año
-                    </span>
-                    &nbsp;
-                    <span class="tw-line-through tw-text-[15px] tw-font-[400] tw-text-[#818181]">
-                      {{  productsHelper.priceWithSymbol(getExtPrice(item.ext).domainregister, cartState.currency) }}
-                    </span>                    
-                    
+                  <div v-if="isAfreeResult(item.ext)"
+                    :class="mainProduct.domainCheck.domainName.length >= 15 ? 'tw-flex-col-1 md:tw-flex' : 'md:tw-flex'"
+                    class="tw-align-middle tw-items-center"
+                  >
+
+                      <div class="tw-bg-[#def4f0] tw-px-2 tw-py-1 tw-my-2 tw-rounded-xl">                   
+                        <span class="tw-text-[16px] tw-font-[600]">
+                          Gratis
+                        </span>
+
+                        <span class="tw-text-[16px] tw-font-[500] tw-mx-1">
+                          {{ productsHelper.priceWithSymbol(0, cartState.currency) }}/primer año
+                        </span>
+                      </div>
+
+                      <span class="tw-line-through tw-text-[15px] tw-font-[400] tw-text-[#818181] tw-mx-1">
+                        {{  productsHelper.priceWithSymbol(getExtPrice(item.ext).domainregister, cartState.currency) }}
+                      </span>
+
                   </div>
-                  <div
-                    v-else
-                  > 
+                  <div v-else>
                     <span class="tw-text-[17px] tw-font-[500]">
                         {{  productsHelper.priceWithSymbol(getExtPrice(item.ext).domainregister, cartState.currency) }}/primer año
-                    </span>                  
+                    </span>
                   </div>
                 </div>
               </q-item-section>
@@ -356,34 +362,37 @@
 
             <q-item
               v-else
-              :key="index.name"              
+              :key="index.name"
             >
               <q-item-section>
                 <div class="tw-flex tw-justify-between">
-                  <div>
-                    <span class="tw-text-[18px] tw-font-[400] tw-text-[#818181]">
+                  <div class="tw-break-words">
+                    <span class="tw-text-[18px] tw-font-[500] tw-text-[#818181]">
                         {{ item.name }}
                     </span>
                   </div>
                   <div>
-                    <span class="tw-text-[16px] tw-font-[600] tw-text-[#818181]">
+                    <span class="tw-text-[15px] tw-font-[600] tw-text-[#818181]">
                         NO DISPONIBLE
                     </span>
                   </div>
                 </div>
               </q-item-section>
             </q-item>
+            <q-separator
+              class="tw-my-2 sm:tw-hidden" 
+            />
           </q-virtual-scroll>
         </div>
       </div>
-      <!-- captcha -->    
-      <div        
+      <!-- captcha -->
+      <div
         class="tw-my-2 tw-px-4"
       >
         <captchaComponent
           ref="captchaRef"
         />
-      </div>    
+      </div>
     </div>
 
 
@@ -406,14 +415,14 @@
       <q-scroll-area
         visible
         class="
-          tw-my-4 
+          tw-my-4
           tw-h-[160px]
-          tw-w-auto          
+          tw-w-auto
         "
       >
-        <div 
+        <div
           class="
-            tw-flex 
+            tw-flex
             tw-gap-x-4
             tw-justify-center
             lg:tw-justify-start
@@ -580,15 +589,15 @@ async function init() {
     }
     cartState.value.products = []
     cartState.value.products.push(product)
-    
-  }  
+
+  }
   await configProducts()
 }
 
 async function loadDomainSearch(){
-  if(mainDomain.value){    
-    if(mainDomain.value.domain.domainName){      
-      showDomainSearch.value = false      
+  if(mainDomain.value){
+    if(mainDomain.value.domain.domainName){
+      showDomainSearch.value = false
     }
   } else {
     showDomainSearch.value = true
@@ -651,11 +660,11 @@ async function configProducts() {
 
         }
 
-        product.domain.action = product.domainCheck.action        
+        product.domain.action = product.domainCheck.action
       }
       getDiscount(product)
     })
-    await loadDomainSearch()    
+    await loadDomainSearch()
     await updateDomainPrice()
   } catch (error){
     cartState.value.products = []
@@ -702,20 +711,20 @@ function removeProduct(product) {
 
 async function updateDomainPrice(){
 
-  cartState.value.products.forEach((product) => {    
+  cartState.value.products.forEach((product) => {
 
     if(mainDomain.value){
-      const tempfrecuency = getFrecuencyOptions(mainDomain.value).find(x => x.frecuency == mainProduct.value.frecuency.frecuency) || false      
+      const tempfrecuency = getFrecuencyOptions(mainDomain.value).find(x => x.frecuency == mainProduct.value.frecuency.frecuency) || false
       if(tempfrecuency){
         if(getFrecuencyFromLabel(tempfrecuency.label) >= 12 ){
           mainDomain.value.frecuency = tempfrecuency
-        } 
-      } else {       
-        mainDomain.value.frecuency = getFrecuencyOptions(mainDomain.value)[0]       
+        }
+      } else {
+        mainDomain.value.frecuency = getFrecuencyOptions(mainDomain.value)[0]
       }
     }
-    
-    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {                  
+
+    if(isFreeExtension() && isDomainNameFree(mainProduct.value)) {
       mainDomain.value.price = 0
       if(product.domain.domainName == mainDomain.value.domain.domainName){
         return false
@@ -784,6 +793,9 @@ function isDomainNameFree(product) {
   return domainCategories.includes(product?.category?.id) || false
 }
 
+function freeDomainLabel(idx){
+ return isTweelveMonths() ? 'Buenas noticias. Obtén (1) dominio GRATIS con este pedido.' : '¿Quieres un dominio gratis? Elige un plan de 12 meses o más.'
+}
 
 function isFreeExtension(){
 
@@ -803,7 +815,7 @@ function isTweelveMonths(){
 }
 
 function isAfreeResult(ext){
-  return (constants.freeExtensions.includes(ext) && isTweelveMonths() )|| false 
+  return (constants.freeExtensions.includes(ext) && isTweelveMonths() )|| false
 }
 
 
@@ -868,7 +880,7 @@ async function checkDomain(product) {
             element.name = element.name.toLowerCase()
             return element
       }) || [];
-      
+
       bkResults.value = results.value
 
     }).catch(e => {});
@@ -1020,26 +1032,26 @@ async function addDomainExtension(extension){
 
     results.value = results.value.filter(x => x.name != extension.name)
 
-    const items = [{ 
+    const items = [{
       item_id: `${mainProduct.value.id}`,
-      
+
       item_name: `Registro de dominio ${extension.ext}`,
-      item_category: mainProduct.value.category.title,          
+      item_category: mainProduct.value.category.title,
       item_brand: mainProduct.value.name,
       domain: `.${extension.name}`,
       ext: extension.ext,
       frecuency: mainProduct.value.frecuency.label,
-      
+
       price: cloned.price,
       quantity: 1
-    }]    
-    
-    gtag('event', 'add_to_cart', { 
+    }]
+
+    gtag('event', 'add_to_cart', {
       currency: cartState.value.currency,
       value: cloned.price,
       items: items
     })
-      
+
 
     await updateDomainPrice()
     //showResults.value = false
