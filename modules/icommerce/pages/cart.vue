@@ -86,8 +86,7 @@
 					>
 						<template #action>
 							<q-btn
-								:label="$t('icommerce.cart.continue')"
-								text-color="white"
+								:label="$t('icommerce.cart.continue')"								
 								color="primary"
 								no-caps
 								unelevated
@@ -96,7 +95,7 @@
 									tw-justify-center
 									tw-font-bold
 									tw-rounded-lg
-									tw-text-white
+									
 								"
 								@click="redirectCheckout()"
 								:disable="disableContinue"
