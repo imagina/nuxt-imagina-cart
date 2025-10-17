@@ -323,16 +323,16 @@
               }"
             >
               <q-item-section>
-                <div class="tw-justify-between tw-w-full"
-                  :class="mainProduct.domainCheck.domainName.length >= 15 ? 'tw-flex-col-1' : 'md:tw-flex'"
+                <div class="tw-justify-between tw-align-middle tw-w-full"
+                  :class="mainProduct.domainCheck.domainName.length >= 30 ? 'tw-flex-col-1 xl:tw-flex' : 'md:tw-flex'"
                 >
-                  <div class="tw-break-words">
+                  <div class="tw-break-words tw-flex tw-items-center">
                     <span class="tw-text-[17px] tw-font-[500]">
                       {{ item.name }} 
                     </span>
                   </div>
                   <div v-if="isAfreeResult(item.ext)"
-                    :class="mainProduct.domainCheck.domainName.length >= 15 ? 'tw-flex-col-1 md:tw-flex' : 'md:tw-flex'"
+                    :class="mainProduct.domainCheck.domainName.length >= 30 ? 'tw-flex-col-1 xl:tw-flex' : 'md:tw-flex'"
                     class="tw-align-middle tw-items-center"
                   >
 
@@ -849,9 +849,15 @@ async function checkDomain(product) {
     const lang = locale.value == 'es' ? 'esp' : 'eng'
     const domain = product.domainCheck.domainName.trim()
 
-    gtag('event', 'view_search_results', {
-      search_term: domain
-    });
+    try {
+      gtag('event', 'view_search_results', {
+        search_term: domain
+      });
+    } catch (e) {
+      console.log(e)
+    }
+
+    
 
 
     const body = {
@@ -1046,11 +1052,15 @@ async function addDomainExtension(extension){
       quantity: 1
     }]
 
-    gtag('event', 'add_to_cart', {
-      currency: cartState.value.currency,
-      value: cloned.price,
-      items: items
-    })
+    try {
+      gtag('event', 'add_to_cart', {
+        currency: cartState.value.currency,
+        value: cloned.price,
+        items: items
+      })
+    } catch (e) {
+      console.log(e)
+    }
 
 
     await updateDomainPrice()

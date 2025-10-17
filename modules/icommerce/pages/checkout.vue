@@ -353,6 +353,7 @@ async function init() {
 }
 
 function GA_beginCheckout(){
+	
 
 	const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 
@@ -371,12 +372,16 @@ function GA_beginCheckout(){
 
 	})
 
-    gtag('event', 'begin_checkout', {
-      currency: cartState.value.currency,
-      value: subtotal,
-      items
-    })
+	try {
+		gtag('event', 'begin_checkout', {
+		currency: cartState.value.currency,
+		value: subtotal,
+		items
+		})
 
+	} catch (e) {
+		console.log(e)
+	}
 }
 
 
