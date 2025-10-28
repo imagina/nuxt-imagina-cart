@@ -118,7 +118,7 @@
 							/>
 
 							<q-input
-								v-model="form.identification"
+								v-model.trim="form.identification"
 								label="Identificación"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
@@ -139,7 +139,7 @@
 							/>
 
 							<q-input
-								v-model="form.mobilePhone"
+								v-model.trim="form.mobilePhone"
 								label="Teléfono"
 								:rules="[
 									(val) => !!val || 'Campo requerido.'
@@ -201,7 +201,7 @@
 								outlined
 							/>
 							<q-input
-								v-model="form.zipCode"
+								v-model.trim="form.zipCode"
 								label="Código  postal"
 								:rules="[
 									(val) => !!val || 'El código postal es obligatorio',
@@ -560,7 +560,7 @@ async function goToPayment() {
 	user.country = user.country['iso2'] || user.country['name']
 	user.identificationType = user.identificationType.value
 	order.user = user
-	
+
 	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
 		headers: {
