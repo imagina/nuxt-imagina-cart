@@ -70,19 +70,18 @@
 					<q-form @submit.prevent.stop="goToPayment" ref="refForm">
 						<div class="tw-my-4 tw-grid lg:tw-grid-cols-2 tw-gap-y-5 lg:tw-gap-y-8 tw-gap-x-5">
 							<q-input
-								v-model="form.email"
+								v-model.trim="form.email"
 								label="Email"
 								:rules="[
 									(val) => !!val || 'Correo es requerido.',
-									(val) =>
-									/.+@.+\..+/.test(val) ||
-									'Por favor introduzca un correo valido',
+									(val) => !/\s/.test(val) || 'El Correo no debe contener espacios',
+									(val) => isValidEmail(val)
 								]"
 								dense
 								outlined
 							/>
 							<q-input
-								v-model="form.firstName"
+								v-model.trim="form.firstName"
 								label="Nombres"
 								:rules="[
 									(val) => !!val || 'Nombre es requerido.',
@@ -92,9 +91,10 @@
 								]"
 								dense
 								outlined
+
 							/>
 							<q-input
-								v-model="form.lastName"
+								v-model.trim="form.lastName"
 								label="Apellidos"
 								:rules="[
 									(val) => !!val || 'Apellido requerido.',
@@ -115,7 +115,6 @@
 								outlined
 								dense
 								label="Tipo de identificación"
-
 							/>
 
 							<q-input
@@ -130,7 +129,7 @@
 
 							<q-input
 								v-if="showCompanyname"
-								v-model="form.companyName"
+								v-model.trim="form.companyName"
 								label="Nombre de Empresa (Opcional)"
 								:rules="[
 									(val) => !!val || 'Campo requerido.',
@@ -143,7 +142,7 @@
 								v-model="form.mobilePhone"
 								label="Teléfono"
 								:rules="[
-									(val) => !!val || 'Campo requerido.',
+									(val) => !!val || 'Campo requerido.'
 								]"
 								type="tel"
 								dense
@@ -162,7 +161,6 @@
 								dense
 								outlined
 								:disable="!countries.length"
-
 							/>
 							<q-select
 								v-model="form.province"
@@ -193,10 +191,11 @@
 								:disable="!cities.length"
 							/>
 							<q-input
-								v-model="form.address"
+								v-model.trim="form.address"
 								label="Dirección"
 								:rules="[
-									(val) => !!val || 'Campo requerido.',
+									(val) => !!val  || 'Campo requerido.',
+									(val) => (/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,#°\-]{5,100}$/).test(val) || 'Dirección inválida (usa letras, números o signos comunes).',
 								]"
 								dense
 								outlined
@@ -205,7 +204,8 @@
 								v-model="form.zipCode"
 								label="Código  postal"
 								:rules="[
-									(val) => !!val || 'Campo requerido.',
+									(val) => !!val || 'El código postal es obligatorio',
+									(val) => (/^[0-9]{4,10}$/.test(val)) || 'Código postal inválido'
 								]"
 								dense
 								outlined
@@ -352,8 +352,14 @@ async function init() {
 
 }
 
+function isValidEmail(val){
+	///(val) => !!/\s/.test(val) || 'El correo no puede contener espacio.',
+	return  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Por favor introduzca un correo valido'
+
+}
+
 function GA_beginCheckout(){
-	
+
 
 	const subtotal = computed(() => productsHelper.getSubtotal(cartState.value.products, cartState.value.currency))
 
@@ -431,7 +437,7 @@ async function getCities(){
 
 function setFormData(reset = false) {
 	if (authStore.isLogged()){
-		form.value.email = form.value.email ||  user.value.email
+		form.value.email = form.value.email.trim() ||  user.value.email.trim()
 		form.value.firstName = form.value.firstName ||  user.value.firstName
 		form.value.lastName = form.value.lastName || user.value.lastName
 		form.value.identification = form.value.identification ||  getField('identification')
@@ -554,7 +560,7 @@ async function goToPayment() {
 	user.country = user.country['iso2'] || user.country['name']
 	user.identificationType = user.identificationType.value
 	order.user = user
-
+	
 	const res = await $fetch(apiRoutes.newCartOrder, {
 		method: 'POST',
 		headers: {
@@ -574,7 +580,7 @@ async function goToPayment() {
 		quasar.loading.hide()
 	}).catch((error) => {
 		quasar.loading.hide()
-		console.log(error)
+		console.log(error)	
 	})
 }
 
