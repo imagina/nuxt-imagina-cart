@@ -64,7 +64,14 @@ export default defineNuxtConfig({
       apiRoute: process.env.API_ROUTE || '', 
       clarityId: process.env.CLARITY_ID || '',
       ipWhiteList: process.env.IP_WHITELIST || null,
-      ipVerify: process.env.IP_VERIFY || null
+      ipVerify: process.env.IP_VERIFY || null, 
+
+      iadminRules: {
+        mainCategoryId: process.env.MAIN_CATEGORY_ID || null,
+        requiredDomainCategories: process.env.REQUIRED_DOMAIN_CATEGORIES || null,
+        freeDomainCategories: process.env.FREE_DOMAIN_CATEGORIES || null,
+        freeExtensions: process.env.FREE_EXTENSIONS || null
+      }
     }
   },
 

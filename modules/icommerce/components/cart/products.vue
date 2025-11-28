@@ -482,10 +482,12 @@
 import { useStorage } from '@vueuse/core'
 import productsHelper from '../../helpers/products';
 import apiRoutes from '../../config/apiRoutes.js';
-import constants from '../../config/constants.js';
 import moment from 'moment';
 import _ from 'lodash';
 import captchaComponent from '../../../iauth/components/captcha.vue'
+import adminRules from '~/plugins/adminRules';
+
+const constants = adminRules()
 
 const route = useRoute()
 
@@ -522,8 +524,8 @@ const cartStateStorage = useStorage('icommerce.cart', {
 const emits = defineEmits(['subtotal', 'discount', 'emptyCart'])
 
 const domainPricing = ref(props.domainPricing)
-const mainProduct = computed(() =>  cartState.value?.products[0] || null)
-const mainDomain = computed(() =>  cartState.value?.products[1] || null)
+const mainProduct = computed(() =>  cartState.value?.products[0] || cartStateStorage.value?.products[0] || null)
+const mainDomain = computed(() =>  cartState.value?.products[1] || cartStateStorage.value?.products[1] || null)
 
 
 const results = ref([])
@@ -789,7 +791,7 @@ function isDomainNameRequired(product) {
 }
 
 function isDomainNameFree(product) {
-  const domainCategories = constants.categories.dominNameFree
+  const domainCategories = constants.categories.domainNameFree
   return domainCategories.includes(product?.category?.id) || false
 }
 
